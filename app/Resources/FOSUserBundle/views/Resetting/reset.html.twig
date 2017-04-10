@@ -1,0 +1,99 @@
+{% trans_default_domain 'FOSUserBundle' %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Alia Fromagerie | Réinitialiser le mot de passe</title>
+    <!-- Favicon-->
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+            <!-- Bootstrap Core Css -->
+    <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+
+            <!-- Waves Effect Css -->
+    <link href="{{ asset('plugins/node-waves/waves.css') }}" rel="stylesheet" />
+
+            <!-- Animation Css -->
+    <link href="{{ asset('plugins/animate-css/animate.css') }}" rel="stylesheet" />
+
+            <!-- Custom Css -->
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+</head>
+
+<body class="signup-page">
+
+<div class="signup-box">
+    <div class="logo">
+                <a href="{{ path('app_index') }}">Alia Fromagerie</a>
+            </div>
+            <div class="card">
+                <div class="body">
+                    {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset',id:"sign_up",method:"POST" } }) }}
+
+                        <div class="msg">Réinitialiser votre mot de passe</div>
+
+
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                            <div class="form-line">
+                                {{ form_widget(form.plainPassword.first,{'attr':
+                                    {
+                                        'placeholder':'Nouveau mot de passe',
+                                        'required':true,
+                                        'class':'form-control',
+                                        'minlength':"6"
+                                    }
+                                })}}
+                            </div>
+                        </div>
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                            <div class="form-line">
+                                {{ form_widget(form.plainPassword.second,{'attr':
+                                    {
+                                        'placeholder':'Confirmer le mot de passe',
+                                        'required':true,
+                                        'class':'form-control',
+                                        'minlength':"6"
+                                    }
+                                })}}
+                            </div>
+                        </div>
+
+
+                        <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">MODIFIER LE MOT DE PASSE</button>
+
+
+                        {{ form_end(form) }}
+                </div>
+            </div>
+</div>
+
+        <!-- Jquery Core Js -->
+        <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+
+        <!-- Bootstrap Core Js -->
+        <script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
+
+        <!-- Waves Effect Plugin Js -->
+        <script src="{{ asset('plugins/node-waves/waves.js') }}"></script>
+
+        <!-- Validation Plugin Js -->
+        <script src="{{ asset('plugins/jquery-validation/jquery.validate.js') }}"></script>
+
+        <!-- Custom Js -->
+        <script src="{{ asset('js/admin.js') }}"></script>
+        <script src="{{ asset('js/pages/examples/sign-up.js') }}"></script>
+        </body>
+
+        </html>
