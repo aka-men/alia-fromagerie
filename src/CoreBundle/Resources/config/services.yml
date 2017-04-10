@@ -1,0 +1,12 @@
+services:
+#    core.example:
+#        class: CoreBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+
+    core.manager.abstract:
+        class: CoreBundle\Manager\AbstractManager
+        arguments: ["@doctrine.orm.entity_manager"]
+        abstract: true
+
+

@@ -1,0 +1,8 @@
+model: AppBundle\Entity\ModePayment
+fixtures:
+    mode_payment_cash:
+        label: Espèce
+    mode_payment_check:
+        label: Chèque
+    mode_payment_bank_transfer:
+        label: Virement bancaire
