@@ -17,7 +17,7 @@ use CoreBundle\Entity\Traits\PrixTrait;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Achat
+abstract class Achat extends AbstractEntity
 {
     use QuantiteTrait;
     use PrixTrait;
