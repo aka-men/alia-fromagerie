@@ -3,55 +3,60 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CoreBundle\Entity\MappedSuperClass\AbstractEntity;
-use CoreBundle\Entity\Traits\DateTrait;
-use CoreBundle\Entity\Traits\MontantHtTrait;
-use CoreBundle\Entity\Traits\MontantTtcTrait;
-use CoreBundle\Entity\Traits\ObservationTrait;
-use AppBundle\Entity\ModePayment;
+use AppBundle\Entity\AbstractDepense;
+use AppBundle\Entity\TypeDepense;
 
 /**
  * Class Depense
- * MappedSuperclass doctrine.
- * @package AppBundle\Entity
  *
- * @ORM\MappedSuperclass
+ * @ORM\Table(name="depense")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\DepenseRepository")
  */
-abstract class Depense extends AbstractEntity
+class Depense extends AbstractDepense
 {
-    use DateTrait;
-    use MontantHtTrait;
-    use MontantTtcTrait;
-    use ObservationTrait;
 
     /**
-     * @var ModePayment
+     * @var TypeDepense
      *
-     * @ORM\ManyToOne(targetEntity="ModePayment")
-     * @ORM\JoinColumn(name="modePayment_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="TypeDepense")
+     * @ORM\JoinColumn(name="typeDepense_id", referencedColumnName="id")
      */
-    private $moePayment;
+    private $typeDepense;
 
     /**
-     * Get modePayment
+     * Get typeDepense
      *
-     * @return \AppBundle\Entity\ModePayment
+     * @return \AppBundle\Entity\TypeDepense
      */
-    public function getMoePayment()
+    public function getTypeDepense()
     {
-        return $this->moePayment;
+        return $this->typeDepense;
     }
 
     /**
-     * Set modePayment
+     * Set typeDepense
      *
-     * @param \AppBundle\Entity\ModePayment $moePayment
+     * @param \AppBundle\Entity\TypeDepense $typeDepense
      * @return $this
      */
-    public function setMoePayment($moePayment)
+    public function setMoePayment($typeDepense)
     {
-        $this->moePayment = $moePayment;
+        $this->typeDepense = $typeDepense;
         return $this;
     }
 
+
+    /**
+     * Set typeDepense
+     *
+     * @param \AppBundle\Entity\TypeDepense $typeDepense
+     *
+     * @return Depense
+     */
+    public function setTypeDepense(\AppBundle\Entity\TypeDepense $typeDepense = null)
+    {
+        $this->typeDepense = $typeDepense;
+
+        return $this;
+    }
 }

@@ -23,6 +23,15 @@ class MatierePremiere extends BaseProduit
      * @ORM\JoinTable(name="matiere_premiere_produit")
      */
     private $produits;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Option")
+     * @ORM\JoinTable(name="matiere_premiere_option")
+     */
+    private $options;
+
     /**
      * Constructor
      */
@@ -63,5 +72,39 @@ class MatierePremiere extends BaseProduit
     public function getProduits()
     {
         return $this->produits;
+    }
+
+    /**
+     * Add option
+     *
+     * @param \AppBundle\Entity\Option $option
+     *
+     * @return MatierePremiere
+     */
+    public function addOption(\AppBundle\Entity\Option $option)
+    {
+        $this->options[] = $option;
+
+        return $this;
+    }
+
+    /**
+     * Remove option
+     *
+     * @param \AppBundle\Entity\Option $option
+     */
+    public function removeOption(\AppBundle\Entity\Option $option)
+    {
+        $this->options->removeElement($option);
+    }
+
+    /**
+     * Get options
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

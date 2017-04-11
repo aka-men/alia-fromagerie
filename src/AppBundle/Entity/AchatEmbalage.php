@@ -45,4 +45,3 @@ class AchatEmbalage extends Achat
         return $this;
     }
 }
-

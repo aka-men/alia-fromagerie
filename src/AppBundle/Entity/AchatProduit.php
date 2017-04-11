@@ -39,10 +39,9 @@ class AchatProduit extends Achat
      *
      * @return AchatProduit
      */
-    public function setEmbalage(Produit $produit)
+    public function setProduit(Produit $produit)
     {
         $this->produit = $produit;
         return $this;
     }
 }
-

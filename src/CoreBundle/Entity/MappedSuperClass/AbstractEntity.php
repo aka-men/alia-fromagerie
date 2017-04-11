@@ -11,6 +11,7 @@ namespace CoreBundle\Entity\MappedSuperClass;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * Class AbstractEntity
  * MappedSuperclass doctrine.

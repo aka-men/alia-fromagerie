@@ -9,10 +9,10 @@ use CoreBundle\Entity\Traits\LabelTrait;
 /**
  * Analyse
  *
- * @ORM\Table(name="analyse")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\AnalyseRepository")
+ * @ORM\Table(name="option")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\OptionRepository")
  */
-class Analyse extends AbstractEntity
+class Option extends AbstractEntity
 {
 
     use LabelTrait;
@@ -28,7 +28,7 @@ class Analyse extends AbstractEntity
      *
      * @param string $code
      *
-     * @return Analyse
+     * @return Option
      */
     public function setCode($code)
     {

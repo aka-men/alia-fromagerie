@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use CoreBundle\Entity\MappedSuperClass\AbstractEntity;
+use AppBundle\Entity\AbstractDepense;
 use CoreBundle\Entity\Traits\QuantiteTrait;
 use CoreBundle\Entity\Traits\MontantTtcTrait;
 use CoreBundle\Entity\Traits\MontantHtTrait;
@@ -17,12 +17,10 @@ use CoreBundle\Entity\Traits\PrixTrait;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Achat extends AbstractEntity
+abstract class Achat extends AbstractDepense
 {
     use QuantiteTrait;
     use PrixTrait;
-    use MontantHtTrait;
-    use MontantTtcTrait;
 
     /**
      * @var string
@@ -55,4 +53,3 @@ abstract class Achat extends AbstractEntity
         return $this->numeroFacture;
     }
 }
-

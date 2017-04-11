@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Achat;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * AchatMatierePremiere
@@ -14,70 +15,94 @@ use AppBundle\Entity\Achat;
 class AchatMatierePremiere extends Achat
 {
 
-
     /**
-     * @var array
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="analyses", type="json_array", nullable=true)
+     * @ORM\OneToMany(targetEntity="AchatMatierePremiereProduit", mappedBy="achat", cascade={"persist","remove"})
      */
-    private $analyses;
+    private $produits;
 
     /**
-     * @var array
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="production", type="json_array", nullable=true)
+     * @ORM\OneToMany(targetEntity="AchatMatierePremiereOption", mappedBy="achat", cascade={"persist","remove"})
      */
-    private $production;
-
-
+    private $options;
 
     /**
-     * Set analyses
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->produits = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->options = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add produit
      *
-     * @param array $analyses
+     * @param \AppBundle\Entity\AchatMatierePremiereProduit $produit
      *
      * @return AchatMatierePremiere
      */
-    public function setAnalyses($analyses)
+    public function addProduit(\AppBundle\Entity\AchatMatierePremiereProduit $produit)
     {
-        $this->analyses = $analyses;
+        $this->produits[] = $produit;
 
         return $this;
     }
 
     /**
-     * Get analyses
+     * Remove produit
      *
-     * @return array
+     * @param \AppBundle\Entity\AchatMatierePremiereProduit $produit
      */
-    public function getAnalyses()
+    public function removeProduit(\AppBundle\Entity\AchatMatierePremiereProduit $produit)
     {
-        return $this->analyses;
+        $this->produits->removeElement($produit);
     }
 
     /**
-     * Set production
+     * Get produits
      *
-     * @param array $production
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProduits()
+    {
+        return $this->produits;
+    }
+
+    /**
+     * Add option
+     *
+     * @param \AppBundle\Entity\AchatMatierePremiereOption $option
      *
      * @return AchatMatierePremiere
      */
-    public function setProduction($production)
+    public function addOption(\AppBundle\Entity\AchatMatierePremiereOption $option)
     {
-        $this->production = $production;
+        $this->options[] = $option;
 
         return $this;
     }
 
     /**
-     * Get production
+     * Remove option
      *
-     * @return array
+     * @param \AppBundle\Entity\AchatMatierePremiereOption $option
      */
-    public function getProduction()
+    public function removeOption(\AppBundle\Entity\AchatMatierePremiereOption $option)
     {
-        return $this->production;
+        $this->options->removeElement($option);
     }
 
+    /**
+     * Get options
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
 }
-
