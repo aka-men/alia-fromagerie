@@ -8,6 +8,7 @@ use CoreBundle\Entity\Traits\QuantiteTrait;
 use CoreBundle\Entity\Traits\MontantTtcTrait;
 use CoreBundle\Entity\Traits\MontantHtTrait;
 use CoreBundle\Entity\Traits\PrixTrait;
+use AppBundle\Entity\Fournisseur;
 
 /**
  * Class Achat
@@ -23,6 +24,14 @@ abstract class Achat extends AbstractDepense
     use PrixTrait;
 
     /**
+     * @var Fournisseur
+     *
+     * @ORM\ManyToOne(targetEntity="Fournisseur")
+     * @ORM\JoinColumn(name="fournisseur_id", referencedColumnName="id", nullable=true)
+     */
+    private $fournisseur;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="numeroFacture", type="string", length=25, nullable=true)
@@ -34,7 +43,7 @@ abstract class Achat extends AbstractDepense
      *
      * @param string $numeroFacture
      *
-     * @return Achat
+     * @return $this
      */
     public function setNumeroFacture($numeroFacture)
     {
@@ -51,5 +60,29 @@ abstract class Achat extends AbstractDepense
     public function getNumeroFacture()
     {
         return $this->numeroFacture;
+    }
+
+    /**
+     * Set fournisseur
+     *
+     * @param \AppBundle\Entity\Fournisseur $fournisseur
+     *
+     * @return $this
+     */
+    public function setFournisseur(\AppBundle\Entity\Fournisseur $fournisseur = null)
+    {
+        $this->fournisseur = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get fournisseur
+     *
+     * @return \AppBundle\Entity\Fournisseur
+     */
+    public function getFournisseur()
+    {
+        return $this->fournisseur;
     }
 }
