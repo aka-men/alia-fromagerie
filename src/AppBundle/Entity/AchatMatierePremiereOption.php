@@ -24,7 +24,7 @@ class AchatMatierePremiereOption extends AbstractEntity
 
     /**
      * @var Option
-     * @ORM\ManyToOne(targetEntity="AchatMatierePremiere")
+     * @ORM\ManyToOne(targetEntity="Option")
      * @ORM\JoinColumn(name="option_id", referencedColumnName="id")
      */
     private $option;

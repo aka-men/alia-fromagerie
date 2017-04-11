@@ -3,7 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AppBundle\Entity\Depense;
+use AppBundle\Entity\AbstractDepense;
+use CoreBundle\Entity\Traits\TypeDepenseTrait;
 use AppBundle\Entity\Employe;
 
 /**
@@ -12,8 +13,9 @@ use AppBundle\Entity\Employe;
  * @ORM\Table(name="charge_employe")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ChargeEmployeRepository")
  */
-class ChargeEmploye extends Depense
+class ChargeEmploye extends AbstractDepense
 {
+    use TypeDepenseTrait;
     /**
      * @var Employe
      *
