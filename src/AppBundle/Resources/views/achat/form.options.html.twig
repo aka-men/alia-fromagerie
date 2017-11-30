@@ -1,0 +1,18 @@
+{% if produit.options|length > 0 %}
+    {% set analyses = produit.options %}
+{% else %}
+    {% set analyses = options %}
+{% endif %}
+
+{% if analyses|length >  0 %}
+    {% set i = index %}
+    {% for option in analyses %}
+        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6 form-group">
+            <label title="{{ option.label }}" style="font-size: 10px;">{{ option.code }}</label>
+            <input style="font-size: 14px;" title="{{ option.label }}" class="form-control big-placeholder small-input numerique" type="text" id="appbundle_achat_options_{{ i }}_valeur" name="appbundle_achat[options][{{ i }}][valeur]" placeholder="{{ option.code }}" />
+            <input type="hidden" value="{{ option.id }}" id="appbundle_achat_options_{{ i }}_option" name="appbundle_achat[options][{{ i }}][option]" />
+            <input type="hidden" value="{{ produit.id }}" id="appbundle_achat_options_{{ i }}_produit" name="appbundle_achat[options][{{ i }}][produit]" />
+        </div>
+        {% set i = i + 1 %}
+    {% endfor %}
+{% endif %}

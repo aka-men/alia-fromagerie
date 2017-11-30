@@ -1,0 +1,3 @@
+{% if td is defined and td == 'action' %}
+    <button data-id="{{ type.id }}" {% if type.forEmploye %} data-href="{{ path('app_charge_employes_index') }}" data-type="employe"{% else %} data-type="autre" data-href="{{ path('app_charge_index') }}"{% endif %} class="btn btn-table btn-sm btn-primary paye-charge"><i class="fa fa-money" aria-hidden="true"></i> Payer</button>
+{% endif %}

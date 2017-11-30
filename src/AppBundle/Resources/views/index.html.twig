@@ -1,15 +1,441 @@
 {% extends "layout.html.twig" %}
 {% set item = 'index' %}
-{% block title %}Accueil{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
 
  {% block breadcrumb %}
-  <li class="active">Alia-Fromagerie</li>
+  <li class="active">Tableau de bord</li>
  {% endblock %}
 
+{% block style %}
+ <!-- Datatables -->
+ <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+ <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+     canvas{
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+     }
+    </style>
+{% endblock %}
+
 {% block contenu %}
+ <div class="row top_tiles">
+  <div class="animated flipInY col-lg-2 col-md-2 col-sm-6 col-xs-12">
+   <div style="background-color: rgb(255, 99, 132);" class="tile-stats">
+    <div class="count">{{ totalAchats }} DH</div>
+    <h3>Achats</h3>
+    <p>Total des achats</p>
+   </div>
+  </div>
+  <div class="animated flipInY col-lg-2 col-md-2 col-sm-6 col-xs-12">
+   <div style="background-color: rgb(54, 162, 235);" class="tile-stats">
+    <div class="count">{{ totalCharges }} DH</div>
+    <h3>Depenses</h3>
+    <p>Total des depenses</p>
+   </div>
+  </div>
+  <div class="animated flipInY col-lg-2 col-md-2 col-sm-6 col-xs-12">
+   <div style="background-color: rgb(153, 102, 255);" class="tile-stats">
+    <div class="count">{{ totalChargesEmployes }} DH</div>
+    <h3>Charge Employés</h3>
+    <p>Total des charge employés</p>
+   </div>
+  </div>
+  <div class="animated flipInY col-lg-2 col-md-2 col-sm-6 col-xs-12">
+   <div style="background-color: rgb(255, 159, 64);" class="tile-stats">
+    <div class="count">{{ totalCommandes }} DH</div>
+    <h3>Ventes</h3>
+    <p>Total des ventes</p>
+   </div>
+  </div>
+  <div class="animated flipInY col-lg-2 col-md-2 col-sm-6 col-xs-12">
+   <div style="background-color: rgb(75, 192, 192);" class="tile-stats">
+    <div class="count">{{ totalCommandeImpayes }} DH</div>
+    <h3>Impayées</h3>
+    <p>Total des ventes impayées</p>
+   </div>
+  </div>
+  <div class="animated flipInY col-lg-2 col-md-2 col-sm-6 col-xs-12">
+   <div style="background-color: rgb(201, 203, 207);" class="tile-stats">
+    <div class="count">{{ totalPaiementsInvalides }} DH</div>
+    <h3 style="font-size: 16px;">Paiements A Valider</h3>
+    <p style="font-size: 11px;">Total des paiements à valider</p>
+   </div>
+  </div>
+ </div>
+
+ <div class="row">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+   <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="x_panel">
+      <div class="x_title">
+       <h2>Ventes à livrer Aujourd'hui</h2>
+       <ul class="nav navbar-right panel_toolbox">
+        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+       </ul>
+       <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+       <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <table data-href="{{ path('app_commande_a_livrer') }}" id="table-commandes" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+           <th style="background-color: transparent;"></th>
+           <th>Id</th>
+           <th>Date</th>
+           <th>Client</th>
+           <th>Total</th>
+           <th>Avance</th>
+           <th>Reste</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="x_panel">
+      <div class="x_title">
+       <h2>Chèques et Effets à déposer ces 3 jours</h2>
+       <ul class="nav navbar-right panel_toolbox">
+        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+       </ul>
+       <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+       <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <table id="table-reglements" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+           <th style="background-color: transparent;"></th>
+           <th>Date dépot</th>
+           <th>Numéro</th>
+           <th>Type</th>
+           <th>Montant</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% set index = 0 %}
+          {% for paiement in paiementsVentes %}
+           <tr>
+            <td class="bg-ligne">
+             <span style="width: 100%;" class="badge badge-info" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer par : {{ paiement.user ? paiement.user.username : '' }}" >{{ loop.index }}</span>
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer le : {{ paiement.date|date('d/m/Y') }}" >{{ paiement.dateReglement|date('d/m/Y') }}</span>
+            </td>
+            <td class="text-center">
+             <span {% if paiement.banque %} data-toggle="tooltip" data-placement="top" data-original-title="{{ paiement.banque ? paiement.banque.nom : '' }}" {% endif %} >{{ paiement.numeroReglement }}</span> {% if paiement.imageCheque %}<a style="margin-left:5px;" title="Image réglement" data-fancybox href="{{ path('app_images',{'nom':paiement.imageCheque.nom}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>{% endif %}
+            </td>
+               {% if paiement.commande is not null %}
+                   {% set commande = paiement.commande %}
+               {% elseif paiement.childrens is not empty %}
+                   {% set commande = paiement.childrens.first.commande %}
+               {% endif %}
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" {% if commande.entreprise %} data-original-title="Entreprise : {{ commande.entreprise.nom }}" {% elseif commande.client %} data-original-title="Client : {{ commande.client.fullName }}" {% endif %} >{{ paiement.modePayment.label }}</span>
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Bon(s) Livraison : {% if paiement.commande %}{{ paiement.commande.id }}{% else %}{% for p in paiement.childrens %}{{ p.commande.id }}{% if loop.last %}.{% else %},{% endif %}{% endfor %}{% endif %}" >{{ paiement.prix|number_format(2,'.',' ') }}</span>
+            </td>
+           </tr>
+              {% set index = loop.index %}
+          {% endfor %}
+         {% for paiement in paiementsCharges %}
+           <tr>
+            <td style="background-color: red;">
+             <span style="width: 100%;" class="badge badge-info" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer par : {{ paiement.username }}" >{{ loop.index + index }}</span>
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer le : {{ paiement.date|date('d/m/Y') }}" >{{ paiement.dateReglement|date('d/m/Y') }}</span>
+            </td>
+            <td class="text-center">
+             <span>{{ paiement.numeroReglement }}</span> {% if paiement.image %}<a style="margin-left:5px;" title="Image réglement" data-fancybox href="{{ path('app_images',{'nom':paiement.image}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>{% endif %}
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" {% if paiement.fournisseur %} data-original-title="Fournisseur : {{ paiement.fournisseur }}" {% elseif paiement.employe %} data-original-title="Employé : {{ paiement.employe }}" {% endif %} >{{ paiement.mode }}</span>
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Charge : {{ paiement.charge }}" >{{ paiement.montant|number_format(2,'.','') }}</span>
+            </td>
+           </tr>
+              {% set index = loop.index + index %}
+          {% endfor %}
+          {% for paiement in paiementsAchats %}
+           <tr>
+            <td style="background-color: red;">
+             <span style="width: 100%;" class="badge badge-info" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer par : {{ paiement.username }}" >{{ loop.index + index }}</span>
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer le : {{ paiement.date|date('d/m/Y') }}" >{{ paiement.dateReglement|date('d/m/Y') }}</span>
+            </td>
+            <td class="text-center">
+             <span>{{ paiement.numeroReglement }}</span> {% if paiement.image %}<a style="margin-left:5px;" title="Image réglement" data-fancybox href="{{ path('app_images',{'nom':paiement.image}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>{% endif %}
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Fournisseur : {{ paiement.fournisseur }}" >{{ paiement.mode }}</span>
+            </td>
+            <td class="text-center">
+             <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Achat : {{ paiement.achat }}" >{{ paiement.montant|number_format(2,'.','') }}</span>
+            </td>
+           </tr>
+              {% set index = loop.index + index %}
+          {% endfor %}
+          </tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+   <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="x_panel">
+      <div class="x_title">
+       <h2>Paiements à valider</h2>
+       <ul class="nav navbar-right panel_toolbox">
+        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+       </ul>
+       <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+       <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <table data-href="{{ path('app_paiement_invalide') }}" id="table-paiements" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+           <th style="background-color: transparent;"></th>
+           <th>Date</th>
+           <th>Client</th>
+           <th>Vente</th>
+           <th>Montant</th>
+           <th>Action</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="x_panel">
+      <div class="x_title">
+       <h2>Charges mensuelles à payer</h2>
+       <ul class="nav navbar-right panel_toolbox">
+        <li><a data-href style="display: none;" id="paye-charges" data-href-autre="{{ path('app_charge_index') }}" data-href-employe="{{ path('app_charge_employe_add') }}" ><i class="fa fa-money" aria-hidden="true"></i> Payer</a></li>
+        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+       </ul>
+       <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+       <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <table data-href="{{ path('app_type_depense_mensuelle_non_paye_index') }}" id="table-types-non-paye" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+           <th style="background-color: transparent;"></th>
+           <th>Label</th>
+           <th>Action</th>
+          </tr>
+          </thead>
+          <tbody></tbody>
+         </table>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <div style="background-color: white;margin-bottom: 20px;" class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+   <!-- Nav tabs -->
+   <ul class="nav nav-tabs" role="tablist">
+    <li style="width: 50%;font-size: 20px;font-weight: bold;" role="presentation" class="active"><a href="#tab-chart" aria-controls="tab-chart" role="tab" data-toggle="tab">Représentation Graphique</a></li>
+    <li style="width: 50%;font-size: 20px;font-weight: bold;" role="presentation"><a href="#tab-table" aria-controls="tab-table" role="tab" data-toggle="tab">Tableau</a></li>
+   </ul>
+
+   <!-- Tab panes -->
+   <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="tab-chart">
+     <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+       <canvas style="max-height: 500px;" id="chart">
+
+       </canvas>
+      </div>
+     </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="tab-table">
+     <div style="margin-top: 15px;padding: 3px;" class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+       <h5 style="text-align: center;font-weight: bold;">Totaux des 12 dérniers mois</h5>
+       <div class="table-responsive">
+        <table class="table table-bordered">
+         <thead>
+         <tr>
+          <th>Total (DH) / Mois</th>
+             {% for key,line in totalAchatsInLast12Month %}
+              <th>{{ ((line.mois ~ "/20/" ~ line.annee)|date('M'))|trans }}-{{ ((line.mois ~ "/20/" ~ line.annee)|date('y')) }}</th>
+             {% endfor %}
+         </tr>
+         </thead>
+         <tbody style="font-weight: bold;font-size: 11px;">
+         <tr>
+          <td style="background-color:rgb(255, 99, 132);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Achats</td>
+             {% for key,line in totalAchatsInLast12Month %}
+              <td>{{ line.total|number_format(2,'.',' ') }}</td>
+             {% endfor %}
+         </tr>
+         <tr>
+          <td style="background-color:rgb(54, 162, 235);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Depenses</td>
+             {% for key,line in totalChargesInLast12Month %}
+              <td>{{ line.total|number_format(2,'.',' ') }}</td>
+             {% endfor %}
+         </tr>
+         <tr>
+          <td style="background-color: rgb(153, 102, 255);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Charges Employés</td>
+             {% for key,line in totalChargesEmployesInLast12Month %}
+              <td>{{ line.total|number_format(2,'.',' ') }}</td>
+             {% endfor %}
+         </tr>
+         <tr>
+          <td style="background-color: rgb(255, 159, 64);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Ventes</td>
+             {% for key,line in totalCommandesInLast12Month %}
+              <td>{{ line.total|number_format(2,'.',' ') }}</td>
+             {% endfor %}
+         </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ <div style="margin-bottom: 20px;" class="row">
+  <div style="background-color: white;" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+   <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="dropdown pull-right">
+      <button id="root-select-mois" data-month="{{ "now"|date('m') }}" data-year="{{ "now"|date('Y') }}" data-href="{{ path('app_prod_vente_achat') }}" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          {{ ("now"|date('F'))|trans }} - {{ "now"|date('Y') }}
+       <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          {% for line in totalAchatsInLast12Month|reverse %}
+           <li><a data-month="{{ line.mois }}" data-year="{{ line.annee }}"  class="select-mois">{{ ((line.mois ~ "/20/" ~ line.annee)|date('F'))|trans }} - {{ ((line.mois ~ "/20/" ~ line.annee)|date('Y')) }}</a></li>
+          {% endfor %}
+      </ul>
+     </div>
+    </div>
+   </div>
+   <!-- Nav tabs -->
+   <ul class="nav nav-tabs" role="tablist">
+    <li style="width: 50%;font-size: 20px;font-weight: bold;" role="presentation" class="active"><a href="#tab-chart-prod-vente" aria-controls="tab-chart-prod-vente" role="tab" data-toggle="tab">Représentation Graphique</a></li>
+    <li style="width: 50%;font-size: 20px;font-weight: bold;" role="presentation"><a href="#tab-table-prod-vente" aria-controls="tab-table-prod-vente" role="tab" data-toggle="tab">Tableau</a></li>
+   </ul>
+
+   <!-- Tab panes -->
+   <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="tab-chart-prod-vente">
+     <div class="row">
+      <div id="content-canvas" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+       <canvas style="max-height: 500px;" id="chart-prod-vente">
+
+       </canvas>
+      </div>
+     </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="tab-table-prod-vente">
+     <div style="margin-top: 15px;padding: 3px;" class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+       <h4 style="text-align: center;" id="titre-table"></h4>
+       <div class="table-responsive">
+        <table id="table-produits" class="table table-bordered">
+         <thead>
+         <tr>
+          <th>Produit</th>
+         </tr>
+         </thead>
+         <tbody style="font-weight: bold;font-size: 11px;">
+         <tr class="achats">
+          <td style="background-color:rgb(252, 215, 112);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Achats</td>
+         </tr>
+         <tr class="production">
+          <td style="background-color:rgb(153,252,125);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Production</td>
+         </tr>
+         <tr class="ventes">
+          <td style="background-color:rgb(231, 124, 245);text-align: center;vertical-align: middle;color: darkgreen;font-weight: bold;">Ventes</td>
+         </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
 
 {% endblock %}
 
 {% block javascript %}
-    <script src="{{ asset('js/pages/index.js') }}"></script>
+ <!-- Datatables -->
+ <script src="{{ asset('vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+ <script src="{{ asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+ <script src="{{ asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+ <script src="{{ asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+<!-- Chart JS -->
+  <script src="{{ asset('vendors/Chart.js/Chart.bundle.js') }}"></script>
+ <script src="{{ asset('vendors/Chart.js/utils.js') }}"></script>
 {% endblock %}
+
+{% block customJs %}
+    <script>
+        var AxesY = [];
+        var dataAchats = [];
+        var dataCharges = [];
+        var dataChargesEmployes = [];
+        var dataVentes = [];
+     {% for line in totalAchatsInLast12Month %}
+        AxesY.push('{{ ((line.mois ~ "/20/" ~ line.annee)|date('M'))|trans }}/{{ line.annee }}');
+        dataAchats.push(parseFloat("{{ line.total }}"));
+     {% endfor %}
+
+        {% for line in totalCommandesInLast12Month %}
+        dataVentes.push(parseFloat("{{ line.total }}"));
+        {% endfor %}
+
+        {% for line in totalChargesInLast12Month %}
+        dataCharges.push(parseFloat("{{ line.total }}"));
+        {% endfor %}
+
+        {% for line in totalChargesEmployesInLast12Month %}
+        dataChargesEmployes.push(parseFloat("{{ line.total }}"));
+        {% endfor %}
+
+    </script>
+ <script src="{{ asset('js/index.js') }}"></script>
+{% endblock %}
+

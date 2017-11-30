@@ -40,6 +40,9 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    exception_controller:  app.exception_controller:showAction
+    globals:
+        configuration: "@app.configuration.manager"
 
 # Doctrine Configuration
 doctrine:
@@ -83,17 +86,6 @@ gregwar_image:
     cache_dir:  cache/gregwar
     fallback_image: images/upload/no_image.png
 
-#Knp Paginator Configuration
-knp_paginator:
-    page_range: 5                      # default page range used in pagination control
-    default_options:
-        page_name: page                # page query parameter name
-        sort_field_name: s          # sort field query parameter name
-        sort_direction_name: d # sort direction query parameter name
-        distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
-    template:
-        pagination: twitter_bootstrap_v3_pagination.html.twig     # sliding pagination controls template
-        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
 
 #FosUserBundle Configuration
 fos_user:
@@ -108,3 +100,12 @@ fos_user:
     resetting:
         email:
             template: email/password_resetting.email.html.twig
+
+#Ensepar configuration
+ensepar_html2pdf:
+    orientation: P
+    format: A4
+    lang: fr
+    unicode: true
+    encoding: UTF-8
+    margin: [10,15,10,15]

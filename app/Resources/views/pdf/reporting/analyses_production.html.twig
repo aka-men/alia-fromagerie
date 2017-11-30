@@ -1,0 +1,123 @@
+<style type="text/css">
+    table.bordred tr td{
+        border: 1px solid black;
+        padding: 5px;
+    }
+    table.bordred tr td:first-child{
+        padding-left: 8px !important;
+    }
+    table.bordred{
+        border-collapse: collapse;
+    }
+</style>
+<page backtop="15mm" backbottom="15mm" backleft="1mm" backright="2.5mm">
+
+    <page_header>
+        <table style="width: 100%; border-bottom: solid 1px black;">
+            <tr>
+                <td style="text-align: left;width: 8%;vertical-align: middle;">
+                    <img style="width:100%;height:30px;" src="{{ configuration.absoluteWebPath ~ '/images/logo.png' }}" />
+                </td>
+                <td style="text-align: left;width: 92%;font-size: 15px;padding-left: 20px;">
+                    Rapport Analyses/Production {% if criteres.mois is defined and criteres.annee is defined %} du mois <b>{{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}</b>  {% elseif criteres.date_start is defined and criteres.date_end is defined %} <b> du {{ criteres.date_start }} au {{ criteres.date_end }}</b> {% endif %}
+                </td>
+            </tr>
+        </table>
+    </page_header>
+    <page_footer>
+        <table style="width: 100%; border-top: solid 1px black;">
+            <tr>
+                <td style="width: 50%;text-align: left;font-size: 9px;">
+                    Généré le {{ "now"|date('d/m/Y') }}
+                </td>
+                <td style="width: 50%;text-align: right;font-size: 9px;">
+                    Page: [[page_cu]]/[[page_nb]]
+                </td>
+            </tr>
+        </table>
+    </page_footer>
+
+    <br/><br/>
+
+    <table style="width:100%;">
+        <tr>
+            <td style="width: 100%;padding-left: 30px;font-weight: normal;text-decoration:underline;">
+                <h2>Achats Produit {{ matiere.titre }}</h2>
+            </td>
+        </tr>
+    </table>
+
+    <br/><br/>
+    {% set nbrCel = matiere.childrens|length + matiere.options|length %}
+    {% set width = 73 / (nbrCel) %}
+    {% set qteTotal = 0 %}
+    {% set totalProd = {} %}
+    <table style="width: 100%;" class="bordred">
+        <tr>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:3%;text-align: center;">Id</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:6%;text-align: center;">Date</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:7%;text-align: center;">Fournisseur</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:5%;text-align: center;">Qté {{ matiere.unite }}</td>
+            {% for o in matiere.options %}
+                <td style="font-weight: bold;font-size: 9px;background-color:white;width:{{ width|number_format(1) }}%;text-align: center;">{{ o.code }}</td>
+            {% endfor %}
+            {% for p in matiere.childrens %}
+                {% set totalProd = totalProd|merge({(p.titre):0}) %}
+                <td style="font-size: 7.5px;background-color:silver;width:{{ width|number_format(1) }}%;text-align: center;">{{ p.titre }}</td>
+            {% endfor %}
+            <td style="font-weight: bold;font-size: 9px;background-color: white;width:6%;text-align: center;">Lot</td>
+        </tr>
+        {% if reportPAMP|length > 0 %}
+             {% for pa in reportPAMP %}
+                 {% set qteTotal = qteTotal + pa.quantite %}
+                 <tr>
+                     <td style="font-size: 9px;width:3%;text-align: center;">{{ pa.achat.id }}</td>
+                     <td style="font-size: 9px;width:6%;text-align: center;">{{ pa.achat.date|date('d/m/Y') }}</td>
+                     <td style="font-size: 9px;width:7%;text-align: center;">{{ pa.achat.fournisseur.nom }}</td>
+                     <td style="font-size: 9px;width:5%;text-align: center;">{{ pa.quantite }}{{ matiere.unite }}</td>
+                     {% for o in matiere.options %}
+                         <td style="font-size: 9px;width:{{ width|number_format(1) }}%;text-align: center;">{{ pa.achat.analyseValue(pa.produit,o) ? pa.achat.analyseValue(pa.produit,o) : '-' }}</td>
+                     {% endfor %}
+                     {% for p in matiere.childrens %}
+                         {% set val = (pa.achat.productionOfProduct(pa.produit,p) ? pa.achat.productionOfProduct(pa.produit,p) : 0) %}
+                         {% set new = totalProd[p.titre] + val %}
+                         {% set totalProd = totalProd|merge({(p.titre):new}) %}
+                         <td style="font-size: 9px;width:{{ width|number_format(1) }}%;text-align: center;">{{ pa.achat.productionOfProduct(pa.produit,p) ? pa.achat.productionOfProduct(pa.produit,p) : '-' }}</td>
+                     {% endfor %}
+                     <td style="font-weight: bold;font-size: 9px;width:5%;text-align: center;">-</td>
+                 </tr>
+             {% endfor %}
+            <tr>
+                <td colspan="3" style="font-size: 9px;width:15%;text-align: center;background-color: silver;font-weight: bold;">Totaux</td>
+                <td style="font-size: 9px;width:5%;text-align: center;font-weight: bold;">{{ qteTotal }}</td>
+                {% for o in matiere.options %}
+                    <td style="font-size: 9px;width:{{ width|number_format(1) }}%;text-align: center;"></td>
+                {% endfor %}
+                {% for p in matiere.childrens %}
+                    <td style="font-weight: bold;font-size: 9px;width:{{ width|number_format(1) }}%;text-align: center;">{{ totalProd[p.titre] }}</td>
+                {% endfor %}
+                <td style="font-weight: bold;font-size: 9px;width:7%;text-align: center;"></td>
+            </tr>
+            {#<tr>
+                <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:3%;text-align: center;">Id</td>
+                <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:5%;text-align: center;">Date</td>
+                <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:7%;text-align: center;">Fournisseur</td>
+                <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:5%;text-align: center;">Qté {{ matiere.unite }}</td>
+                {% for o in matiere.options %}
+                    <td style="font-weight: bold;font-size: 9px;background-color:white;width:{{ width|number_format(0) }}%;text-align: center;">{{ o.code }}</td>
+                {% endfor %}
+                {% for p in matiere.childrens %}
+                    {% set totalProd = totalProd|merge({(p.titre):0}) %}
+                    <td style="font-size: 7.5px;background-color:silver;width:{{ width|number_format(0) }}%;text-align: center;">{{ p.titre }}</td>
+                {% endfor %}
+                <td style="font-weight: bold;font-size: 9px;background-color: white;width:5%;text-align: center;">Lot</td>
+            </tr>#}
+        {% else %}
+            <tr>
+                <td colspan="{{ nbrCel + 5 }}" style="width: 100%;font-size: 15px;text-align: center;color: silver;">
+                    Aucune achat enregistrée
+                </td>
+            </tr>
+        {% endif %}
+    </table>
+</page>

@@ -10,7 +10,7 @@
 namespace CoreBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class StockTrait
  * @package CoreBundle\Entity\Traits
@@ -18,16 +18,19 @@ use Doctrine\ORM\Mapping as ORM;
 trait StockTrait
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="stock", type="integer")
+     * @var float
+     * @Assert\GreaterThanOrEqual(
+     *     message = "Le stock doit être supérieur ou égal à zéro.",
+     *     value = 0
+     * )
+     * @ORM\Column(name="stock", type="float", nullable=true)
      */
-    private $stock = 0;
+    private $stock;
 
     /**
      * Set stock
      *
-     * @param integer $stock
+     * @param float $stock
      *
      * @return $this
      */
@@ -40,9 +43,9 @@ trait StockTrait
     /**
      * Get stock
      *
-     * @return int
+     * @return float
      */
     public function getStock() {
-        return $this->stock;
+        return $this->stock ? $this->stock : 0;
     }
 }

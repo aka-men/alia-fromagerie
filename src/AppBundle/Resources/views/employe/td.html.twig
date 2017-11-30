@@ -1,0 +1,43 @@
+{% if td is defined and td == 'action' %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu inner">
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-xs btn-default employe-toggle-state"  data-href="{{ path('app_employe_state_toggle',{'id':employe.id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if employe.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_employe_remove',{'id':employe.id}) }}" class="btn btn-xs btn-default delete-employe"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+        </ul>
+    </div>
+    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_employe_edit',{'id':employe.id}) }}" data-title="Editer un employé" class="btn btn-table btn-primary edit-employe"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+{% endif %}
+{% if td is defined and td == 'nom' %}
+    <span data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+             {% if employe.fonction %}
+             <strong>Fonction : </strong>{{ employe.fonction }}<br/>
+             {% endif %}
+             {% if employe.salaire %}
+             <strong>Salaire : </strong>{{ employe.salaire|number_format(2,'.','') }}DH<br/>
+             {% endif %}
+             {% if employe.dateEmbauche %}
+             <strong>Date embauche : </strong>{{ employe.dateEmbauche|date('d/m/Y') }}<br/>
+             {% endif %}
+             {% if employe.adresse %}
+             <strong>Adresse : </strong>{{ employe.adresse }}<br/>
+             {% endif %}
+             {% if employe.email1 %}
+             <strong>Email 2 : </strong>{{ employe.email1 }}<br/>
+             {% endif %}
+             {% if employe.gsm1 %}
+             <strong>Gsm 2 : </strong>{{ employe.gsm1 }}<br/>
+             {% endif %}
+             {% if employe.autres %}
+             <strong>Autres : </strong>{{ employe.autres }}<br/>
+             {% endif %}
+             {% endfilter %}" >{{ employe.fullName }}</span>
+{% endif %}
+{% if td is defined and td == 'documents' %}
+    {% for doc in employe.imagesDocuments %}
+        <a class="btn btn-xs btn-default photo-box" data-fancybox href="{{ path('app_images',{'nom':doc.nom}) }}"><i class="fa fa-picture-o" aria-hidden="true"></i></a>
+    {% endfor %}
+{% endif %}
+

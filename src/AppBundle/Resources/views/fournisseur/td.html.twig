@@ -1,0 +1,57 @@
+{% if td is defined and td == 'action' %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu inner">
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-xs btn-default fournisseur-toggle-state"  data-href="{{ path('app_fournisseur_state_toggle',{'id':fournisseur.id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if fournisseur.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_fournisseur_remove',{'id':fournisseur.id}) }}" class="btn btn-xs btn-default delete-fournisseur"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+        </ul>
+    </div>
+    <button data-type-vente="{{ fournisseur.typeVente }}" data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_fournisseur_edit',{'id':fournisseur.id}) }}" data-title="Editer un fournisseur" class="btn btn-table btn-primary edit-fournisseur"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+    {% if fournisseur.typeVente is null or fournisseur.typeVente == 0 %}
+        <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-table btn-warning fournisseur-get-types" data-title="Liste designations pour ' {{ fournisseur.nom }} '" title="Designations" data-href="{{ path('app_type_depense_liste_by_fournisseur',{'id':fournisseur.id}) }}"><i class="fa fa-tags" aria-hidden="true"></i></button>
+    {% elseif fournisseur.typeVente == 1  %}
+        <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-table btn-info fournisseur-get-produits" data-title="Liste matières première vendus par '{{ fournisseur.nom }}'" title="Matières première" data-href="{{ path('app_produit_liste_by_fournisseur',{'id':fournisseur.id}) }}"><i class="fa fa-cubes" aria-hidden="true"></i></button>
+    {% elseif fournisseur.typeVente == 2  %}
+        <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-table btn-info fournisseur-get-produits" data-title="Liste produits vendus par '{{ fournisseur.nom }}'" title="Produits" data-href="{{ path('app_produit_liste_by_fournisseur',{'id':fournisseur.id}) }}"><i class="fa fa-cubes" aria-hidden="true"></i></button>
+    {% endif %}
+{% endif %}
+{% if td is defined and td == 'nom' %}
+    <span data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+             {% if fournisseur.email %}
+             <strong>Email : </strong>{{ fournisseur.email }}<br/>
+             {% endif %}
+             {% if fournisseur.phone %}
+             <strong>Telephone : </strong>{{ fournisseur.phone }}<br/>
+             {% endif %}
+             {% if fournisseur.fax %}
+             <strong>Fax : </strong>{{ fournisseur.fax }}<br/>
+             {% endif %}
+             {% if fournisseur.gsm %}
+             <strong>Gsm : </strong>{{ fournisseur.gsm }}<br/>
+             {% endif %}
+             {% if fournisseur.site %}
+             <strong>Site : </strong>{{ fournisseur.site }}<br/>
+             {% endif %}
+             {% if fournisseur.idCE %}
+             <strong>Id CE : </strong>{{ fournisseur.idCE }}<br/>
+             {% endif %}
+             {% if fournisseur.idFiscale %}
+             <strong>Id Fiscale : </strong>{{ fournisseur.idFiscale }}<br/>
+             {% endif %}
+             {% if fournisseur.patente %}
+             <strong>Patente : </strong>{{ fournisseur.patente }}<br/>
+             {% endif %}
+             {% if fournisseur.cnss %}
+             <strong>Cnss : </strong>{{ fournisseur.cnss }}<br/>
+             {% endif %}
+             {% if fournisseur.compteBancaire %}
+             <strong>Compte : </strong>{{ fournisseur.compteBancaire }}<br/>
+             {% endif %}
+             {% if fournisseur.adresse %}
+             <strong>Adresse : </strong>{{ fournisseur.adresse }}<br/>
+             {% endif %}
+             {% endfilter %}" >{{ fournisseur.nom }}</span>
+{% endif %}
+

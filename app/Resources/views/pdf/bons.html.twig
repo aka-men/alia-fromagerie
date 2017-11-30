@@ -1,0 +1,191 @@
+<style type="text/css">
+    table.bordred tr td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+    table.bordred tr td:first-child {
+        padding-left: 8px !important;
+    }
+
+    table.bordred {
+        border-collapse: collapse;
+    }
+</style>
+
+
+{% for p in (0..pagesCount) %}
+    {% if loop.last %}
+        {% set n = commandesInLastPage %}
+    {% else %}
+        {% set n = 20 %}
+    {% endif %}
+    <page {% if not loop.first %} pageset="old" {% endif %}backtop="35mm" backbottom="20mm" backleft="3mm" backright="3mm">
+        {% if loop.first %}
+                <page_header>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 100%;text-align:left;">
+                                <img style="width:70mm;height: 40mm;"
+                                     src="{{ configuration.absoluteWebPath ~ '/images/logo.jpg' }}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </page_header>
+
+                <page_footer>
+                    <table style="width: 100%; border-top: solid 1px black;">
+                        <tr>
+                            <td style="text-align: left;width: 8%;vertical-align: middle;">
+                                <img style="width:100%;height:30px;"
+                                     src="{{ configuration.absoluteWebPath ~ '/images/logo.png' }}"/>
+                            </td>
+                            <td style="text-align: center;width: 84%;font-size: 7.5px;font-weight: bold;"></td>
+                            <td style="text-align: right;width: 8%;vertical-align: middle;font-size: 9px;">
+                                <qrcode value="{{ configuration.get("entreprise_site") }}"
+                                        style="border: none; width:50px;"></qrcode>
+                            </td>
+                        </tr>
+                    </table>
+                </page_footer>
+        {% endif %}
+
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 60%;"></td>
+                <td style="width: 40%;text-align: left;">{{ "now"|date('d/m/Y') }}</td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 50%;text-align: left;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 100%;text-align: left;font-size: 18px;">
+                                <b>Bons {{ bons[0].date|date('Y') }}:</b>
+                                <br/> {% for bon in bons|slice((p*10),(n)) %}{{ bon.id }}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%;text-align: left;font-size: 18px;font-weight: bold;">
+                                {{ bons[0].clientEntreprise }}
+                            </td>
+                        </tr>
+                        {#{% if bons[0].client_adresse %}
+                            <tr>
+                                <td style="width: 100%;text-align: left;">
+                                    {{ bons[0].client_adresse }}
+                                </td>
+                            </tr>
+                        {% endif %}#}
+                    </table>
+                </td>
+                <td style="width: 60%;text-align: left;"></td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 100%;">
+                    <table cellspacing="0" class="bordred" style="width: 100%;font-size: 14px;margin-top: 25px;">
+                        <tr>
+                            <td style="text-align: left;width: 5%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                N°
+                            </td>
+                            <td style="text-align: center;width: 30%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                Bon Livraison
+                            </td>
+                            <td style="text-align: center;width: 16%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                Livré le
+                            </td>
+                            <td style="text-align: center;width: 11%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                HT
+                            </td>
+                            <td style="text-align: center;width: 11%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                TTC
+                            </td>
+                            <td style="text-align: center;width: 11%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                Avance
+                            </td>
+                            <td style="text-align: center;width: 14%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                                Payée
+                            </td>
+                        </tr>
+                        {% set totalHt = 0 %}
+                        {% set totalFrais = 0 %}
+                        {% set totalGlobal = 0 %}
+                        {% set totalTaxes = 0 %}
+                        {% set totalRemise = 0 %}
+                        {% set totalReste = 0 %}
+                        {% for bon in bons|slice((p*20),(n)) %}
+                            {% set total = bon.montantTtc + bon.totalFrais %}
+                            {% set totalHt = totalHt + bon.montantHt %}
+                            {% set totalFrais = totalFrais + bon.totalFrais %}
+                            {% set totalGlobal = totalGlobal + total %}
+                            {% set totalReste = totalReste + bon.reste %}
+                            {% set totalTaxes = totalTaxes + bon.taxes %}
+                            {% set totalRemise = totalRemise + bon.reduction %}
+                            <tr>
+                                <td style="text-align: left;width: 5%;font-weight: bold;vertical-align: middle;padding-left: 10px;">
+                                    {{ loop.index }}
+                                </td>
+                                <td style="text-align: center;width: 30%;font-weight: bold;vertical-align: middle;">Bon {{ bon.id }}</td>
+                                <td style="text-align: center;width: 16%;font-weight: bold;vertical-align: middle;">{{ bon.dateLivraison ? bon.dateLivraison|date('d/m/Y') : bon.date|date('d/m/Y') }}</td>
+                                <td style="text-align: right;width: 11%;font-weight: bold;vertical-align: middle;">{{ bon.montantHt|number_format(2,'.',' ') }}</td>
+                                <td style="text-align: right;width: 11%;font-weight: bold;vertical-align: middle;">{{ bon.montantHt|number_format(2,'.',' ') }}</td>
+                                <td style="text-align: {% if bon.avance > 0 %}right{% else %}center{% endif %};width: 12%;font-weight: bold;vertical-align: middle;">{% if bon.avance > 0 %}{{ bon.avance|number_format(2,'.',' ') }}{% else %}-{% endif %}</td>
+                                <td style="text-align: center;width: 14%;font-weight: bold;vertical-align: middle;">{{ bon.state }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 100%;">
+                    <table style="width: 100%;margin-top: 20px;">
+                        <tr>
+                            <td style="width: 50%;text-align: center;">
+
+                            </td>
+                            <td style="width: 50%;">
+                                <table class="bordred" style="width: 100%;">
+                                    <tr>
+                                        <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">
+                                            Total HT
+                                        </td>
+                                        <td style="width: 50%;text-align: right;">{{ totalHt|number_format(2,'.',' ') }}</td>
+                                    </tr>
+                                    {% if totalFrais > 0 %}
+                                        <tr>
+                                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">
+                                                Total Frais
+                                            </td>
+                                            <td style="width: 50%;text-align: right;">{{ totalFrais|number_format(2,'.',' ') }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">
+                                            Total TTC
+                                        </td>
+                                        <td style="width: 50%;text-align: right;">{{ totalGlobal|number_format(2,'.',' ') }}</td>
+                                    </tr>
+                                </table>
+                                <table style="width: 100%;margin-top: 20px;" class="bordred">
+                                    <tr>
+                                        <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;font-size: 14px;">
+                                            Reste A Payer
+                                        </td>
+                                        <td style="width: 50%;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;font-size: 14px;">{{ totalReste|number_format(2,'.',' ') }}
+                                            DH
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </page>
+{% endfor %}

@@ -1,0 +1,41 @@
+{% if td is defined and td == 'fournisseurs' %}
+    {% if produit.fournisseurs.count == 1 %}
+        <span class="label label-info">{{ produit.fournisseurs.first.nom }}</span>
+    {% elseif produit.fournisseurs.count > 1 %}
+        <span class="label label-info">{{ produit.fournisseurs.first.nom }}</span>
+        <span data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+             {% for f in produit.fournisseurs %}
+             {{ f.nom }}<br/>
+             {% endfor %}
+         {% endfilter %}" class="label label-info" ><i class="fa fa-plus-square" aria-hidden="true"></i></span>
+    {% endif %}
+{% endif %}
+{% if td is defined and td == 'options' %}
+    {% if produit.options.count == 1 %}
+        <span class="label label-info">{{ produit.options.first.label }}</span>
+    {% elseif produit.options.count > 1 %}
+        <span class="label label-info">{{ produit.options.first.label }}</span>
+        <span data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+             {% for o in produit.options %}
+             {{ o.label }}<br/>
+             {% endfor %}
+         {% endfilter %}" class="label label-info" ><i class="fa fa-plus-square" aria-hidden="true"></i></span>
+    {% endif %}
+{% endif %}
+{% if td is defined and td == 'action' %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu inner">
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_produit_state_toggle',{'id':produit.id}) }}" class="btn btn-xs btn-default produit-toggle-state matiere-toggle-state"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if produit.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_produit_remove',{'id':produit.id}) }}" class="btn btn-xs btn-default delete-produit delete-matiere"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+        </ul>
+    </div>
+    {% if produit.isMatierePremiere %}
+        <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_produit_matiere_edit',{'id':produit.id}) }}" data-title="Editer une matière  première" class="btn btn-table btn-primary edit-matiere"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+        <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Produits" data-href="{{ path('app_produit_list_by_parent',{'id':produit.id}) }}" data-title="Liste des produits extraits du <strong>{{ produit.titre }}</strong>" class="btn btn-table btn-warning get-productions"><i class="fa fa-cubes" aria-hidden="true"></i></button>
+    {% else %}
+        <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_produit_fini_edit',{'id':produit.id}) }}" data-title="Editer un produit" class="btn btn-table btn-primary edit-produit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+    {% endif %}
+{% endif %}

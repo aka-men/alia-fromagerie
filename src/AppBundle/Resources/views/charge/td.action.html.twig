@@ -1,0 +1,14 @@
+<div class="btn-group">
+    <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu inner">
+        <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_charge_remove',{'id':charge.id}) }}" class="btn btn-xs btn-default delete-charge"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+    </ul>
+</div>
+{% if charge.image is not null %}
+    <a class="btn btn-table btn-default" title="{{ charge.numeroFacture }}" data-fancybox href="{{ path('app_images',{'nom':charge.image.nom}) }}"><i class="fa fa-picture-o" aria-hidden="true"></i></a>
+{% endif %}
+<button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_charge_edit',{'id':charge.id}) }}" data-title="Editer une charge" class="btn btn-table btn-primary edit-charge"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+
+

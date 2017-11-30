@@ -1,0 +1,12 @@
+{{ form_start(formDocument,{ 'action': action,'attr':{'method':'POST','id':'appbundle_edocument_edit','data-parsley-validate':''}}) }}
+<div class="row">
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formDocument.titre) }}
+            {{ form_widget(formDocument.titre, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+</div>
+{% do formDocument.file.setRendered %}
+{{ form_rest(formDocument) }}
+{{ form_end(formDocument) }}

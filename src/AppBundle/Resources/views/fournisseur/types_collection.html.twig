@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group">
+            <select class="msl" data-href="{{ path('app_fournisseur_types_collection',{'id':fournisseur.id}) }}" id="select-types" name="select_types" multiple>
+                {% for type in types %}
+                    {% if not type.forEmploye %}
+                        <option {% if fournisseur.typesDepenses.contains(type) %} selected {% endif %} value="{{ type.id }}">{{ type.label }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>

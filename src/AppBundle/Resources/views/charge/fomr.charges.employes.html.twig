@@ -1,0 +1,38 @@
+<form name="appbundle_charge" id="appbundle_charge" action="{{ path('app_charge_add') }}" method="post">
+    <p id="form-error" style="padding: 10px;color:red;"></p>
+<div class="table-responsive">
+    <table id="charge-employes" class="table table-striped jambo_table bulk_action">
+        <thead>
+        <tr class="headings">
+            <th>
+                <input type="checkbox" id="check-all" class="">
+            </th>
+            <th class="column-title">Employé</th>
+            <th class="column-title">Date</th>
+            <th class="column-title">Designation</th>
+            <th class="column-title">Montant</th>
+            <th class="column-title">Paiement</th>
+            <th class="column-title">Numéro</th>
+            <th class="column-title">Date</th>
+            <th class="column-title">Image</th>
+            <th class="column-title">Obsérvation</th>
+        </tr>
+        </thead>
+        <tbody>
+             {% for employe in employes %}
+                 {% if not employe.isArchive %}
+                     {% if query.type is defined %}
+                         {% include 'AppBundle:charge:form.charge.employe.line.html.twig' with {'modes':modes,'types':types,'employe':employe,'index':loop.index0,'selectedType':query.type} %}
+                     {% else %}
+                         {% include 'AppBundle:charge:form.charge.employe.line.html.twig' with {'modes':modes,'types':types,'employe':employe,'index':loop.index0} %}
+                     {% endif %}
+                 {% endif %}
+             {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <div class="form-group">
+        <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-primary pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+        <a class="btn btn-default pull-right liste-charges">Anuller</a>
+    </div>
+</form>

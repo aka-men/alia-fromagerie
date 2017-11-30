@@ -1,0 +1,11 @@
+{% if td is defined and td == 'active' %}
+    {% if user.isEnabled %}
+        <span data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-id='{{ user.id }}' data-href='{{ path("app_user_state_toggle") }}' class='btn btn-sm btn-table btn-success toggle-state' title='Désactivé' >Activé</span>
+    {% else %}
+        <span data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-id='{{ user.id }}' data-href='{{ path("app_user_state_toggle") }}' class='btn btn-sm btn-danger btn-table toggle-state' title='Activé' >Désactivé</span>
+    {% endif %}
+{% endif %}
+{% if td is defined and td == 'action' %}
+    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_user_edit',{'id':user.id}) }}" data-title="Editer un utilisateur" class="btn btn-table btn-primary edit-user"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+{% endif %}
+

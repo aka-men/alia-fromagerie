@@ -1,0 +1,102 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{% if params.forEmploye is defined %}
+    {{ form_start(formType,{ 'action': action,'attr':{'method':'POST','id':'appbundle_typedepense','data-parsley-validate':''}}) }}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formType.label) }}
+                {{ form_widget(formType.label, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="appbundle_typedepense[forEmploye]" value="1" />
+    {% do formType.fournisseurs.setRendered %}
+    {% do formType.forEmploye.setRendered %}
+    {% do formType.parent.setRendered %}
+    {{ form_rest(formType) }}
+    {{ form_end(formType) }}
+{% elseif params.settings is defined and params.settings == 'parent' %}
+    {{ form_start(formType,{ 'action': action,'attr':{'method':'POST','id':'appbundle_typedepense','data-parsley-validate':''}}) }}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formType.label) }}
+                {{ form_widget(formType.label, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formType.fournisseurs) }}
+                {{ form_widget(formType.fournisseurs, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+            </div>
+        </div>
+        {% if params.operation is defined and params.operation == 'edit' %}
+            <div class="col-lg-12">
+                <div class="form-group">
+                    {{ form_label(formType.parent) }}
+                    {{ form_widget(formType.parent, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% do formType.forEmploye.setRendered %}
+    {% do formType.parent.setRendered %}
+    {{ form_rest(formType) }}
+    {{ form_end(formType) }}
+{% elseif params.settings is defined and params.settings == 'fils' %}
+        {{ form_start(formType,{ 'action': action,'attr':{'method':'POST','id':'appbundle_typedepense','data-parsley-validate':''}}) }}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    {{ form_label(formType.label) }}
+                    {{ form_widget(formType.label, {'attr': {'class':'form-control'}}) }}
+                </div>
+            </div>
+            <input type="hidden" name="appbundle_typedepense[parent]" value="{{ formType.parent.vars.value }}" />
+        </div>
+    {% do formType.forEmploye.setRendered %}
+    {% do formType.parent.setRendered %}
+    {% do formType.fournisseurs.setRendered %}
+        {{ form_rest(formType) }}
+        {{ form_end(formType) }}
+{% else %}
+{{ form_start(formType,{ 'action': action,'attr':{'method':'POST','id':'appbundle_typedepense_fournisseur','data-parsley-validate':''}}) }}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group">
+            {{ form_label(formType.label) }}
+            {{ form_widget(formType.label, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+    {% if params.fournisseur is defined or params.parent is defined %}
+        {% if params.fournisseur is defined %}
+            <input type="hidden" name="appbundle_typedepense[fournisseurs][]" value="{{ params.fournisseur }}" />
+        {% endif %}
+        {% if params.parent is defined %}
+            <input type="hidden" name="appbundle_typedepense[parent]" value="{{ params.parent }}" />
+        {% endif %}
+       {% do formType.fournisseurs.setRendered %}
+        {% do formType.parent.setRendered %}
+    {% else %}
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formType.fournisseurs) }}
+                {{ form_widget(formType.fournisseurs, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formType.parent) }}
+                {{ form_widget(formType.parent, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% do formType.forEmploye.setRendered %}
+{{ form_rest(formType) }}
+{{ form_end(formType) }}
+{% endif %}

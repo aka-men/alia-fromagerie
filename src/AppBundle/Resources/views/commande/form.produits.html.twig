@@ -1,0 +1,60 @@
+{% if response == 'form' %}
+    <form action="{{ path('app_commande_add_produits') }}" method="post" name="form_produits" id="form_produits">
+        {% set pr = 0 %}
+        {% set selectedProduits = (params.selected is defined) ? params.selected : [] %}
+        <div class="row">
+            {% for p in produits %}
+                {% if not (p.id in selectedProduits) %}
+                    {% set pr = pr + 1 %}
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="pretty info circle curvy a-rotate">
+                            <input {% if pr == 1 %}required{% endif %} value="{{ p.id }}" name="produits[]" type="checkbox">
+                            <label>
+                                <i class="fa fa-check prety-large" aria-hidden="true"></i> {{ p.titre }}<br/>
+                            </label>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if pr == 0 %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-warning">
+                        <p>Aucun produit disponible !!</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <input type="hidden" name="index" value="{{ params.index }}" />
+    </form>
+{% elseif response == 'lines' %}
+    {% set index = params.index %}
+    {% for p in produits %}
+        {% if p.id in params.produits %}
+            <tr data-id="{{ p.id }}" class="details-line">
+                <td style="max-width: 100px;">
+                    <span>{{ p.titre }}</span>
+                    <p class="description">{{ p.description }}</p>
+                    <input type="hidden" name="appbundle_commande[produits][{{ index }}][produit]" value="{{ p.id }}" />
+                </td>
+                <td class="prix">
+                    <input required type="text" class="form-control numerique prix" name="appbundle_commande[produits][{{ index }}][prix]" value="{{ p.prix }}" />
+                </td>
+                <td class="qte">
+                    <input required type="text" class="form-control numerique qte" name="appbundle_commande[produits][{{ index }}][quantite]" value="1" />
+                </td>
+                <td class="prix">
+                    <div class="input-group">
+                        <input value="{{ p.prix }}" style="background-color: white;z-index: 0 !important;" type="text" class="form-control st" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-danger delete-line-produit"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        </span>
+                    </div>
+
+                </td>
+            </tr>
+            {% set index = index + 1 %}
+        {% endif %}
+    {% endfor %}
+{% endif %}

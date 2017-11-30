@@ -1,0 +1,62 @@
+{% if commande is defined %}
+    {% if commande.reste > 0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <button data-title="Ajouter un paiement" data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-primary pull-right add-paiement" title="Ajouter un paiement" data-href="{{ path('app_commande_paiement_add',{'id':commande.id}) }}"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-12">
+           <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="max-width:40px;"></th>
+                        <th>Id</th>
+                        <th>Date</th>
+                        <th>Mode</th>
+                        <th>Montant</th>
+                        <th>N° réglement</th>
+                        <th>Date réglement</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if commande.paiements|length > 0 %}
+                        {% for p in commande.paiements %}
+                            <tr>
+                                <td class="bg-ligne" style="max-width: 40px;">{{ loop.index }}</td>
+                                <td>{{ p.id }}</td>
+                                <td>{{ p.date|date('d/m/Y') }}</td>
+                                <td>{{ p.modePayment.label }}</td>
+                                <td>{{ p.prix|number_format(2,'.','') }} DH</td>
+                                <td><span {% if p.banque %} data-toggle="tooltip" data-placement="top" data-original-title="{{ p.banque.nom }}" {% endif %} >{{ p.numeroReglement }}</span> {% if p.imageCheque %}<a style="margin-left:5px;" title="Image réglement" data-fancybox href="{{ path('app_images',{'nom':p.imageCheque.nom}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>{% endif %}</td>
+                                <td>{% if p.dateReglement %}{{ p.dateReglement|date('d/m/Y') }}{% endif %}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu inner">
+                                            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_commande_paiement_remove',{'id':commande.id,'paiement':p.id}) }}" class="btn btn-xs btn-default delete-paiement"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+                                        </ul>
+                                    </div>
+                                    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_commande_paiement_edit',{'id':commande.id,'paiement':p.id}) }}" data-title="Editer un paiement" class="btn btn-table btn-primary edit-paiement"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8">
+                                <p class="text-bold text-center">Aucun paiement pour cette vente !</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}

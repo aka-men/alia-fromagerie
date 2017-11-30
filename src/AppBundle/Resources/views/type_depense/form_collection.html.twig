@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+<form action="{{ action }}" method="post" name="appbundle_typedepense" id="appbundle_typedepense" >
+    <div  id="types-collection" class="row"></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <button class="btn btn-sm btn-success pull-right add-line-type" data-prototype='
+{% filter escape %}
+             <div class="col-lg-12">
+                <div class="input-group">
+                    <span class="input-group-btn"><button class="btn btn-danger delete-line-type" type="button"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+                    <input required title="Libellé" placeholder="Libellé" type="text" class="form-control " id="appbundle_typedepense___name___label" name="appbundle_typedepense[__name__][label]" />
+                </div>
+                {% if params.fournisseur is defined %}
+                    <input type="hidden" name="appbundle_typedepense[__name__][fournisseurs][]" value="{{ params.fournisseur }}" />
+                {% endif %}
+                {% if params.parent is defined %}
+                    <input type="hidden" name="appbundle_typedepense[__name__][parent]" value="{{ params.parent }}" />
+                {% endif %}
+            </div>
+         {% endfilter %}'><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+            </div>
+        </div>
+    </div>
+    {% if params.target is defined %}
+        <input type="hidden" id="target" value="{{ params.target }}" />
+    {% endif %}
+</form>

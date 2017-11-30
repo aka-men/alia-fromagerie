@@ -1,0 +1,90 @@
+{% if td is defined and td == 'action' %}
+<div class="btn-group">
+    <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu inner">
+        <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'  data-href="{{ path('app_commande_remove',{'id':commande.id}) }}" class="btn btn-xs btn-default delete-commande"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+        {% if commande.factureGlobal is null %}
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'  data-href="{{ path('app_facture_new',{'id':commande.id}) }}" class="btn btn-xs btn-default create-invoice"><i class="fa fa-foursquare" aria-hidden="true"></i> Générer facture</button></li>
+        {% else %}
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'  data-href="{{ path('app_commande_facture_remove',{'id':commande.id}) }}" class="btn btn-xs btn-default remove-invoice"><i class="fa fa-foursquare" aria-hidden="true"></i> Supprimer facture</button></li>
+        {% endif %}
+    </ul>
+</div>
+    {% if commande.reste > 0 %}
+        <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-title="Ajouter un paiement" class="btn btn-table btn-success add-paiement" data-href="{{ path('app_commande_paiement_add',{'id':commande.id}) }}"  title="Ajouter un paiement"><i class="fa fa-money" aria-hidden="true"></i>
+    {% endif %}
+    {% if is_granted('ROLE_SUPER_ADMIN') > 0 %}
+        <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-title="Editer vente N° {{ commande.id }}" class="btn btn-table btn-primary edit-commande" data-href="{{ path('app_commande_edit',{'id':commande.id}) }}"  title="Editer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+    {% endif %}
+    {% set hidden = false %}
+    <div title="Images réglements" class="btn-group galery" role="group" aria-label="...">
+    {% for p in commande.paiements %}
+    {% if p.imageCheque %}
+        <a class="btn btn-default" {% if hidden == true %}style="display: none;" {% endif %} data-photobox href="{{ path('app_images',{'nom':p.imageCheque.nom}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+     {% set hidden = true %}
+    {% endif %}
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% if td is defined and td == 'frais' %}
+        <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for fc in commande.fraisSupplementaires %}
+        <strong>{{ fc.label }} : </strong> {{ fc.prix|number_format(2,'.',' ') }} <br/>
+        {% endfor %}
+        {% endfilter %}" >{{ commande.totalFrais|number_format(2,'.',' ') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'tva' %}
+        <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="{{ commande.taxes }} DH" >{{ commande.tva|number_format() }} %</span>
+{% endif %}
+
+{% if td is defined and td == 'facture' %}
+       {% if commande.factureGlobal %}
+       <a data-loading-text="<i class='fa fa-spin fa-spinner' aria-hidden='true'></i>" target="_blank" data-href="{{ path('app_facture_print',{'id':commande.factureGlobal.id}) }}" class="btn btn-table btn-link print-invoice" href="{{ path('app_facture_print',{'id':commande.factureGlobal.id}) }}">{{ commande.factureGlobal.id }}</a>
+       {% else %}
+       -
+       {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'id' %}
+    <a {% if commande.user %}data-toggle="tooltip" data-placement="top" data-original-title="Editer par : {{ commande.user.username }}"{% endif %} data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' target="_blank" data-href="{{ path('app_commande_bon_livraison',{'id':commande.id}) }}" class="btn btn-table btn-link print-vaucher" href="{{ path('app_commande_bon_livraison',{'id':commande.id}) }}">{{ commande.id }}</a>
+{% endif %}
+
+{% if td is defined and td == 'client' %}
+    <span data-loading-text='<i class="fa fa-spin fa-spinner"></i>' data-title="{{ commande.clientEntreprise }}" class="statut_client_entreprise" {% if commande.client %} data-type="client" data-id="{{ commande.client.id }}" {% elseif commande.entreprise %} data-id="{{ commande.entreprise.id }}" data-type="entreprise" {% endif %} style="cursor: pointer;" data-href="{{ path('app_commande_statut_client') }}" data-toggle="tooltip" data-placement="top" data-original-title="{% if commande.livrerPar %}Livré par : {{ commande.livrerPar }}{% endif %}" >{{ commande.clientEntreprise }}</span>
+{% endif %}
+
+{% if td is defined and td == 'date' %}
+    <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="{% if commande.dateLivraison %}Livré le : {{ commande.dateLivraison|date('d/m/Y') }}{% endif %}" >{{ commande.date|date('d/m/Y') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'avance' %}
+        <span data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-title="Liste des paiements pour la vente N° {{ commande.id }}" data-href="{{ path('app_commande_paiement_liste',{'id':commande.id}) }}" class="liste-paiements" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for p in commande.paiements %}
+            {{ p.date|date('d/m/Y') }} - {{ p.modePayment.code }} {% if p.numeroReglement %} - {{ p.numeroReglement }} {% endif %}- {{ p.prix|number_format(2,'.',' ') }} DH <br/>
+        {% endfor %}
+        {% endfilter %}" >{{ commande.avance|number_format(2,'.',' ') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'ligne' %}
+        <span style="width: 100%;" class="badge badge-info" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for pc in commande.produits %}
+        {% if pc.isEchantillon %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - Echantillon <br/>
+        {% else %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - {{ pc.prix|number_format(2,'.',' ') }} DH <br/>
+        {% endif %}
+        {% endfor %}
+        {% endfilter %}" >{{ ligne }}</span>
+{% endif %}
+
+{% if td is defined and td == 'ttc' %}
+        {{ commande.montantTtc|number_format(2,'.',' ') }}
+{% endif %}
+
+{% if td is defined and td == 'ht' %}
+        {{ commande.montantHt|number_format(2,'.',' ') }} {% if commande.remise %}<i data-toggle="tooltip" data-placement="top" data-original-title="Remise : {{ commande.remise }}% ({{ commande.reduction }} DH)" class="fa fa-star" aria-hidden="true" style="color: gold;"></i>{% endif %}
+{% endif %}

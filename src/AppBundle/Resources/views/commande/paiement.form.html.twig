@@ -1,0 +1,40 @@
+<div class="row paiement-line">
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        <div class="form-group">
+            <input value="{{ "now"|date("d/m/Y") }}" class="form-control date-input input-sm small-input" type="text" id="appbundle_commande_paiements___name___date" name="appbundle_commande[paiements][__name__][date]" required="required" placeholder="Date Paiement" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        <div class="form-group">
+            <select class="form-control show-tick mode" data-live-search="true" id="appbundle_commande_paiements___name___modePayment" name="appbundle_commande[paiements][__name__][modePayment]" required="required">
+                <option value="" selected="selected">Mode paiement</option>
+                {% for mode in modes %}
+                    <option value="{{ mode.id }}">{{ mode.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+        <div class="form-group">
+            <input class="form-control prix numerique input-sm small-input" type="text" id="appbundle_commande_paiements___name___prix" name="appbundle_commande[paiements][__name__][prix]" required="required" placeholder="Montant" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 cheque">
+        <div class="form-group">
+            <input class="form-control entier input-sm small-input cheque-info" type="text" id="appbundle_commande_paiements___name___numeroReglement" name="appbundle_commande[paiements][__name__][numeroReglement]" placeholder="Numéro reglement" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 cheque">
+        <div class="form-group text-center">
+            <button class="btn btn-sm btn-default bind_img" type="button">Image</button>
+            <p class="help-block text-center"><a style="margin-top:-10px;font-size:10px;" class="pic-show btn btn-xs btn-link" data-fancybox>Visualiser</a></p>
+            <input class="cheque-info" style="display: none;" type="file" id="appbundle_commande_paiements___name___imageCheque_file" name="appbundle_commande[paiements][__name__][imageCheque][file]" accept="image/*" />
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 cheque">
+        <div class="input-group">
+            <input class="form-control date-input cheque-info input-sm small-input" type="text" id="appbundle_commande_paiements___name___dateReglement" name="appbundle_commande[paiements][__name__][dateReglement]" placeholder="Date reglement" />
+            <span class="input-group-btn"><button id="delete-line-paiement" type="button" class="btn btn-sm btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+        </div>
+    </div>
+</div>

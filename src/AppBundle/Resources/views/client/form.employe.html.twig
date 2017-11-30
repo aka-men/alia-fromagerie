@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+<form name="appbundle_client" id="appbundle_client" method="post" action="{{ action }}">
+    <div class="row">
+        {% if employes|length > 0 %}
+            {% for employe in employes %}
+                {% if not employe.isCommercial %}
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                        <div class="pretty info circle curvy a-rotate">
+                            <input {% if loop.last %}data-parsley-required data-parsley-required-message="Vous devez sélectionniez au moins un employé" {% endif %} value="{{ employe.id }}"  name="appbundle_client[employe][]" type="checkbox">
+                            <label><i class="fa fa-check" aria-hidden="true"></i> {{ employe.fullName }}</label>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="col-lg-12">
+                <div class="alert alert-warning">
+                    <p>Vous n'avez pas des employés dans votre base de données !</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</form>

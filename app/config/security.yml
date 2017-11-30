@@ -23,7 +23,14 @@ security:
             anonymous:    true
 
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/settings, role: ROLE_SUPER_ADMIN }
+        - { path: ^/reporting, role: ROLE_SUPER_ADMIN }
+        - { path: ^/ventes/edit, role: ROLE_SUPER_ADMIN }
+        - { path: ^/charges/employes, role: ROLE_SUPER_ADMIN }
+        - { path: ^/depenses/settings/employe, role: ROLE_SUPER_ADMIN }
+        - { path: ^/employe$, role: ROLE_SUPER_ADMIN }
+        - { path: ^/typeDepense/employe, role: ROLE_SUPER_ADMIN }
+        - { path: ^/paiement/valider, role: ROLE_SUPER_ADMIN }
         - { path: ^/, role: ROLE_USER }

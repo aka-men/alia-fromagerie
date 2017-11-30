@@ -1,0 +1,22 @@
+{% if documents|length > 0 %}
+    {% for document in documents %}
+        <div class="document-item"  title="{{ document.titre }}.{{ document.file.extension }}">
+            <div class="icon">
+                <span class="icon">{{ document.icon|raw }}</span>
+            </div>
+            <div class="document-item-footer">
+                <div class="document-item-footer-title" title="{{ document.titre }}.{{ document.file.extension }}">{{ (document.titre ~ '.' ~ document.file.extension)|slice(0,20) }}<br> <samp>({{ document.file.size|number_format(2,'.','') }} KB)</samp></div>
+                <div class="document-item-footer-file-actions">
+                    <a data-title="Renommer un document" data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' href="{{ path('app_e_document_edit',{'id':document.id}) }}" type="button" class="btn btn-xs btn-primary edit-document" title="Renommer"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                    <a href="{{ path('app_e_document_download_file',{'id':document.id}) }}" download type="button" class="btn btn-xs btn-default" title="Télécharger"><i class="fa fa-download" aria-hidden="true"></i></a>
+                    <a target="_blank" href="{{ path('app_e_document_file',{'id':document.id}) }}" type="button" class="btn btn-xs btn-default" title="Ourir dans une nouvel onglet"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                    <a data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' href="{{ path('app_e_document_remove',{'id':document.id}) }}" type="button" class="btn btn-xs btn-danger remove-document" title="Supprimer"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+<div style="text-align: center">
+    <p style="margin: 50px;font-weight: bold;font-size: 30px;color: gainsboro;">Aucun document trouvé !!</p>
+</div>
+{% endif %}

@@ -1,0 +1,18 @@
+{% if td is defined and td == 'action' %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu inner">
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-xs btn-default client-toggle-state"  data-href="{{ path('app_client_state_toggle',{'id':client.id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if client.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_client_remove',{'id':client.id}) }}" class="btn btn-xs btn-default delete-client"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+            <li><button  data-href="{{ path('app_commande_index') }}?client={{ client.id }}" class="btn btn-xs btn-default b-link"><i class="fa fa-handshake-o" aria-hidden="true"></i> Ventes</button></li>
+        </ul>
+    </div>
+    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Produits" data-href="{{ path('app_client_produits',{'id':client.id}) }}" data-title="Produits achetés par <strong style='color:cornflowerblue;'>{{ client.fullName }}</strong>" class="btn btn-table btn-warning produits-client"><i class="fa fa-cubes" aria-hidden="true"></i></button>
+    <button data-type="{{ type }}" data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_client_edit',{'id':client.id}) }}" data-title="Editer un client" class="btn btn-table btn-primary edit-client"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+{% endif %}
+
+{% if td is defined and td == 'nom' %}
+    {{ client.fullName(true) }} {% if client.hasTva %} <i class="fa fa-star" style="color: gold;" aria-hidden="true"></i> {% endif %}
+{% endif %}

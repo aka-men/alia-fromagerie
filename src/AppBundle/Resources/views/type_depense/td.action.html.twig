@@ -1,0 +1,10 @@
+<div class="btn-group">
+    <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' type="button" class="btn btn-sm btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu inner">
+        <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-xs btn-default type-toggle-state"  data-href="{{ path('app_type_depense_state_toggle',{'id':type.id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if type.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+        <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_type_depense_remove',{'id':type.id}) }}" class="btn btn-xs btn-default delete-type"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+    </ul>
+</div>
+<button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_type_depense_edit',{'id':type.id}) }}" data-title="Editer un type" class="btn btn-sm btn-table btn-primary edit-type"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>

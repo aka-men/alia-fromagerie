@@ -1,0 +1,10 @@
+<div class="btn-group">
+    <button type="button" class="btn btn-sm btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu inner">
+        <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-xs btn-default banque-toggle-state"  data-href="{{ path('app_banque_state_toggle',{'id':banque.id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if banque.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+        <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_banque_remove',{'id':banque.id}) }}" class="btn btn-xs btn-default delete-banque"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+    </ul>
+</div>
+<button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_banque_edit',{'id':banque.id}) }}" data-title="Editer une banque" class="btn btn-sm btn-table btn-primary edit-banque"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>

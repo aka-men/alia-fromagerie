@@ -1,0 +1,246 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{% if formProduit is defined %}
+{{ form_start(formProduit,{ 'action': action,'attr':{'method':'POST','id':'appbundle_produit'}}) }}
+<div class="row">
+    <div class="col-lg-3 ccol-md-3 col-sm-6 col-xs-12">
+        <div style="padding-top: 25px;" class="form-group">
+            <div class="pretty info circle curvy a-rotate">
+                {{ form_widget(formProduit.isMatierePremiere, {'attr': {}}) }}
+                <label style="font-weight: bold;" for="appbundle_produit_isMatierePremiere"><i class="fa fa-check" aria-hidden="true"></i> Matière Première</label>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="1" name="appbundle_produit[isAchat]" />
+    {% do formProduit.isAchat.setRendered %}
+    {% if params.fournisseur is defined %}
+        <input type="hidden" value="{{ params.fournisseur }}" name="appbundle_produit[fournisseurs][]" />
+        {% do formProduit.fournisseurs.setRendered %}
+    {% else %}
+        <div class="col-lg-3 ccol-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formProduit.fournisseurs) }}
+                {{ form_widget(formProduit.fournisseurs, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+            </div>
+        </div>
+    {% endif %}
+    <div class="col-lg-3 ccol-md-3 col-sm-6 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formProduit.titre) }}
+            {{ form_widget(formProduit.titre, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+   <div class="col-lg-3 ccol-md-3 col-sm-6 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formProduit.prixAchat) }}
+            {{ form_widget(formProduit.prixAchat, {'attr': {'class':'form-control numerique'}}) }}
+        </div>
+    </div>
+    <div class="col-lg-3 ccol-md-3 col-sm-6 col-xs-12 produit">
+        <div class="form-group">
+            {{ form_label(formProduit.prix) }}
+            {{ form_widget(formProduit.prix, {'attr': {'class':'form-control numerique'}}) }}
+        </div>
+    </div>
+ </div>
+<div class="row">
+    <div class="col-lg-3 ccol-md-3 col-sm-6 col-xs-12 produit">
+        <div class="form-group">
+            {{ form_label(formProduit.stock) }}
+            {{ form_widget(formProduit.stock, {'attr': {'class':'form-control entier','data-parsley-type':"integer"}}) }}
+        </div>
+    </div>
+</div>
+{{ form_rest(formProduit) }}
+{{ form_end(formProduit) }}
+{% elseif formMatiere is defined %}
+    {{ form_start(formMatiere,{ 'action': action,'attr':{'method':'POST','id':'appbundle_produit_matiere'}}) }}
+    {% if params.fournisseur is defined %}
+        <input type="hidden" value="{{ params.fournisseur }}" name="appbundle_produit_matiere[fournisseurs][]" />
+        {% do formMatiere.fournisseurs.setRendered %}
+    {% else %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    {{ form_label(formMatiere.fournisseurs) }}
+                    {{ form_widget(formMatiere.fournisseurs, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formMatiere.titre) }}
+                {{ form_widget(formMatiere.titre, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formMatiere.prixAchat) }}
+                {{ form_widget(formMatiere.prixAchat, {'attr': {'class':'form-control numerique'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formMatiere.options) }}
+                {{ form_widget(formMatiere.options, {'attr': {'class':'form-control show-tick',"data-live-search":"true"}}) }}
+            </div>
+        </div>
+    </div>
+    {{ form_rest(formMatiere) }}
+    {{ form_end(formMatiere) }}
+{% elseif formSousProduit is defined %}
+    {{ form_start(formSousProduit,{ 'action': action,'attr':{'method':'POST','id':'appbundle_produit_sub'}}) }}
+    {% if params.parent is defined %}
+        <input type="hidden" value="{{ params.parent }}" name="appbundle_produit_sub[parents][]" />
+    {% endif %}
+   <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formSousProduit.titre) }}
+                {{ form_widget(formSousProduit.titre, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formSousProduit.unite) }}
+                {{ form_widget(formSousProduit.unite, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formSousProduit.prix) }}
+                {{ form_widget(formSousProduit.prix, {'attr': {'class':'form-control numerique'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formSousProduit.stock) }}
+                {{ form_widget(formSousProduit.stock, {'attr': {'class':'form-control numerique'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                {{ form_label(formSousProduit.description) }}
+                {{ form_widget(formSousProduit.description, {'attr': {'class':'form-control auto-growth'}}) }}
+            </div>
+        </div>
+    </div>
+    {% do formSousProduit.parents.setRendered %}
+    {{ form_rest(formSousProduit) }}
+    {{ form_end(formSousProduit) }}
+{% elseif formProduitFini is defined %}
+    {{ form_start(formProduitFini,{ 'action': action,'attr':{'method':'POST','id':'appbundle_produit_fini'}}) }}
+    <div class="row">
+        {% if params.fournisseur is defined %}
+            <input type="hidden" value="{{ params.fournisseur }}" name="appbundle_produit_fini[fournisseurs][]" />
+            {% do formProduitFini.fournisseurs.setRendered %}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    {{ form_label(formProduitFini.titre) }}
+                    {{ form_widget(formProduitFini.titre, {'attr': {'class':'form-control'}}) }}
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    {{ form_label(formProduitFini.unite) }}
+                    {{ form_widget(formProduitFini.unite, {'attr': {'class':'form-control'}}) }}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    {{ form_label(formProduitFini.prixAchat) }}
+                    {{ form_widget(formProduitFini.prixAchat, {'attr': {'class':'form-control numerique'}}) }}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    {{ form_label(formProduitFini.prix) }}
+                    {{ form_widget(formProduitFini.prix, {'attr': {'class':'form-control numerique'}}) }}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    {{ form_label(formProduitFini.stock) }}
+                    {{ form_widget(formProduitFini.stock, {'attr': {'class':'form-control numerique'}}) }}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    {{ form_label(formProduitFini.fournisseurs) }}
+                    {{ form_widget(formProduitFini.fournisseurs, {'attr': {'class':'form-control msl'}}) }}
+                    <p style="margin-top: -5px;" class="help-block text-center"><a data-type="2" data-href="{{ path('app_fournisseur_add') }}" data-title="Ajouter un fournisseur" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link add-fournisseur"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter fournisseur</a></p>
+                </div>
+            </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        {{ form_label(formProduitFini.titre) }}
+                        {{ form_widget(formProduitFini.titre, {'attr': {'class':'form-control'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        {{ form_label(formProduitFini.unite) }}
+                        {{ form_widget(formProduitFini.unite, {'attr': {'class':'form-control'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {{ form_label(formProduitFini.prixAchat) }}
+                        {{ form_widget(formProduitFini.prixAchat, {'attr': {'class':'form-control numerique'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {{ form_label(formProduitFini.prix) }}
+                        {{ form_widget(formProduitFini.prix, {'attr': {'class':'form-control numerique'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {{ form_label(formProduitFini.stock) }}
+                        {{ form_widget(formProduitFini.stock, {'attr': {'class':'form-control numerique'}}) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {{ form_label(formProduitFini.description) }}
+                        {{ form_widget(formProduitFini.description, {'attr': {'class':'form-control auto-growth'}}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {{ form_rest(formProduitFini) }}
+    {{ form_end(formProduitFini) }}
+{% endif %}

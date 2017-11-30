@@ -1,0 +1,171 @@
+<style type="text/css">
+    table.bordred tr td{
+        border: 1px solid black;
+        padding: 5px;
+    }
+    table.bordred tr td:first-child{
+        padding-left: 8px !important;
+    }
+    table.bordred{
+        border-collapse: collapse;
+    }
+</style>
+<page backtop="15mm" backbottom="15mm" backleft="3mm" backright="3mm">
+
+    <page_header>
+        <table style="width: 100%; border-bottom: solid 1px black;">
+            <tr>
+                <td style="text-align: left;width: 8%;vertical-align: middle;">
+                    <img style="width:100%;height:30px;" src="{{ configuration.absoluteWebPath ~ '/images/logo.png' }}" />
+                </td>
+                <td style="text-align: left;width: 92%;font-size: 15px;padding-left: 20px;">
+                    Rapport des ventes {% if criteres.isPaid is defined and criteres.isPaid == 0 %} (impayées) {% elseif criteres.has_invoice is defined and criteres.has_invoice == true %} (avec facture) {% elseif criteres.has_invoice is defined and criteres.has_invoice == false %} (sans facture){% endif %} {% if criteres.mois is defined and criteres.annee is defined %} du mois <b>{{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}</b>  {% elseif criteres.date_start is defined and criteres.date_end is defined %} <b> du {{ criteres.date_start }} au {{ criteres.date_end }}</b>{% endif %}
+                </td>
+            </tr>
+        </table>
+    </page_header>
+    <page_footer>
+        <table style="width: 100%; border-top: solid 1px black;">
+            <tr>
+                <td style="width: 50%;text-align: left;font-size: 9px;">
+                    Généré le {{ "now"|date('d/m/Y') }}
+                </td>
+                <td style="width: 50%;text-align: right;font-size: 9px;">
+                    Page: [[page_cu]]/[[page_nb]]
+                </td>
+            </tr>
+        </table>
+    </page_footer>
+
+    <br/><br/>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;padding-left: 30px;font-weight: normal;text-decoration:underline;">
+                <h2>● La liste des ventes</h2>
+            </td>
+        </tr>
+    </table>
+
+    <br/><br/>
+
+    <table style="width: 100%;" class="bordred">
+        {#
+        <tr>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:28px;{% else %}width:30px;{% endif %}text-align: center;">BL</td>
+            {% if criteres.has_invoice is not defined or criteres.has_invoice != false %}
+                <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:22px;text-align: center;">Facture</td>
+            {% endif %}
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">Date</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:80px;{% else %}width:82px;{% endif %}text-align: center;">Client</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">HT</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">Remise</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">TVA</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">TTC</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">Frais</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">Ttotal</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">Avance</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;">Reste</td>
+        </tr>
+        {% if reportCommandes.commandes|length > 0 %}
+            {% for commande in reportCommandes.commandes %}
+                <tr>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:28px;{% else %}width:30px;{% endif %}text-align: center;vertical-align: middle;">{{ commande.id }}</td>
+                    {% if criteres.has_invoice is not defined or criteres.has_invoice != false %}
+                        <td style="font-size: 9px;width:22px;text-align: center;">{{ commande.facture ? commande.facture.id : '-' }}</td>
+                    {% endif %}
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;vertical-align: middle;">{{ commande.date|date('d/m/Y') }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:80px;{% else %}width:82px;{% endif %}text-align: center;vertical-align: middle;">{{ commande.clientEntreprise }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;">{{ commande.remise ? commande.remise|number_format(2,'.',' ') : '0.00' }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;">{{ commande.tva ? commande.tva|number_format(2,'.',' ') : '0.00'  }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;">{{ commande.totalFrais|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;">{{ commande.total|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;color: green;">{{ commande.avance|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: right;vertical-align: middle;color: red;">{{ commande.reste|number_format(2,'.',' ') }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td {% if criteres.has_invoice is not defined or criteres.has_invoice != false %} colspan="9"{% else %}colspan="8"{% endif %} style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:388px;{% else %}width:382px;{% endif %}text-align: right;vertical-align: middle;font-weight: bold;">Sous Totaux</td>
+                <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;vertical-align: middle;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }}</td>
+                <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;vertical-align: middle;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }}</td>
+                <td style="font-size: 9px;{% if criteres.has_invoice is not defined or criteres.has_invoice != false %}width:43px;{% else %}width:45px;{% endif %}text-align: center;vertical-align: middle;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td {% if criteres.has_invoice is not defined or criteres.has_invoice != false %} colspan="12"{% else %}colspan="11"{% endif %} style="width: 100%;font-size: 15px;text-align: center;color: silver;">
+                    Aucune vente enregistrée
+                </td>
+            </tr>
+        {% endif %}
+        #}
+        <tr>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:26px;text-align: center;">BL</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:20px;text-align: center;">Facture</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:41px;text-align: center;">Date</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:78px;text-align: center;">Client</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:41px;text-align: center;">HT</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:39px;text-align: center;">Remise</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:39px;text-align: center;">TVA</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:41px;text-align: center;">TTC</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:39px;text-align: center;">Frais</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:45px;text-align: center;">Ttotal</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:45px;text-align: center;">Avance</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:45px;text-align: center;">Reste</td>
+        </tr>
+        {% if reportCommandes.commandes|length > 0 %}
+            {% for commande in reportCommandes.commandes %}
+                <tr>
+                    <td style="font-size: 9px;width:26px;text-align: center;vertical-align: middle;">{{ commande.id }}</td>
+                    <td style="font-size: 9px;width:20px;text-align: center;">{{ commande.facture ? commande.facture.id : '-' }}</td>
+                    <td style="font-size: 9px;width:41px;text-align: center;vertical-align: middle;">{{ commande.date|date('d/m/Y') }}</td>
+                    <td style="font-size: 9px;width:78px;text-align: center;vertical-align: middle;">{{ commande.clientEntreprise }}</td>
+                    <td style="font-size: 9px;width:41px;text-align: right;vertical-align: middle;">{{ commande.montantHt|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:39px;text-align: right;vertical-align: middle;">{{ commande.remise ? commande.remise|number_format(2,'.',' ') : '0.00' }}</td>
+                    <td style="font-size: 9px;width:39px;text-align: right;vertical-align: middle;">{{ commande.tva ? commande.tva|number_format(2,'.',' ') : '0.00'  }}</td>
+                    <td style="font-size: 9px;width:41px;text-align: right;vertical-align: middle;">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:39px;text-align: right;vertical-align: middle;">{{ commande.totalFrais|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;">{{ commande.total|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;color: green;">{{ commande.avance|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;color: red;">{{ commande.reste|number_format(2,'.',' ') }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="9" style="font-size: 9px;width:364px;text-align: right;vertical-align: middle;font-weight: bold;">Sous Totaux</td>
+                <td style="font-size: 9px;width:45px;text-align: center;vertical-align: middle;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }}</td>
+                <td style="font-size: 9px;width:45px;text-align: center;vertical-align: middle;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }}</td>
+                <td style="font-size: 9px;width:45px;text-align: center;vertical-align: middle;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12" style="width: 100%;font-size: 15px;text-align: center;color: silver;">
+                    Aucune vente enregistrée
+                </td>
+            </tr>
+        {% endif %}
+    </table>
+    <br/><br/><br/>
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 25%;"></td>
+            <td style="width: 50%;">
+                <table class="bordred" style="width: 100%;font-size: 13px;">
+                    <tr>
+                        <td style="width: 50%;vertical-align: middle;text-align: left;font-weight: bold;">Total des ventes</td>
+                        <td style="width: 50%;vertical-align: middle;text-align: right;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%;vertical-align: middle;text-align: left;color: green;font-weight: bold;">Total de avances</td>
+                        <td style="width: 50%;vertical-align: middle;text-align: right;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%;vertical-align: middle;text-align: left;color: red;font-weight: bold;">Total du reste</td>
+                        <td style="width: 50%;vertical-align: middle;text-align: right;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 25%;"></td>
+        </tr>
+    </table>
+</page>

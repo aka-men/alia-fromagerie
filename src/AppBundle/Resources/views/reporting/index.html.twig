@@ -1,0 +1,193 @@
+{% extends "layout.html.twig" %}
+{% set item = 'reporting' %}
+{% block title %}Rapports {% endblock %}
+
+{% block style %}
+ <link rel="stylesheet" href="{{ asset('vendors/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css') }}" type="text/css" />
+{% endblock %}
+
+{% block breadcrumb %}
+ </li><li class="active">Rapports</li>
+{% endblock %}
+
+{% block contenu %}
+ <div class="row">
+
+     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+      <div class="row">
+       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+         <div class="x_title">
+          <h2>Bénéfice net <small>&nbsp;&nbsp;&nbsp;<input value="month" checked class="check-type-report" type="radio" name="benefice_type_report" id="benefice_type_report_1" /> <label for="benefice_type_report_1">Mensuelle</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input value="periode" class="check-type-report" type="radio" name="benefice_type_report" id="benefice_type_report_2" /> <label for="benefice_type_report_2">Période</label></small></h2>
+          <ul class="nav navbar-right panel_toolbox">
+           <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+          </ul>
+          <div class="clearfix"></div>
+         </div>
+         <div class="x_content">
+             <form target="_blank" action="{{ path('app_reporting_benefice_net') }}" name="benefice" method="post" id="benefice" data-parsley-validate>
+                 <div id="month" class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                         <div class="form-group">
+                             <label for="benefice_month">Mois</label>
+                             <input required placeholder="Mois" type="text" class="form-control date-month" name="benefice_month" id="benefice_month" />
+                         </div>
+                     </div>
+                 </div>
+                 <div style="display: none;" id="periode" class="row">
+                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                         <div class="form-group">
+                             <label for="benefice_date_debut">Début</label>
+                             <input placeholder="Date Début" type="text" class="form-control date date-range-min" id="benefice_date_debut" />
+                         </div>
+                     </div>
+                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                         <div class="form-group">
+                             <label for="benefice_date_fin">Fin</label>
+                             <input placeholder="Date Fin" type="text" class="form-control date date-range-max"  id="benefice_date_fin" />
+                         </div>
+                     </div>
+                 </div>
+                 <div class="form-group">
+                     <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-eye"></i> Afficher</button>
+                     <button class="btn btn-success pull-right ben-net-pdf" type="submit"><i class="fa fa-file-pdf-o"></i> Générer PDF</button>
+                 </div>
+             </form>
+         </div>
+        </div>
+       </div>
+      </div>
+
+         <div class="row">
+             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                 <div class="x_panel">
+                     <div class="x_title">
+                         <h2>Ventes <small>&nbsp;&nbsp;&nbsp;<input value="month" checked class="check-type-report" type="radio" name="vente_type_report" id="vente_type_report_1" /> <label for="vente_type_report_1">Mensuelle</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input value="periode" class="check-type-report" type="radio" name="vente_type_report" id="vente_type_report_2" /> <label for="vente_type_report_2">Période</label></small></h2>
+                         <ul class="nav navbar-right panel_toolbox">
+                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                         </ul>
+                         <div class="clearfix"></div>
+                     </div>
+                     <div class="x_content">
+                         <form target="_blank" action="{{ path('app_reporting_vente') }}" name="vente" method="post" id="vente" data-parsley-validate>
+                             <div id="month" class="row">
+                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                     <div class="form-group">
+                                         <label for="vente_month">Mois</label>
+                                         <input required placeholder="Mois" type="text" class="form-control date-month" name="vente_month" id="vente_month" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div style="display: none;" id="periode" class="row">
+                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                     <div class="form-group">
+                                         <label for="vente_date_debut">Début</label>
+                                         <input placeholder="Date Début" type="text" class="form-control date date-range-min" id="vente_date_debut" />
+                                     </div>
+                                 </div>
+                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                     <div class="form-group">
+                                         <label for="vente_date_fin">Fin</label>
+                                         <input placeholder="Date Fin" type="text" class="form-control date date-range-max"  id="vente_date_fin" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="row">
+                                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                     <div class="pretty info circle curvy a-rotate">
+                                         <input checked value="all" id="vente_type_1" name="vente_type" type="radio">
+                                         <label style="font-size: 11px;"><i class="fa fa-check" aria-hidden="true"></i> Tous</label>
+                                     </div>
+                                 </div>
+                                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                     <div class="pretty info circle curvy a-rotate">
+                                         <input value="with-invoice" id="vente_type_2" name="vente_type" type="radio">
+                                         <label style="font-size: 11px;"><i class="fa fa-check" aria-hidden="true"></i> Avec facture</label>
+                                     </div>
+                                 </div>
+                                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                     <div class="pretty info circle curvy a-rotate">
+                                         <input value="without-invoice" id="vente_type_3" name="vente_type" type="radio">
+                                         <label style="font-size: 11px;"><i class="fa fa-check" aria-hidden="true"></i> Sans facture</label>
+                                     </div>
+                                 </div>
+                                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                     <div class="pretty info circle curvy a-rotate">
+                                         <input value="unpaid" id="vente_type_4" name="vente_type" type="radio">
+                                         <label style="font-size: 11px;"><i class="fa fa-check" aria-hidden="true"></i> Impayées</label>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="form-group">
+                                 <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-eye"></i> Afficher</button>
+                                 <button class="btn btn-success pull-right ben-net-pdf" type="submit"><i class="fa fa-file-pdf-o"></i> Générer PDF</button>
+                             </div>
+                         </form>
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+     </div>
+
+     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+         <div class="row">
+             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                 <div class="x_panel">
+                     <div class="x_title">
+                         <h2>Analyses/Production <small>&nbsp;&nbsp;&nbsp;<input value="month" checked class="check-type-report" type="radio" name="analyses_production_type_report" id="analyses_production_type_report_1" /> <label for="analyses_production_type_report_1">Mensuelle</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input value="periode" class="check-type-report" type="radio" name="analyses_production_type_report" id="analyses_production_type_report_2" /> <label for="analyses_production_type_report_2">Période</label></small></h2>
+                         <ul class="nav navbar-right panel_toolbox">
+                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                         </ul>
+                         <div class="clearfix"></div>
+                     </div>
+                     <div class="x_content">
+                         <form target="_blank" action="{{ path('app_reporting_analyses_production') }}" name="analyses_production" method="post" id="analyses_production" data-parsley-validate>
+                             <div id="month" class="row">
+                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                     <div class="form-group">
+                                         <label for="benefice_month">Mois</label>
+                                         <input required placeholder="Mois" type="text" class="form-control date-month" name="analyses_production_month" id="analyses_production_month" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div style="display: none;" id="periode" class="row">
+                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                     <div class="form-group">
+                                         <label for="analyses_production_date_debut">Début</label>
+                                         <input placeholder="Date Début" type="text" class="form-control date date-range-min" id="analyses_production_date_debut" />
+                                     </div>
+                                 </div>
+                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                     <div class="form-group">
+                                         <label for="analyses_production_date_fin">Fin</label>
+                                         <input placeholder="Date Fin" type="text" class="form-control date date-range-max"  id="analyses_production_date_fin" />
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="form-group">
+                                 <select name="analyses_production_mp">
+                                     {% for mp in matieres %}
+                                         <option value="{{ mp.id }}">{{ mp.titre }}</option>
+                                     {% endfor %}
+                                 </select>
+                                 <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-eye"></i> Afficher</button>
+                                 <button class="btn btn-success pull-right ben-net-pdf" type="submit"><i class="fa fa-file-pdf-o"></i> Générer PDF</button>
+                             </div>
+                         </form>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript" src="{{ asset('vendors/bootstrap-datetimepicker/js/moment-with-locales.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendors/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js') }}"></script>
+{% endblock %}
+{% block customJs %}
+ <script src="{{ asset('js/reporting.js') }}" type="text/javascript"></script>
+{% endblock %}

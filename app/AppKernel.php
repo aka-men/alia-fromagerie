@@ -16,9 +16,10 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Gregwar\ImageBundle\GregwarImageBundle(),
-            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Ensepar\Html2pdfBundle\EnseparHtml2pdfBundle(),
             new CoreBundle\CoreBundle(),
             new AppBundle\AppBundle(),
         ];

@@ -25,9 +25,11 @@
         "symfony/symfony": "3.2.*",
         "twig/twig": "^1.0||^2.0",
         "gregwar/image-bundle": "dev-master",
-        "knplabs/knp-paginator-bundle": "dev-master",
         "khepin/yaml-fixtures-bundle": "~1.0.1",
-        "friendsofsymfony/user-bundle" : "~2.0"
+        "friendsofsymfony/user-bundle" : "~2.0",
+        "jms/serializer-bundle": "dev-master",
+        "ensepar/html2pdf-bundle" : "dev-master",
+        "beberlei/DoctrineExtensions" : "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

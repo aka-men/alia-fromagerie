@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+<p><input value="month" checked class="check-type-report" type="radio" name="vente_type_report" id="vente_type_report_1" /> <label for="vente_type_report_1">Mensuelle</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input value="periode" class="check-type-report" type="radio" name="vente_type_report" id="vente_type_report_2" /> <label for="vente_type_report_2">Période</label></p>
+<form target="_blank" name="form_statut" id="form_statut" method="post" action="{{ path('app_commande_statut_client') }}" data-parsley-validate>
+    <div id="month" class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label for="statut_annee">Année</label>
+                <select id="statut_annee" name="statut[annee]" data-name="statut[annee]" class="form-control show-tick" data-live-search="true">
+                    {% for a in range(2016,"now"|date('Y')) %}
+                        <option {% if loop.last %} selected {% endif %} value="{{ a }}">{{ a }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label for="mois">Mois</label>
+                <select id="statut_mois" name="statut[mois]" data-name="statut[mois]" class="form-control show-tick" data-live-search="true">
+                    {% for m in range(1,12) %}
+                        {% set dateString = "01-"~ m ~ "-2017" %}
+                        <option {% if m == "now"|date('m') %} selected {% endif %} value="{{ m }}">{{ dateString|date('m') }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" id="periode" class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label for="statut_date_end">Début</label>
+                <input placeholder="Date Début" type="text" class="form-control date" data-name="statut[date_start]" id="statut_date_start" />
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label for="statut_date_end">Fin</label>
+                <input placeholder="Date Fin" type="text" class="form-control date" data-name="statut[date_end]"  id="statut_date_end" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="pretty info circle curvy a-rotate">
+                <input checked value="" id="vente_type_1" name="statut[isPaid]" type="radio">
+                <label style="font-size: 15px;"><i class="fa fa-check" aria-hidden="true"></i> Tous</label>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="pretty info circle curvy a-rotate">
+                <input value="1" id="vente_type_3" name="statut[isPaid]" type="radio">
+                <label style="font-size: 15px;"><i class="fa fa-check" aria-hidden="true"></i> Payées</label>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="pretty info circle curvy a-rotate">
+                <input value="0" id="vente_type_4" name="statut[isPaid]" type="radio">
+                <label style="font-size: 15px;"><i class="fa fa-check" aria-hidden="true"></i> Impayées</label>
+            </div>
+        </div>
+    </div>
+    {% if client is defined %}
+        <input type="hidden" name="statut[client]" value="{{ client.id }}" />
+    {% elseif entreprise is defined %}
+        <input type="hidden" name="statut[entreprise]" value="{{ entreprise.id }}" />
+    {% endif %}
+</form>

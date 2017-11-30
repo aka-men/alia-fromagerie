@@ -32,4 +32,17 @@ class FournisseurManager extends AbstractManager
     {
         return $this->getManager()->getRepository("AppBundle:Fournisseur");
     }
+
+    public function listeDataTableOther(array $criteres, $sort, $dir, $start = 0, $max = 25)
+    {
+        return $this->getRepository()->listeDataTableOther($criteres,$sort, $dir, $start , $max );
+    }
+    public function listeDataTableMP(array $criteres, $sort, $dir, $start = 0, $max = 25)
+    {
+        return $this->getRepository()->listeDataTableMP($criteres,$sort, $dir, $start , $max );
+    }
+    public function listeDataTablePI(array $criteres, $sort, $dir, $start = 0, $max = 25)
+    {
+        return $this->getRepository()->listeDataTablePI($criteres,$sort, $dir, $start , $max );
+    }
 }

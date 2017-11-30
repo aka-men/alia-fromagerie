@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{{ form_start(formMode,{ 'action': action,'attr':{'method':'POST','id':'appbundle_modepayment'}}) }}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group">
+            {{ form_label(formMode.label) }}
+            {{ form_widget(formMode.label, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group">
+            {{ form_label(formMode.code) }}
+            {{ form_widget(formMode.code, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+</div>
+{{ form_rest(formMode) }}
+{{ form_end(formMode) }}

@@ -1,616 +1,374 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('images/logo.ico') }}" type="image/x-icon" />
     <title>Alia Fromagerie | {% block title %}{% endblock %}</title>
-    <!-- Favicon-->
-    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+    <!-- Jquery UI -->
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.structure.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{{ asset('vendors/nprogress/nprogress.css') }}" rel="stylesheet">
+    <!-- jQuery custom content scroller -->
+    <link href="{{ asset('vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}" rel="stylesheet"/>
+    <!-- jQuery sweetAlert -->
+    <link href="{{ asset('vendors/bootstrap-sweetalert-master/dist/sweetalert.css') }}" rel="stylesheet"/>
+    <!-- jQuery selectPicker -->
+    <link href="{{ asset('vendors/bootstrap-select-1.12.2/dist/css/bootstrap-select.css') }}" rel="stylesheet"/>
+    <!-- jQuery photobox -->
+    <link rel="stylesheet" href="{{ asset('vendors/photobox-master/photobox/photobox.css') }}" type="text/css" media="screen" />
+    <!-- iCheck -->
+    <link href="{{ asset('vendors/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+    <!-- Switchery -->
+    {#<link href="{{ asset('vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet">#}
+    <!-- multiselect -->
+    <link href="{{ asset('vendors/lou-multi-select-e052211/css/multi-select.css') }}" media="screen" rel="stylesheet" type="text/css">
+    <!-- pretty checkbox -->
+    <link href="{{ asset('vendors/pretty-checkbox-master/src/pretty.min.css') }}" media="screen" rel="stylesheet" type="text/css">
+   {% block style %}{% endblock %}
+    <!-- Custom Theme Style -->
+    <link href="{{ asset('build/css/custom.css') }}" rel="stylesheet">
+    <!-- Mon Style -->
+    <link href="{{ asset('build/css/style.css') }}" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
-
-    <!-- Bootstrap Core Css -->
-    <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
-
-    <!-- Waves Effect Css -->
-    <link href="{{ asset('plugins/node-waves/waves.css') }}" rel="stylesheet" />
-
-    <!-- Animation Css -->
-    <link href="{{ asset('plugins/animate-css/animate.css') }}" rel="stylesheet" />
-
-    <!-- Morris Chart Css-->
-    <link href="{{ asset('plugins/morrisjs/morris.css') }}" rel="stylesheet" />
-
-    <!-- Custom Css -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    {% block style %}{% endblock %}
-
-    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
-    <link href="{{ asset('css/themes/all-themes.css') }}" rel="stylesheet" />
+    {% block customCss %}{% endblock %}
 </head>
 
-<body class="theme-red">
-<!-- Page Loader -->
-<div class="page-loader-wrapper">
-    <div class="loader">
-        <div class="preloader">
-            <div class="spinner-layer pl-red">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a href="{{ path('app_index') }}" class="site_title"><i class="fa fa-font" aria-hidden="true"></i> <span>Alia Fromagerie</span></a>
                 </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
+
+                <div class="clearfix"></div>
+
+                <!-- menu profile quick info -->
+                <div class="profile clearfix">
+                    <div class="profile_pic">
+                        <img {% if app.user.image is not null %} src="{{ image('images/upload/' ~ app.user.image.fullName).resize(56,56) }}" {% else %} src="{{ image("images/upload/no_image.png").resize(56,56) }}" {% endif %} alt="{{ app.user.username }}" class="img-circle profile_img">
+                    </div>
+                    <div class="profile_info">
+                        <span>Bienvenue,</span>
+                        <h2>{{ app.user.username }}</h2>
+                    </div>
                 </div>
+                <!-- /menu profile quick info -->
+
+                <br />
+
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                       <ul class="nav side-menu">
+                           <li {% if item is defined and item == 'index' %} class="active" {% endif %}><a href="{{ path('app_index') }}"><i class="fa fa-home"></i> Accueil</a></li>
+                           <li {% if item is defined and item == 'clients' %} class="active" {% endif %}><a href="{{ path('app_client_index') }}"><i class="fa fa-address-card" aria-hidden="true"></i> Clients</a></li>
+                           <li {% if item is defined and item == 'ventes' %} class="active" {% endif %}><a href="{{ path('app_commande_index') }}"><i class="fa fa-handshake-o" aria-hidden="true"></i> Ventes</a></li>
+                           <li {% if item is defined and item == 'factures' %} class="active" {% endif %}><a href="{{ path('app_facture_index') }}"><i class="fa fa-file-text" aria-hidden="true"></i> Factures</a></li>
+                           <li {% if item is defined and item == 'paiements' %} class="active" {% endif %}><a href="{{ path('app_paiement_index') }}"><i class="fa fa-money" aria-hidden="true"></i> Paiements</a></li>
+                           <li {% if item is defined and item == 'depenses' %} class="active" {% endif %}><a><i class="fa fa-briefcase" aria-hidden="true"></i> Dépenses <span class="fa fa-chevron-down"></span></a>
+                               <ul id="menu-to-block" class="nav child_menu">
+                                   <li {% if sousItem is defined and sousItem == 'charges' %} class="current-page" {% endif %}><a href="{{ path('app_charge_index') }}"><i class="fa fa-money" aria-hidden="true"></i> Charges</a></li>
+                                   <li {% if sousItem is defined and sousItem == 'achats' %} class="current-page" {% endif %}><a href="{{ path('app_achat_index') }}"><i class="fa fa-handshake-o" aria-hidden="true"></i> Achats</a></li>
+                                   {% if is_granted('ROLE_SUPER_ADMIN') %}<li {% if sousItem is defined and sousItem == 'charges_employes' %} class="current-page" {% endif %}><a href="{{ path('app_charge_employes_index') }}"><i class="fa fa-users" aria-hidden="true"></i> Employés</a></li>{% endif %}
+                                   <li {% if sousItem is defined and sousItem == 'settings' %} class="current-page" {% endif %}><a href="{{ path('app_depense_settings') }}"><i class="fa fa-cogs" aria-hidden="true"></i> Paramétrage</a></li>
+                               </ul>
+                           </li>
+                           {% if is_granted('ROLE_SUPER_ADMIN') %}
+                               <li {% if item is defined and item == 'settings' %} class="active" {% endif %}><a><i class="fa fa-cogs" aria-hidden="true"></i> Paramétrages <span class="fa fa-chevron-down"></span></a>
+                                   <ul id="menu-to-block" class="nav child_menu">
+                                       <li {% if sousItem is defined and sousItem == 'config' %} class="current-page" {% endif %}><a href="{{ path('app_config') }}"><i class="fa fa-wrench" aria-hidden="true"></i> Générale</a></li>
+                                       <li {% if sousItem is defined and sousItem == 'users' %} class="current-page" {% endif %}><a href="{{ path('app_user_index') }}"><i class="fa fa-users" aria-hidden="true"></i> Utilisateurs</a></li>
+                                   </ul>
+                               </li>
+                               <li {% if item is defined and item == 'reporting' %} class="active" {% endif %}><a href="{{ path('app_reporting_index') }}"><i class="fa fa-list"></i> Rapports</a></li>
+                               <li {% if item is defined and item == 'e-document' %} class="active" {% endif %}><a href="{{ path('app_e_document_index') }}"><i class="fa fa-file-pdf-o"></i> E-Documents</a></li>
+                           {% endif %}
+                       </ul>
+                    </div>
+                </div>
+                <!-- /sidebar menu -->
+
+                <!-- /menu footer buttons -->
+                <!--<div class="sidebar-footer hidden-small">
+                    <a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                        <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Lock">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                    </a>
+                </div>-->
+                <!-- /menu footer buttons -->
             </div>
         </div>
-        <p>Veuillez patienter...</p>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <img {% if app.user.image is not null %} src="{{ image('images/upload/' ~ app.user.image.fullName).resize(29,29) }}" {% else %} src="{{ image("images/upload/no_image.png").resize(29,29) }}" {% endif %} alt="{{ app.user.username }}">{{ app.user.username }}
+                                <span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="{{ path('app_user_profil') }}"><i class="fa fa-user-circle-o pull-right"></i> Mon profil</a></li>
+                                <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out pull-right"></i> Déconnexion</a></li>
+                            </ul>
+                        </li>
+
+                        {#<li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">6</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="{{ image('noFound').resize(29,29) }}" alt="Profile Image" /></span>
+                                        <span>
+
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="{{ image('noFound').resize(29,29) }}" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a>
+                                        <span class="image"><img src="{{ image('noFound').resize(29,29) }}" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>                                <li>
+                                    <a>
+                                        <span class="image"><img src="{{ image('noFound').resize(29,29) }}" alt="Profile Image" /></span>
+                                        <span>
+                          <span>John Smith</span>
+                          <span class="time">3 mins ago</span>
+                        </span>
+                                        <span class="message">
+                          Film festivals used to be do-or-die moments for movie makers. They were where...
+                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="text-center">
+                                        <a>
+                                            <strong>See All Alerts</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>#}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="row hidden-xs hidden-sm">
+                <div class="col-lg-12 text-right">
+                    <a href="{{ path('app_achat_index') }}?o=new-mp" class="btn btn-default" title="Ajouter achat matière première" target="_blank"><i class="fa fa-plus"></i> Achat MP</a>
+                    <a href="{{ path('app_achat_index') }}?o=new-pa" class="btn btn-primary" title="Ajouter achat produit alia" target="_blank"><i class="fa fa-plus"></i> Achat PA</a>
+                    <a href="{{ path('app_charge_index') }}?o=new" class="btn btn-info" title="Ajouter charge" target="_blank"><i class="fa fa-plus"></i> Charge</a>
+                    <a href="{{ path('app_charge_employes_index') }}?o=new" class="btn btn-danger" title="Ajouter charge employé" target="_blank"><i class="fa fa-plus"></i> Charge Employé</a>
+                    <a href="{{ path('app_commande_index') }}?o=new" class="btn btn-warning" title="Ajouter vente" target="_blank"><i class="fa fa-plus"></i> Vente</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <ol class="breadcrumb">
+                        <span><i class="fa fa-home"></i></span>
+                        <li><a href="{{ path('app_index') }}">Alia Fromagerie</a></li>
+                        {% block breadcrumb %}
+
+                        {% endblock %}
+                    </ol>
+                </div>
+            </div>
+           {% block contenu %}{% endblock %}
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+            <div class="pull-right">
+                Alia Fromageri © {{ "now"|date('Y') }}
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
     </div>
 </div>
-<!-- #END# Page Loader -->
-<!-- Overlay For Sidebars -->
-<div class="overlay"></div>
-<!-- #END# Overlay For Sidebars -->
-<!-- Search Bar -->
-{#<div class="search-bar">
-    <div class="search-icon">
-        <i class="material-icons">search</i>
-    </div>
-    <input type="text" placeholder="START TYPING...">
-    <div class="close-search">
-        <i class="material-icons">close</i>
-    </div>
-</div>#}
-<!-- #END# Search Bar -->
-<!-- Top Bar -->
-<nav class="navbar">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
-            <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" href="{{ path('app_index') }}">Alia Fromagerie</a>
-        </div>
-        <div class="collapse navbar-collapse" id="navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <!-- Call Search -->
-                {#<li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>#}
-                <!-- #END# Call Search -->
-                <!-- Notifications -->
-                <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        <i class="material-icons">notifications</i>
-                        <span class="label-count">7</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">NOTIFICATIONS</li>
-                        <li class="body">
-                            <ul class="menu">
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-light-green">
-                                            <i class="material-icons">person_add</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4>12 new members joined</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 14 mins ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-cyan">
-                                            <i class="material-icons">add_shopping_cart</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4>4 sales made</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 22 mins ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-red">
-                                            <i class="material-icons">delete_forever</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>Nancy Doe</b> deleted account</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 3 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-orange">
-                                            <i class="material-icons">mode_edit</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>Nancy</b> changed name</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 2 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-blue-grey">
-                                            <i class="material-icons">comment</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>John</b> commented your post</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 4 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-light-green">
-                                            <i class="material-icons">cached</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4><b>John</b> updated status</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> 3 hours ago
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <div class="icon-circle bg-purple">
-                                            <i class="material-icons">settings</i>
-                                        </div>
-                                        <div class="menu-info">
-                                            <h4>Settings updated</h4>
-                                            <p>
-                                                <i class="material-icons">access_time</i> Yesterday
-                                            </p>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="footer">
-                            <a href="javascript:void(0);">View All Notifications</a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- #END# Notifications -->
-                <!-- Tasks -->
-                <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        <i class="material-icons">flag</i>
-                        <span class="label-count">9</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">TASKS</li>
-                        <li class="body">
-                            <ul class="menu tasks">
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Footer display issue
-                                            <small>32%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-pink" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 32%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Make new buttons
-                                            <small>45%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-cyan" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Create new dashboard
-                                            <small>54%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-teal" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 54%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Solve transition issue
-                                            <small>65%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);">
-                                        <h4>
-                                            Answer GitHub questions
-                                            <small>92%</small>
-                                        </h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-purple" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 92%">
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="footer">
-                            <a href="javascript:void(0);">View All Tasks</a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- #END# Tasks -->
-                 <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
-            </ul>
+
+<!-- Large Modal -->
+<div id="large-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' id="submit" type="button" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            </div>
+
         </div>
     </div>
-</nav>
-<!-- #Top Bar -->
-<section>
-    <!-- Left Sidebar -->
-    <aside id="leftsidebar" class="sidebar">
-        <!-- User Info -->
-        <div class="user-info">
-            <div class="image">
-                <img src="{{ image('images/upload/' ~ app.user.image.fullName).resize(48,48) }}" width="48" height="48" alt="User" />
+</div>
+<div id="large-modal-info" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
             </div>
-            <div class="info-container">
-                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ app.user.username }}</div>
-                <div class="email">{{ app.user.email }}</div>
-                <div class="btn-group user-helper-dropdown">
-                    <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
-                    <ul class="dropdown-menu pull-right">
-                        <li><a href="javascript:void(0);"><i class="material-icons">person</i>Mon profil</a></li>
-                        {#<li role="seperator" class="divider"></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                        <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>#}
-                        <li role="seperator" class="divider"></li>
-                        <li><a href="{{ path('fos_user_security_logout') }}"><i class="material-icons">input</i>Se déconnecter</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- #User Info -->
-        <!-- Menu -->
-        <div class="menu">
-            <ul class="list">
-                {#<li class="header">MAIN NAVIGATION</li>#}
-                <li {% if item is defined and item == 'index' %} class="active" {% endif %}>
-                    <a href="{{ path('app_index') }}">
-                        <i class="material-icons">home</i>
-                        <span>Accueil</span>
-                    </a>
-                </li>
-                <li {% if item is defined and item == 'fournisseur' %} class="active" {% endif %}>
-                    <a href="{{ path('app_fournisseur_index') }}">
-                        <i class="material-icons">markunread_mailbox</i>
-                        <span>Fournisseur</span>
-                    </a>
-                </li>
-               {# <li>
-                    <a href="javascript:void(0);" class="menu-toggle">
-                        <i class="material-icons">widgets</i>
-                        <span>Widgets</span>
-                    </a>
-                    <ul class="ml-menu">
-                        <li>
-                            <a href="javascript:void(0);" class="menu-toggle">
-                                <span>Cards</span>
-                            </a>
-                            <ul class="ml-menu">
-                                <li>
-                                    <a href="pages/widgets/cards/basic.html">Basic</a>
-                                </li>
-                                <li>
-                                    <a href="pages/widgets/cards/colored.html">Colored</a>
-                                </li>
-                                <li>
-                                    <a href="pages/widgets/cards/no-header.html">No Header</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" class="menu-toggle">
-                                <span>Infobox</span>
-                            </a>
-                            <ul class="ml-menu">
-                                <li>
-                                    <a href="pages/widgets/infobox/infobox-1.html">Infobox-1</a>
-                                </li>
-                                <li>
-                                    <a href="pages/widgets/infobox/infobox-2.html">Infobox-2</a>
-                                </li>
-                                <li>
-                                    <a href="pages/widgets/infobox/infobox-3.html">Infobox-3</a>
-                                </li>
-                                <li>
-                                    <a href="pages/widgets/infobox/infobox-4.html">Infobox-4</a>
-                                </li>
-                                <li>
-                                    <a href="pages/widgets/infobox/infobox-5.html">Infobox-5</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+            <div class="modal-body">
 
-                <li>
-                    <a href="javascript:void(0);" class="menu-toggle">
-                        <i class="material-icons">view_list</i>
-                        <span>Tables</span>
-                    </a>
-                    <ul class="ml-menu">
-                        <li>
-                            <a href="pages/tables/normal-tables.html">Normal Tables</a>
-                        </li>
-                        <li>
-                            <a href="pages/tables/jquery-datatable.html">Jquery Datatables</a>
-                        </li>
-                        <li>
-                            <a href="pages/tables/editable-table.html">Editable Tables</a>
-                        </li>
-                    </ul>
-                </li>#}
-
-            </ul>
-        </div>
-        <!-- #Menu -->
-        <!-- Footer -->
-        <div class="legal">
-            <div class="copyright">
-                &copy; {{ "now"|date('Y') }} <a href="javascript:void(0);">Alia Fromagerie</a>.
             </div>
-            {#<div class="version">
-                <b>Version: </b> 1.0.0
-            </div>#}
-        </div>
-        <!-- #Footer -->
-    </aside>
-    <!-- #END# Left Sidebar -->
-    <!-- Right Sidebar -->
-    <aside id="rightsidebar" class="right-sidebar">
-        <ul class="nav nav-tabs tab-nav-right" role="tablist">
-            <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
-            {#<li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>#}
-        </ul>
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
-                <ul class="demo-choose-skin">
-                    <li data-theme="red" class="active">
-                        <div class="red"></div>
-                        <span>Red</span>
-                    </li>
-                    <li data-theme="pink">
-                        <div class="pink"></div>
-                        <span>Pink</span>
-                    </li>
-                    <li data-theme="purple">
-                        <div class="purple"></div>
-                        <span>Purple</span>
-                    </li>
-                    <li data-theme="deep-purple">
-                        <div class="deep-purple"></div>
-                        <span>Deep Purple</span>
-                    </li>
-                    <li data-theme="indigo">
-                        <div class="indigo"></div>
-                        <span>Indigo</span>
-                    </li>
-                    <li data-theme="blue">
-                        <div class="blue"></div>
-                        <span>Blue</span>
-                    </li>
-                    <li data-theme="light-blue">
-                        <div class="light-blue"></div>
-                        <span>Light Blue</span>
-                    </li>
-                    <li data-theme="cyan">
-                        <div class="cyan"></div>
-                        <span>Cyan</span>
-                    </li>
-                    <li data-theme="teal">
-                        <div class="teal"></div>
-                        <span>Teal</span>
-                    </li>
-                    <li data-theme="green">
-                        <div class="green"></div>
-                        <span>Green</span>
-                    </li>
-                    <li data-theme="light-green">
-                        <div class="light-green"></div>
-                        <span>Light Green</span>
-                    </li>
-                    <li data-theme="lime">
-                        <div class="lime"></div>
-                        <span>Lime</span>
-                    </li>
-                    <li data-theme="yellow">
-                        <div class="yellow"></div>
-                        <span>Yellow</span>
-                    </li>
-                    <li data-theme="amber">
-                        <div class="amber"></div>
-                        <span>Amber</span>
-                    </li>
-                    <li data-theme="orange">
-                        <div class="orange"></div>
-                        <span>Orange</span>
-                    </li>
-                    <li data-theme="deep-orange">
-                        <div class="deep-orange"></div>
-                        <span>Deep Orange</span>
-                    </li>
-                    <li data-theme="brown">
-                        <div class="brown"></div>
-                        <span>Brown</span>
-                    </li>
-                    <li data-theme="grey">
-                        <div class="grey"></div>
-                        <span>Grey</span>
-                    </li>
-                    <li data-theme="blue-grey">
-                        <div class="blue-grey"></div>
-                        <span>Blue Grey</span>
-                    </li>
-                    <li data-theme="black">
-                        <div class="black"></div>
-                        <span>Black</span>
-                    </li>
-                </ul>
-            </div>
-            {#<div role="tabpanel" class="tab-pane fade" id="settings">
-                <div class="demo-settings">
-                    <p>GENERAL SETTINGS</p>
-                    <ul class="setting-list">
-                        <li>
-                            <span>Report Panel Usage</span>
-                            <div class="switch">
-                                <label><input type="checkbox" checked><span class="lever"></span></label>
-                            </div>
-                        </li>
-                        <li>
-                            <span>Email Redirect</span>
-                            <div class="switch">
-                                <label><input type="checkbox"><span class="lever"></span></label>
-                            </div>
-                        </li>
-                    </ul>
-                    <p>SYSTEM SETTINGS</p>
-                    <ul class="setting-list">
-                        <li>
-                            <span>Notifications</span>
-                            <div class="switch">
-                                <label><input type="checkbox" checked><span class="lever"></span></label>
-                            </div>
-                        </li>
-                        <li>
-                            <span>Auto Updates</span>
-                            <div class="switch">
-                                <label><input type="checkbox" checked><span class="lever"></span></label>
-                            </div>
-                        </li>
-                    </ul>
-                    <p>ACCOUNT SETTINGS</p>
-                    <ul class="setting-list">
-                        <li>
-                            <span>Offline</span>
-                            <div class="switch">
-                                <label><input type="checkbox"><span class="lever"></span></label>
-                            </div>
-                        </li>
-                        <li>
-                            <span>Location Permission</span>
-                            <div class="switch">
-                                <label><input type="checkbox" checked><span class="lever"></span></label>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>#}
-        </div>
-    </aside>
-    <!-- #END# Right Sidebar -->
-</section>
-
-<section class="content">
-    <div class="container-fluid">
-        {% for flashMessage in app.session.flashbag.get('notice') %}
-            <div class="alert alert-warning alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                {{ flashMessage|raw }}
-            </div>
-        {% endfor %}
-        {% for flashMessage in app.session.flashbag.get('error') %}
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                {{ flashMessage|raw }}
-            </div>
-        {% endfor %}
-        {% for flashMessage in app.session.flashbag.get('success') %}
-            <div class="alert alert-success alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                {{ flashMessage|raw }}
-            </div>
-        {% endfor %}
-        <div class="block-header">
-            <ol class="breadcrumb breadcrumb-bg-grey">
-                {% block breadcrumb %}
-                {% endblock %}
-            </ol>
-        </div>
-        {% block contenu %}
-        {% endblock %}
+         </div>
     </div>
-</section>
+</div>
+<!-- Medium modal -->
+<div id="medium-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
 
-<!-- Jquery Core Js -->
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+            </div>
+            <div class="modal-footer">
+                <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' id="submit" type="button" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            </div>
 
-<!-- Bootstrap Core Js -->
-<script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
+        </div>
+    </div>
+</div>
+<!-- small modal -->
+<div id="small-modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
 
-<!-- Select Plugin Js -->
-<script src="{{ asset('plugins/bootstrap-select/js/bootstrap-select.js') }}"></script>
+            </div>
+            <div class="modal-footer">
+                <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' id="submit" type="button" class="btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            </div>
 
-<!-- Slimscroll Plugin Js -->
-<script src="{{ asset('plugins/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
+        </div>
+    </div>
+</div>
+<div id="small-modal-info" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
 
-<!-- Waves Effect Plugin Js -->
-<script src="{{ asset('plugins/node-waves/waves.js') }}"></script>
+            </div>
+        </div>
+    </div>
+</div>
 
-<!-- Jquery CountTo Plugin Js -->
-<script src="{{ asset('plugins/jquery-countto/jquery.countTo.js') }}"></script>
-
-<!-- Morris Plugin Js -->
-<script src="{{ asset('plugins/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('plugins/morrisjs/morris.js') }}"></script>
-
-<!-- ChartJs -->
-<script src="{{ asset('plugins/chartjs/Chart.bundle.js') }}"></script>
-
-<!-- Flot Charts Plugin Js -->
-<script src="{{ asset('plugins/flot-charts/jquery.flot.js') }}"></script>
-<script src="{{ asset('plugins/flot-charts/jquery.flot.resize.js') }}"></script>
-<script src="{{ asset('plugins/flot-charts/jquery.flot.pie.js') }}"></script>
-<script src="{{ asset('plugins/flot-charts/jquery.flot.categories.js') }}"></script>
-<script src="{{ asset('plugins/flot-charts/jquery.flot.time.js') }}"></script>
-
-<!-- Sparkline Chart Plugin Js -->
-<script src="{{ asset('plugins/jquery-sparkline/jquery.sparkline.js') }}"></script>
-<script src="{{ asset('js/pages/ui/tooltips-popovers.js') }}"></script>
-<!-- Custom Js -->
-<script src="{{ asset('js/admin.js') }}"></script>
+<!-- jQuery -->
+<script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
+<!-- jQuery UI -->
+<script src="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
+<!-- Bootstrap -->
+<script src="{{ asset('vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<!-- FastClick -->
+<script src="{{ asset('vendors/fastclick/lib/fastclick.js') }}"></script>
+<!-- NProgress -->
+<script src="{{ asset('vendors/nprogress/nprogress.js') }}"></script>
+<!-- jQuery custom content scroller -->
+<script src="{{ asset('vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<!-- jQuery sweetAlert -->
+<script src="{{ asset('vendors/bootstrap-sweetalert-master/dist/sweetalert.min.js') }}"></script>
+<!-- jQuery parsley validate -->
+<script src="{{ asset('vendors/parsley/parsley.min.js') }}"></script>
+<!-- jQuery selectPicker -->
+<script src="{{ asset('vendors/bootstrap-select-1.12.2/dist/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('vendors/bootstrap-select-1.12.2/dist/js/i18n/defaults-fr_FR.min.js') }}"></script>
+<!-- jQuery photobox  -->
+<script  src="{{ asset('vendors/photobox-master/photobox/jquery.photobox.js') }}"></script>
+<!-- jQuery autoSize  -->
+<script src="{{ asset('vendors/autosize-master/dist/autosize.min.js') }}"></script>
+<!-- iCheck -->
+<script src="{{ asset('vendors/iCheck/icheck.min.js') }}"></script>
+<!-- jQuery Tags Input -->
+<script src="{{ asset('vendors/jquery.tagsinput/src/jquery.tagsinput.js') }}"></script>
+<!-- Switchery -->
+{#<script src="{{ asset('vendors/switchery/dist/switchery.min.js') }}"></script>#}
+<!-- multiselect -->
+<script src="{{ asset('vendors/lou-multi-select-e052211/js/jquery.multi-select.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendors/quicksearch-master/jquery.quicksearch.js') }}" type="text/javascript"></script>
 {% block javascript %}{% endblock %}
+<!-- Custom Theme Scripts -->
+<script src="{{ asset('build/js/custom.js') }}"></script>
 
-
-<!-- Demo Js -->
-<script src="{{ asset('js/demo.js') }}"></script>
+<!-- Mon Script -->
+<script src="{{ asset('build/js/script.js') }}"></script>
+{% block customJs %}{% endblock %}
 </body>
-
 </html>

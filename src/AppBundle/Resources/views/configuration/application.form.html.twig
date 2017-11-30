@@ -1,0 +1,58 @@
+<form name="config_application" id="config_application" method="post" action="{{ path('app_config') }}" enctype="multipart/form-data">
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            <div class="pretty info circle curvy a-rotate">
+                <input {% if configuration.get('facture_entete') %}checked{% endif %} id="facture_entete" name="facture_entete" type="checkbox">
+                <label><i class="fa fa-check" aria-hidden="true"></i> Facture avec en-tête</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            <div class="pretty info circle curvy a-rotate">
+                <input {% if configuration.get('facture_pied') %}checked{% endif %} id="facture_pied" name="facture_pied" type="checkbox">
+                <label><i class="fa fa-check" aria-hidden="true"></i> Facture avec pied de page</label>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group text-center">
+                <img style="max-width: 180px;max-height: 90px;" src="{{ image('images/' ~ configuration.get('facture_logo_entete','none')).resize(180,90) }}" />
+                <br/>
+                <button class="btn btn-xs bind_img">Logo en-tête</button>
+                <input accept="image/*" data-src="{{ image('none').resize(190,80) }}" type="file" style="display: none;" id="facture_logo_entete" name="facture_logo_entete" />
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group text-center">
+                <img style="max-width: 180px;max-height: 90px;" src="{{ image('images/' ~ configuration.get('facture_logo_pied','none')).resize(180,90) }}" />
+                <br/>
+                <button class="btn btn-xs bind_img">Logo pied de page</button>
+                <input accept="image/*" data-src="{{ image('none').resize(190,80) }}" type="file" style="display: none;" id="facture_logo_pied" name="facture_logo_pied" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group text-center">
+                <img style="max-width: 180px;max-height: 90px;" src="{{ image('images/' ~ configuration.get('facture_cachet','none')).resize(180,90) }}" />
+                <br/>
+                <button class="btn btn-xs bind_img">Cachet de la facture</button>
+                <input accept="image/*" data-src="{{ image('none').resize(190,80) }}" type="file" style="display: none;" id="facture_cachet" name="facture_cachet" />
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <button type="submit" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' type="button" class="btn btn-primary pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,125 @@
+{% set count = facture.commandes|length %}
+{% set commande = facture.commandes.first %}
+{% if td is defined and td == 'action' %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu inner">
+            <li>
+                <button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'
+                        data-href="{{ path('app_facture_remove',{'id':facture.id}) }}"
+                        class="btn btn-xs btn-default delete-facture"><i class="fa fa-trash" aria-hidden="true"></i>
+                    Supprimer
+                </button>
+            </li>
+        </ul>
+    </div>
+    {% if facture.reste > 0 %}
+        <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'
+                data-title="Ajouter un paiement" class="btn btn-table btn-success collection-add-paiment"
+                data-href="{{ path('app_commande_paiements_add') }}"
+                data-href-one="{{ path('app_commande_paiement_add',{'id':'id_commande'}) }}"
+                title="Ajouter un paiement"><i class="fa fa-money" aria-hidden="true"></i></button>
+    {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'frais' %}
+    {% if count > 1 %}
+        <span style="cursor: help;">{{ facture.fraisSupp|number_format(2,'.','') }}</span>
+    {% else %}
+        <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for fc in commande.fraisSupplementaires %}
+        <strong>{{ fc.label }} : </strong> {{ fc.prix|number_format(2,'.','') }} <br/>
+        {% endfor %}
+        {% endfilter %}">{{ commande.totalFrais|number_format(2,'.','') }}</span>
+    {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'tva' %}
+    <span style="cursor: help;" data-toggle="tooltip" data-placement="top"
+          data-original-title="{{ facture.taxes }} DH">{{ facture.tva|number_format() }} %</span>
+{% endif %}
+
+{% if td is defined and td == 'id' %}
+    <a data-id="{{ facture.id }}" data-loading-text="<i class='fa fa-spin fa-spinner' aria-hidden='true'></i>"
+       target="_blank" data-href="{{ path('app_facture_print',{'id':facture.id}) }}"
+       class="btn btn-table btn-link print-invoice"
+       href="{{ path('app_facture_print',{'id':facture.id}) }}">{{ facture.id }}</a>
+{% endif %}
+
+{% if td is defined and td == 'client' %}
+    <span data-loading-text='<i class="fa fa-spin fa-spinner"></i>'
+          data-title="{{ commande.clientEntreprise }}"
+          class="statut_client_entreprise" {% if commande.client %} data-type="client" data-id="{{ commande.client.id }}" {% elseif commande.entreprise %} data-id="{{ commande.entreprise.id }}" data-type="entreprise" {% endif %}
+          style="cursor: pointer;" data-href="{{ path('app_commande_statut_client') }}" data-toggle="tooltip"
+          data-placement="top"
+          data-original-title="{% if commande.livrerPar %}Livré par : {{ commande.livrerPar }}{% endif %}">{{ commande.clientEntreprise }}</span>
+{% endif %}
+
+{% if td is defined and td == 'date' %}
+    <span style="cursor: help;">{{ facture.date|date('d/m/Y') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'avance' %}
+    {% if count > 1 %}
+        <span>{{ facture.avance|number_format(2,'.','') }}</span>
+    {% else %}
+        <span data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'
+              data-title="Liste des paiements pour la vente N° {{ commande.id }}"
+              data-href="{{ path('app_commande_paiement_liste',{'id':commande.id}) }}" class="liste-paiements"
+              style="cursor: pointer;" data-toggle="tooltip" data-placement="top"
+              data-original-title="{% filter escape %}
+        {% for p in commande.paiements %}
+            {{ p.date|date('d/m/Y') }} - {{ p.modePayment.label }} - {{ p.prix|number_format(2,'.','') }} DH <br/>
+        {% endfor %}
+        {% endfilter %}">{{ commande.avance|number_format(2,'.','') }}</span>
+    {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'ligne' %}
+    {% if count > 1 %}
+        <span style="width: 100%;"
+              class="badge badge-info">{{ ligne }}</span>
+    {% else %}
+        <span style="width: 100%;"
+              class="badge badge-info" data-toggle="tooltip" data-placement="top"
+              data-original-title="{% filter escape %}
+        {% for pc in commande.produits %}
+        {% if pc.isEchantillon %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - Echantillon <br/>
+        {% else %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - {{ pc.prix|number_format(2,'.','') }}DH <br/>
+        {% endif %}
+        {% endfor %}
+        {% endfilter %}">{{ ligne }}</span>
+    {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'ttc' %}
+    {{ facture.ttc|number_format(2,'.',' ') }}
+{% endif %}
+
+{% if td is defined and td == 'commande' %}
+    <a data-commandes="{% for cmd in facture.commandes %}{{ cmd.id }}{% if not loop.last %}-{% endif %}{% endfor %}"
+       data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' target="_blank"
+       data-href="{{ path('app_commande_bon_livraison',{'id':facture.commandes.first.id}) }}"
+       class="btn btn-table btn-link print-vaucher"
+       href="{{ path('app_commande_bon_livraison',{'id':facture.commandes.first.id}) }}">{{ facture.commandes.first.id }}{% if count > 1 %}
+            <span data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for cmd in facture.commandes %}{{ cmd.id }}{% if not loop.last %} - {% endif %}{% endfor %}
+        {% endfilter %}"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
+        {% endif %}</a>
+
+{% endif %}
+
+{% if td is defined and td == 'ht' %}
+    {{ facture.ht|number_format(2,'.',' ') }} {% if facture.remise %}<i data-toggle="tooltip"
+                                                                                                 data-placement="top"
+                                                                                                 data-original-title="Remise : {{ facture.remise }}% ({{ facture.reduction }} DH)"
+                                                                                                 class="fa fa-star"
+                                                                                                 aria-hidden="true"
+                                                                                                 style="color: gold;"></i>
+{% endif %}
+{% endif %}

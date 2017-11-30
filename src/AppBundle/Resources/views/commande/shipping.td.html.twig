@@ -1,0 +1,31 @@
+{% if td is defined and td == 'id' %}
+    <a {% if commande.user %}data-toggle="tooltip" data-placement="top" data-original-title="Editer par : {{ commande.user.username }}"{% endif %} data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' target="_blank" class="btn btn-table btn-link" href="{{ path('app_commande_index') }}?o=edit&id={{ commande.id }}">{{ commande.id }}</a>
+{% endif %}
+
+{% if td is defined and td == 'client' %}
+    <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="{% if commande.livrerPar %}Livré par : {{ commande.livrerPar }}{% endif %}" >{{ commande.clientEntreprise }}</span>
+{% endif %}
+
+{% if td is defined and td == 'date' %}
+    <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="{% if commande.dateLivraison %}Livré le : {{ commande.dateLivraison|date('d/m/Y') }}{% endif %}" >{{ commande.date|date('d/m/Y') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'avance' %}
+        <span data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' style="cursor: pointer;" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for p in commande.paiements %}
+            {{ p.date|date('d/m/Y') }} - {{ p.modePayment.label }} {% if p.numeroReglement %} - {{ p.numeroReglement }} {% endif %}- {{ p.prix|number_format(2,'.','') }} DH <br/>
+        {% endfor %}
+        {% endfilter %}" >{{ commande.avance|number_format(2,'.','') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'ligne' %}
+        <span style="width: 100%;" class="badge badge-info" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        {% for pc in commande.produits %}
+        {% if pc.isEchantillon %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - Echantillon <br/>
+        {% else %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - {{ pc.prix|number_format(2,'.','') }} DH <br/>
+        {% endif %}
+        {% endfor %}
+        {% endfilter %}" >{{ ligne }}</span>
+{% endif %}

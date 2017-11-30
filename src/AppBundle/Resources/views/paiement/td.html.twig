@@ -1,0 +1,72 @@
+{% if td is defined and td == 'date' %}
+    {% if paiement.dateReglement is null %}
+        {{ paiement.date|date('d/m/Y') }}
+    {% else %}
+        <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Date Réglement : {{ paiement.dateReglement|date('d/m/Y') }}" >{{ paiement.date|date('d/m/Y') }}</span>
+    {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'commande' %}
+    {% if paiement.commande is not null %}
+        <span class="label label-success pointer b-link" data-href="{{ path('app_commande_index') }}?id={{ paiement.commande.id }}" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+        <b>N° : </b> {{ paiement.commande.id }} <br/>
+        <b>Date : </b> {{ paiement.commande.date|date('d/m/Y') }} <br/>
+        {% if paiement.commande.dateLivraison %}
+        <b>Livré le : </b> {{ paiement.commande.dateLivraison|date('d/m/Y') }} <br/>
+        {% endif %}
+        {% if paiement.commande.client %}
+        <b>Client : </b> {{ paiement.commande.client.fullName }} <br/>
+        {% elseif paiement.commande.entreprise %}
+        <b>Entreprise : </b> {{ paiement.commande.entreprise.nom}} <br/>
+        {% endif %}
+        <center>-------------</center>
+        {% for pc in paiement.commande.produits %}
+        {% if pc.isEchantillon %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - Echantillon <br/>
+        {% else %}
+        {{ pc.quantite ~ pc.produit.unite }} - {{ pc.produit.titre }} - {{ pc.prix|number_format(2,'.','') }} DH <br/>
+        {% endif %}
+        {% endfor %}
+        {% for fs in paiement.commande.fraisSupplementaires  %}
+        {{ fs.label }} - {{ fs.ttc|number_format(2,'.','') }} DH <br/>
+        {% endfor %}
+        <center>-------------</center>
+        <b>Total : </b> {{ paiement.commande.total|number_format(2,'.','') }} DH <br/>
+        <b>Avance : </b> {{ paiement.commande.avance|number_format(2,'.','') }} DH <br/>
+        <b>Reste : </b> {{ paiement.commande.reste|number_format(2,'.','') }} DH <br/>
+        {% endfilter %}" >{{ paiement.commande.id }}</span>
+    {% elseif paiement.childrens is not empty %}
+        {% for p in paiement.childrens %}
+            <span class="label label-success pointer b-link" data-href="{{ path('app_commande_index') }}?id={{ p.commande.id }}" data-toggle="tooltip" data-placement="top" data-original-title="{{ p.prix|number_format(2,'.',' ') }} DH">{{ p.commande.id }}</span>
+        {% endfor %}
+    {% endif %}
+{% endif %}
+
+
+{% if td is defined and td == 'montant' %}
+    {{ paiement.prix|number_format(2,'.',' ') }}
+{% endif %}
+
+{% if td is defined and td == 'client' %}
+    {% if paiement.commande is not null %}
+        {{ paiement.commande.clientEntreprise }}
+    {% elseif paiement.childrens is not empty %}
+        {{ paiement.childrens.first.commande.clientEntreprise }}
+    {% endif %}
+{% endif %}
+
+{% if td is defined and td == 'numero' %}
+    <span {% if paiement.banque %} data-toggle="tooltip" data-placement="top" data-original-title="{{ paiement.banque.nom }}" {% endif %} >{{ paiement.numeroReglement }}</span> {% if paiement.imageCheque %}<a style="margin-left:5px;" title="Image réglement" data-fancybox href="{{ path('app_images',{'nom':paiement.imageCheque.nom}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>{% endif %}
+{% endif %}
+
+{% if td is defined and td == 'action' %}
+    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' data-href="{{ path('app_paiement_valider',{'id':paiement.id}) }}" class="btn btn-xs btn-table btn-success valider-paiement" title="Valider"><i class="fa fa-check-square"></i></button>
+{% endif %}
+
+{% if td is defined and td == 'ligne' %}
+    <span class="badge badge-info">{{ ligne }}</span>
+{% endif %}
+
+{% if td is defined and td == 'mode' %}
+   {{ paiement.modePayment.label }}
+{% endif %}

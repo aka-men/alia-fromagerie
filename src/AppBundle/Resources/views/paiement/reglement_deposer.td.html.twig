@@ -1,0 +1,20 @@
+{% if td is defined and td == 'date' %}
+   <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer le : {{ paiement.date|date('d/m/Y') }}" >{{ paiement.dateReglement|date('d/m/Y') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'ligne' %}
+    <span style="width: 100%;" class="badge badge-info" data-toggle="tooltip" data-placement="top" data-original-title="Efféctuer par : {{ paiement.username }}" >{{ ligne }}</span>
+{% endif %}
+
+{% if td is defined and td == 'montant' %}
+    <span style="cursor: help;" data-toggle="tooltip" data-placement="top" data-original-title="Bon Livraison : {{ paiement.commande }}" >{{ paiement.montant|number_format(2,'.','') }}</span>
+{% endif %}
+
+{% if td is defined and td == 'numero' %}
+    <span {% if paiement.banque %} data-toggle="tooltip" data-placement="top" data-original-title="{{ paiement.banque }}" {% endif %} >{{ paiement.numeroReglement }}</span> {% if paiement.image %}<a style="margin-left:5px;" title="Image réglement" data-fancybox href="{{ path('app_images',{'nom':paiement.image}) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>{% endif %}
+{% endif %}
+
+{% if td is defined and td == 'type' %}
+    <span style="cursor: help;" data-toggle="tooltip" data-placement="top" {% if paiement.entreprise %} data-original-title="Entreprise : {{ paiement.entreprise }}" {% elseif paiement.client %} data-original-title="Client : {{ paiement.client }}" {% endif %} >{{ paiement.mode }}</span>
+{% endif %}
+

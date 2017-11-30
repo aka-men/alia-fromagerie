@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+        .row{
+            padding:10px;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('images/logo.ico') }}" type="image/x-icon" />
+    <!-- Jquery UI -->
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.structure.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <title>Alia Fromagerie | Rapport Analyses/Production {% if criteres.mois is defined and criteres.annee is defined %} du mois {{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}  {% elseif criteres.date_start is defined and criteres.date_end is defined %}  du {{ criteres.date_start }} au {{ criteres.date_end }} {% endif %}</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <legend style="padding: 10px;">Rapport Analyses/Production {% if criteres.mois is defined and criteres.annee is defined %} du mois <b>{{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}</b>  {% elseif criteres.date_start is defined and criteres.date_end is defined %} <b> du {{ criteres.date_start }} au {{ criteres.date_end }}</b> {% endif %}</legend>
+    </div>
+</div>
+
+<br/><br/>
+
+<table style="width:100%;">
+    <tr>
+        <td style="width: 100%;padding-left: 30px;font-weight: normal;text-decoration:underline;">
+            <h2>Achats Produit {{ matiere.titre }}</h2>
+        </td>
+    </tr>
+</table>
+
+<br/><br/>
+{% set nbrCel = matiere.childrens|length + matiere.options|length %}
+{% set qteTotal = 0 %}
+{% set totalProd = {} %}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive">
+            <table style="font-size: 9px;font-weight: bold;" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Fournisseur</th>
+                    <th class="text-center">Qté {{ matiere.unite }}</th>
+                    {% for o in matiere.options %}
+                        <th class="text-center">{{ o.code }}</th>
+                    {% endfor %}
+                    {% for p in matiere.childrens %}
+                        {% set totalProd = totalProd|merge({(p.titre):0}) %}
+                        <th style="background-color: silver;" class="text-center">{{ p.titre }}</th>
+                    {% endfor %}
+                    <th class="text-center">Lot</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportPAMP|length > 0 %}
+                    {% for pa in reportPAMP %}
+                        {% set qteTotal = qteTotal + pa.quantite %}
+                        <tr>
+                            <td class="text-center">{{ pa.achat.id }}</td>
+                            <td class="text-center">{{ pa.achat.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ pa.achat.fournisseur.nom }}</td>
+                            <td class="text-center">{{ pa.quantite }}{{ matiere.unite }}</td>
+                            {% for o in matiere.options %}
+                                <td class="text-center">{{ pa.achat.analyseValue(pa.produit,o) ? pa.achat.analyseValue(pa.produit,o) : '-' }}</td>
+                            {% endfor %}
+                            {% for p in matiere.childrens %}
+                                {% set val = (pa.achat.productionOfProduct(pa.produit,p) ? pa.achat.productionOfProduct(pa.produit,p) : 0) %}
+                                {% set new = totalProd[p.titre] + val %}
+                                {% set totalProd = totalProd|merge({(p.titre):new}) %}
+                                <td class="text-center">{{ pa.achat.productionOfProduct(pa.produit,p) ? pa.achat.productionOfProduct(pa.produit,p) : '-' }}</td>
+                            {% endfor %}
+                            <td class="text-center">-</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="3" style="text-align: right;background-color: silver;">Totaux</td>
+                        <td >{{ qteTotal }}</td>
+                        {% for o in matiere.options %}
+                            <td></td>
+                        {% endfor %}
+                        {% for p in matiere.childrens %}
+                            <td title="{{ p.titre }}">{{ totalProd[p.titre] }}</td>
+                        {% endfor %}
+                        <td></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="{{ nbrCel + 5 }}" style="width: 100%;font-size: 15px;text-align: center;color: silver;">
+                            Aucune achat enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

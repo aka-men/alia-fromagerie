@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{{ form_start(formEmploye,{'attr':{'id':'appbundle_employe','action':action}}) }}
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.nom) }}
+                {{ form_widget(formEmploye.nom, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+           <div class="form-group">
+               {{ form_label(formEmploye.prenom) }}
+               {{ form_widget(formEmploye.prenom, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.cin) }}
+                {{ form_widget(formEmploye.cin, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.email) }}
+                {{ form_widget(formEmploye.email, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.email1) }}
+                {{ form_widget(formEmploye.email1, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.gsm) }}
+                {{ form_widget(formEmploye.gsm, {'attr': {'class':'form-control phone'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.gsm1) }}
+                {{ form_widget(formEmploye.gsm1, {'attr': {'class':'form-control phone'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.fonction) }}
+                {{ form_widget(formEmploye.fonction, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.dateEmbauche) }}
+                {{ form_widget(formEmploye.dateEmbauche, {'attr': {'class':'form-control date-input'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.salaire) }}
+                {{ form_widget(formEmploye.salaire, {'attr': {'class':'form-control numerique'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.adresse) }}
+                {{ form_widget(formEmploye.adresse, {'attr': {'class':'form-control auto-growth'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.autres) }}
+                {{ form_widget(formEmploye.autres, {'attr': {'class':'form-control tagsInput'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formEmploye.imagesDocuments) }}
+                <div>
+                    <button id="add-document" class="btn btn-primary">Ajouter un document</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="appbundle_employe_imagesDocuments"
+         data-prototype="
+         {% filter escape %}
+             {{ include('AppBundle:employe:prototype-document.html.twig') }}
+         {% endfilter %}">
+    </div>
+{% do formEmploye.imagesDocuments.setRendered  %}
+{{ form_rest(formEmploye) }}
+{{ form_end(formEmploye) }}

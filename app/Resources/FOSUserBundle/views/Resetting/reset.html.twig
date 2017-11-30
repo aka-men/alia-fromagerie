@@ -1,99 +1,76 @@
 {% trans_default_domain 'FOSUserBundle' %}
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Alia Fromagerie | Réinitialiser le mot de passe</title>
-    <!-- Favicon-->
-    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <title>Alia Fromagerie - Réinitialiser le mot de passe</title>
 
-            <!-- Bootstrap Core Css -->
-    <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{{ asset('vendors/nprogress/nprogress.css') }}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="{{ asset('vendors/animate.css/animate.min.css') }}" rel="stylesheet">
 
-            <!-- Waves Effect Css -->
-    <link href="{{ asset('plugins/node-waves/waves.css') }}" rel="stylesheet" />
-
-            <!-- Animation Css -->
-    <link href="{{ asset('plugins/animate-css/animate.css') }}" rel="stylesheet" />
-
-            <!-- Custom Css -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="{{ asset('build/css/custom.min.css') }}" rel="stylesheet">
 </head>
 
-<body class="signup-page">
-
-<div class="signup-box">
-    <div class="logo">
-                <a href="{{ path('app_index') }}">Alia Fromagerie</a>
-            </div>
-            <div class="card">
-                <div class="body">
-                    {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset',id:"sign_up",method:"POST" } }) }}
-
-                        <div class="msg">Réinitialiser votre mot de passe</div>
-
-
-                        <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">lock</i>
-                        </span>
-                            <div class="form-line">
-                                {{ form_widget(form.plainPassword.first,{'attr':
-                                    {
-                                        'placeholder':'Nouveau mot de passe',
-                                        'required':true,
-                                        'class':'form-control',
-                                        'minlength':"6"
-                                    }
-                                })}}
-                            </div>
-                        </div>
-                        <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">lock</i>
-                        </span>
-                            <div class="form-line">
-                                {{ form_widget(form.plainPassword.second,{'attr':
-                                    {
-                                        'placeholder':'Confirmer le mot de passe',
-                                        'required':true,
-                                        'class':'form-control',
-                                        'minlength':"6"
-                                    }
-                                })}}
-                            </div>
-                        </div>
-
-
-                        <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">MODIFIER LE MOT DE PASSE</button>
-
-
-                        {{ form_end(form) }}
+<body class="login">
+<div class="login_wrapper">
+    <div class="animate form login_form">
+            <section class="login_content">
+                {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': {method:"POST" } }) }}
+                    <h1>Réinitialiser votre mot de passe</h1>
+                <div>
+                        {{ form_widget(form.plainPassword.first,{'attr':
+                            {
+                                'placeholder':'Nouveau mot de passe',
+                                'required':true,
+                                'class':'form-control',
+                                'minlength':"6"
+                            }
+                        })}}
                 </div>
-            </div>
+                <div>
+                        {{ form_widget(form.plainPassword.second,{'attr':
+                            {
+                                'placeholder':'Confirmer le mot de passe',
+                                'required':true,
+                                'class':'form-control',
+                                'minlength':"6"
+                            }
+                        })}}
+                </div>
+                    <div>
+                        <button class="btn btn-default submit" type="submit">Enregistrer</button>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <p class="change_link">
+                            <a href="{{ path('fos_user_security_login') }}" class="to_register">Se Connecter</a>
+                        </p>
+
+                        <div class="clearfix"></div>
+                        <br />
+
+                        <div>
+                            <h1>Alia Fromagerie</h1>
+                            <p>{{ "now"|date('Y') }} © Tous droits réservés</p>
+                        </div>
+                    </div>
+                {{ form_end(form) }}
+            </section>
+        </div>
 </div>
-
-        <!-- Jquery Core Js -->
-        <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-
-        <!-- Bootstrap Core Js -->
-        <script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
-
-        <!-- Waves Effect Plugin Js -->
-        <script src="{{ asset('plugins/node-waves/waves.js') }}"></script>
-
-        <!-- Validation Plugin Js -->
-        <script src="{{ asset('plugins/jquery-validation/jquery.validate.js') }}"></script>
-
-        <!-- Custom Js -->
-        <script src="{{ asset('js/admin.js') }}"></script>
-        <script src="{{ asset('js/pages/examples/sign-up.js') }}"></script>
-        </body>
-
-        </html>
+</body>
+</html>

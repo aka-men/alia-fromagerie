@@ -1,0 +1,31 @@
+<div style="margin-bottom: 20px;" class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li {% if item == 'fournisseur' %} class="active" {% endif %}><a href="{{ path('app_depense_fournisseur') }}"><i class="fa fa-address-book" aria-hidden="true"></i> Fournisseurs</a></li>
+                        <li {% if item == 'matiere_premiere' %} class="active" {% endif %}><a href="{{ path('app_depense_matiere_premiere') }}"><i class="fa fa-cube" aria-hidden="true"></i> Produits Alia</a></li>
+                        <li {% if item == 'produit_fini' %} class="active" {% endif %}><a href="{{ path('app_depense_poduit_fini') }}"><i class="fa fa-cubes" aria-hidden="true"></i> Produits d'importation</a></li>
+                        <li {% if item == 'designation' %} class="active" {% endif %}><a href="{{ path('app_depense_designation') }}"><i class="fa fa-tags" aria-hidden="true"></i> Designations</a></li>
+                        <li {% if item == 'analyse' %} class="active" {% endif %}><a href="{{ path('app_depense_analyse') }}"><i class="fa fa-flask" aria-hidden="true"></i> Analyses</a></li>
+                        <li {% if item == 'paiement' %} class="active" {% endif %}><a href="{{ path('app_depense_mode_paiement') }}"><i class="fa fa-credit-card" aria-hidden="true"></i> Modes Paiement</a></li>
+                        <li {% if item == 'banque' %} class="active" {% endif %}><a href="{{ path('app_depense_banque') }}"><i class="fa fa-bank" aria-hidden="true"></i> Banques</a></li>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}<li {% if item == 'employe' %} class="active" {% endif %}><a href="{{ path('app_depense_employe') }}"><i class="fa fa-users" aria-hidden="true"></i> Employés</a></li>{% endif %}
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+</div>

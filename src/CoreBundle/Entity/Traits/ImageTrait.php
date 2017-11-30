@@ -11,6 +11,7 @@ namespace CoreBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Image;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Class ImageTrait
@@ -19,9 +20,10 @@ use AppBundle\Entity\Image;
 trait ImageTrait
 {
     /**
+     * @Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Image", cascade={"persist","remove"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="image_id", referencedColumnName="id", nullable=true)
+     *   @ORM\JoinColumn(name="image_id", referencedColumnName="id", nullable=true, onDelete="cascade")
      * })
      */
     private $image;
@@ -42,14 +44,7 @@ trait ImageTrait
      * @return \AppBundle\Entity\Image
      */
     public function getImage() {
-        if ($this->image)
-            return $this->image;
-        $image = new Image();
-        $image
-            ->setNom("no_image")
-            ->setExtension("png")
-        ;
-        return $image;
+        return $this->image;
     }
 
 

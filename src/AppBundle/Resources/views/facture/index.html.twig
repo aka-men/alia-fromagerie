@@ -1,0 +1,194 @@
+{% extends "layout.html.twig" %}
+{% set item = 'factures' %}
+{% block title %}Factures{% endblock %}
+
+{% block style %}
+    <!-- Datatables -->
+    <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('vendors/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css') }}" type="text/css" />
+ {% endblock %}
+
+{% block breadcrumb %}
+    </li><li class="active">Factures</li>
+{% endblock %}
+
+{% block contenu %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Recherche : </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><select class="form-control" id="length"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option selected value="75">75</option><option value="100">100</option></select></li>
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="search-bar" class="x_content">
+                    <div class="row row-fluid">
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <select id="annee" class="form-control show-tick filter" data-live-search="true">
+                                    <option value>Année</option>
+                                    {% for a in range(2016,"now"|date('Y')) %}
+                                        <option {% if loop.last %} selected {% endif %} value="{{ a }}">{{ a }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <select id="mois" class="form-control show-tick filter" data-live-search="true">
+                                    <option value>Mois</option>
+                                    {% for m in range(1,12) %}
+                                        {% set dateString = "01-"~ m ~ "-2017" %}
+                                        <option {% if m == "now"|date('m') %} selected {% endif %} value="{{ m }}">{{ dateString|date('m') }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <select id="mode" class="form-control show-tick filter" data-live-search="true">
+                                    <option selected value="">Mode Paiement</option>
+                                    {% for mode in modes %}
+                                        {% if not mode.isArchive %}
+                                            <option value="{{ mode.id }}">{{ mode.label }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <select id="client-entreprise" class="form-control show-tick filter" data-live-search="true">
+                                    <option value>Client</option>
+                                    <optgroup id="clients" label="Clients">
+                                        {% for client in clients %}
+                                            {% if not client.isArchive %}
+                                                <option data-type="client" value="{{ client.id }}">{{ client.fullName(true)}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup id="commerciaux" label="Commerciaux">
+                                        {% for commerciale in commerciales %}
+                                            {% if not commerciale.isArchive %}
+                                                <option data-type="client" value="{{ commerciale.id }}">{{ commerciale.fullName(true)}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup id="entreprises" label="Entreprises">
+                                        {% for entreprise in entreprises %}
+                                            {% if not entreprise.isArchive %}
+                                                <option data-type="entreprise" value="{{ entreprise.id }}">{{ entreprise.nom}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <input type="text" placeholder="Facture" id="id" class="form-control small-input filter entier" />
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <input type="text" placeholder="BL" id="commande" class="form-control small-input filter entier" />
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+                            <div class="form-group">
+                                <input type="text" placeholder="N° reglement" id="cheque" class="form-control filter entier" />
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+                            <div class="form-group">
+                                <select id="isPaid" class="form-control show-tick filter">
+                                    <option selected value="">Payé</option>
+                                    <option value="1">Oui</option>
+                                    <option value="0">Non</option>
+                                </select>
+                            </div>
+                        </div>
+                        {#<div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <input type="text" title="Montant Ttc" placeholder="TTC" id="ttc" class="form-control small-input filter numerique" />
+                            </div>
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+                            <div class="form-group">
+                                <input type="text" title="Montant Ht" placeholder="Ht" id="ht" class="form-control small-input filter numerique" />
+                            </div>
+                        </div>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Liste Factures</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <div id="collection-action" style="display: none;margin-right: 5px;" class="btn-group">
+                                <button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' type="button" style="background-color: cornflowerblue;color: azure;padding: 5px 10px;margin: 0 1px;" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu inner">
+                                    <li><button style="width: 100%;text-align: left;" data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'  data-href="{{ path('app_facture_print_collection') }}" id="collection-print" class="btn btn-default"><i class="fa fa-print" aria-hidden="true"></i> Réunir factures</button></li>
+                                    <li><button style="width: 100%;text-align: left;" data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>'  data-href="{{ path('app_commande_paiements_add') }}" data-title="Payer plusieurs factures" id="collection-add-paiment" class="btn btn-default"><i class="fa fa-money" aria-hidden="true"></i> Payer</button></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <table id="table-factures" data-href="{{ path('app_facture_index') }}" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th style="background-color: transparent;text-align: center;">
+                                <div style="margin: auto;" class="pretty info circle curvy a-rotate">
+                                    <input id="select-all-invoice" type="checkbox">
+                                    <label><i class="fa fa-check" aria-hidden="true"></i></label>
+                                </div>
+                            </th>
+                            <th>BL</th>
+                            <th>Facture</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th title="Montant Hors Taxe">HT</th>
+                            <th>TVA</th>
+                            <th title="Montant toute taxe comprise">TTC</th>
+                            <th title="Frais Supplémentaire">Frais Supp</th>
+                            <th>TOTAL</th>
+                            <th>Avance</th>
+                            <th>Reste</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <!-- Datatables -->
+    <script src="{{ asset('vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendors/bootstrap-datetimepicker/js/moment-with-locales.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vendors/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js') }}"></script>
+{% endblock %}
+{% block customJs %}
+    <script src="{{ asset('js/facture/index.js') }}"></script>
+{% endblock %}

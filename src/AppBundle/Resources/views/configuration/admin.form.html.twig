@@ -1,0 +1,25 @@
+<form method="post" action="{{ path('app_config') }}" name="config_admin" id="config_admin" data-parsley-validate>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                <div style="margin-top: 30px;" class="pretty info circle curvy a-rotate">
+                    <input {% if configuration.get('admin_enable_retour') %}checked{% endif %} id="config_admin_admin_enable_retour" name="config_admin[admin_enable_retour]" type="checkbox">
+                    <label><i class="fa fa-check" aria-hidden="true"></i> Autoriser le retour</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                <label for="config_admin_admin_code_retour">Code retour</label>
+                <input {% if not configuration.get('admin_enable_retour') %}disabled{% endif %} placeholder="Code retour" value="{{ configuration.get('admin_code_retour') }}" type="text" class="form-control" id="config_admin_admin_code_retour" name="config_admin[admin_code_retour]" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group">
+                <button type="submit" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' type="button" class="btn btn-primary pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</form>

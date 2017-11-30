@@ -1,0 +1,23 @@
+<form action="{{ action }}" method="post" name="types_mensuelles" id="types_mensuelles" data-parsley-validate>
+    {% set index = 1 %}
+    {% for type in types %}
+        {% if type.childrens|length == 0 %}
+            {% if index == 1 %}
+                <div class="row">
+            {% endif %}
+            {% set index = index + 1 %}
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div title="{{ type.fullLabel }}" class="pretty info circle curvy a-rotate">
+                    <input {% if type.mensuelle %}checked{% endif %} value="{{ type.id }}" name="types_mensuelles[]" type="checkbox">
+                    <label>
+                        <i class="fa fa-check prety-large" aria-hidden="true"></i> {{ type.fullLabel|slice(0,15) }}<br/>
+                    </label>
+                </div>
+            </div>
+            {% if index == 4 or loop.last %}
+                {% set index = 1 %}
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</form>

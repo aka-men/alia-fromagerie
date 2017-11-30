@@ -1,0 +1,440 @@
+<style type="text/css">
+    table.bordred tr td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+
+    table.bordred tr td:first-child {
+        padding-left: 8px !important;
+    }
+
+    table.bordred {
+        border-collapse: collapse;
+    }
+</style>
+<page backtop="50mm" backbottom="10mm" backleft="3mm" backright="3mm">
+
+    {% if configuration.get("facture_entete") %}
+        <page_header>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 100%;text-align:left;">
+                        <img style="width:70mm;height: 40mm;" {% if type == 'pdf' %} src="{{ configuration.absoluteWebPath ~ '/images/logo.jpg' }}" {% else %} src="{{ asset('images/logo.jpg') }}" {% endif %} />
+                    </td>
+                </tr>
+            </table>
+        </page_header>
+    {% endif %}
+
+    {% if configuration.get("facture_pied") %}
+        <page_footer>
+            <table style="width: 100%; border-top: solid 1px black;">
+                <tr>
+                    <td style="text-align: left;width: 8%;vertical-align: middle;">
+                        <img style="width:100%;height:30px;" {% if type == 'pdf' %} src="{{ configuration.absoluteWebPath ~ '/images/logo.png' }}" {% else %} src="{{ asset('images/logo.png') }}" {% endif %} />
+                    </td>
+                    <td style="text-align: center;width: 84%;font-size: 7.5px;font-weight: bold;">
+                        Siege
+                        social: {{ configuration.get("entreprise_adresse1") ~ ' ' ~ configuration.get("entreprise_adresse2") }}
+                        / RC: {{ configuration.get("entreprise_rc") }} / IF: {{ configuration.get("entreprise_if") }} /
+                        CNSS: {{ configuration.get("entreprise_cnss") }} /
+                        PATENTE: {{ configuration.get("entreprise_patente") }} |
+                        ICE: {{ configuration.get("entreprise_ice") }}<br/>
+                        Tél: {{ configuration.get("entreprise_phone") }} -
+                        Fax: {{ configuration.get("entreprise_fax") }} -
+                        Gsm: {{ configuration.get("entreprise_gsm1") }} {% if configuration.get("entreprise_gsm2") is not null and configuration.get("entreprise_gsm2") != '' %} / {{ configuration.get("entreprise_gsm2") }}{% endif %}{% if configuration.get("entreprise_gsm3") is not null and configuration.get("entreprise_gsm3") != '' %} / {{ configuration.get("entreprise_gsm3") }}{% endif %}
+                        / Web: {{ configuration.get("entreprise_site") }} /
+                        mail: {{ configuration.get("entreprise_email") }}
+                    </td>
+                    <td style="text-align: right;width: 8%;vertical-align: middle;font-size: 9px;">
+                        <qrcode value="{{ configuration.get("entreprise_site") }}"
+                                style="border: none; width:50px;"></qrcode>
+                    </td>
+                </tr>
+            </table>
+        </page_footer>
+    {% endif %}
+
+
+    <br/><br/>
+
+    {% if facture.commandes|length > 1 %}
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 60%;"></td>
+                <td style="width: 40%;text-align: left;">{{ facture.date|date('d/m/Y') }}</td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 60%;text-align: left;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><br/></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%;font-size: 12px;">
+                                <span style="font-weight: bold;font-size: 23px;">{{ configuration.get("entreprise_nom") }}</span><br/><br/>
+                                Tél: &nbsp;&nbsp;&nbsp;{{ configuration.get("entreprise_phone") }}<br/>
+                                Gsm: {{ configuration.get("entreprise_gsm1") }}<br/>
+                                email: {{ configuration.get("entreprise_email") }}<br/><br/>
+                                <span style="font-size: 11px;color: grey;font-weight: normal;margin-top: -8px;">BL: {% set i = 0 %}{% for cmd in facture.commandes %}{% if i == 8 %}
+                                        <br/>{% set i = 0 %}{% else %}{% set i = i + 1 %}{% endif %}{{ ' ' ~ cmd.id }}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 40%;text-align: left;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 100%;text-align: left;font-size: 18px;font-weight: bold;">
+                                Facture: {{ facture.numero }}<br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%;text-align: left;font-size: 18px;font-weight: bold;">
+                                {% if facture.client is not null %}
+                                    {{ facture.client.fullName }}
+                                {% elseif facture.entreprise is not null %}
+                                    {{ facture.entreprise.nom }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if (facture.client and facture.client.adresse) or (facture.entreprise and facture.entreprise.adresse) %}
+                            <tr>
+                                <td style="width: 100%;text-align: left;">
+                                    {% if facture.entreprise %}{{ facture.entreprise.adresse }}{% elseif facture.client %}{{ facture.client.adresse }}{% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br/><br/><br/>
+        <table cellspacing="0" class="bordred" style="width: 100%;font-size: 14px;margin-top: 25px;">
+            <tr>
+                <td style="text-align: left;width: 18%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Date
+                </td>
+                <td style="text-align: left;width: 36%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Designation
+                </td>
+                <td style="text-align: center;width: 10%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    BL
+                </td>
+                <td style="text-align: right;width: 18%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Montant HT
+                </td>
+                <td style="text-align: right;width: 18%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Montant TTC
+                </td>
+            </tr>
+            {% for cmd in facture.commandes %}
+                <tr>
+                    <td style="text-align: left;width: 18%;vertical-align: middle;">
+                        {% if cmd.dateLivraison %}{{ cmd.dateLivraison|date('d/m/Y') }}{% else %}{{ cmd.date|date('d/m/Y') }}{% endif %}
+                    </td>
+                    <td style="text-align: left;width: 36%;vertical-align: middle;">{{ cmd.numero }}</td>
+                    <td style="text-align: center;width: 10%;vertical-align: middle;">{{ cmd.id }}</td>
+                    <td style="text-align: right;width: 18%;vertical-align: middle;">{{ cmd.MontantHt|number_format(2,'.',' ') }}</td>
+                    <td style="text-align: right;width: 18%;vertical-align: middle;">{{ cmd.MontantTtc|number_format(2,'.',' ') }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <table style="width: 100%;margin-top: 20px;">
+            <tr>
+                <td style="width: 50%;text-align: center;">
+                    {% if facture.reste < 1 %}
+                        <img style="border: none;height: 100px;width: 200px;rotation: 20deg;" {% if type == 'pdf' %} src="{{ configuration.absoluteWebPath ~ '/images/paid.png' }}" {% else %} src="{{ asset('images/paid.png') }}" {% endif %} />
+                    {% endif %}
+                </td>
+                <td style="width: 50%;">
+                    <table class="bordred" style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">Sous
+                                Total
+                            </td>
+                            <td style="width: 50%;text-align: right;">{{ facture.ht|number_format(2,'.',' ') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">TVA
+                                ({{ facture.tva }}%)
+                            </td>
+                            <td style="width: 50%;text-align: right;">{{ facture.taxes|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%;margin-top: 20px;" class="bordred">
+                        <tr>
+                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;font-size: 14px;">
+                                Net A Payer
+                            </td>
+                            <td style="width: 50%;text-align: right;font-weight: bold;padding-top: 10px;padding-bottom: 10px;font-size: 14px;">{{ facture.total|number_format(2,'.',' ') }}
+                                DH
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;">
+                                Avance
+                            </td>
+                            <td style="width: 50%;text-align: right;font-weight: bold;padding-top: 10px;padding-bottom: 10px;">{{ facture.avance|number_format(2,'.',' ') }}
+                                DH
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;">
+                                Reste
+                            </td>
+                            <td style="width: 50%;text-align: right;font-weight: bold;padding-top: 10px;padding-bottom: 10px;">{{ facture.reste|number_format(2,'.',' ') }}
+                                DH
+                            </td>
+                        </tr>
+                    </table>
+                    {#{% if facture.commande.paiements|length > 0 %}
+                        <table style="width: 100%;margin-top: 20px;" class="bordred">
+                            {% for paiement in facture.commande.paiements %}
+                                <tr>
+                                    <td style="text-align: left;width:70%;vertical-align: middle;">
+                                        {{ paiement.modePayment.label }}
+                                        - {{ paiement.date|date('d/m/Y') }}  {% if paiement.numeroReglement %}N° {{ paiement.numeroReglement }}{% endif %}
+                                    </td>
+                                    <td style="width: 30%;vertical-align: middle;text-align: right;">{{ paiement.prix|number_format(2,'.',' ') }}
+                                        DH
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% if facture.commande.avance > 0 %}
+                                <tr>
+                                    <td style="text-align: center;width:70%;vertical-align: middle;font-weight: bold;">Total
+                                        Avance
+                                    </td>
+                                    <td style="width: 30%;vertical-align: middle;text-align: right;">{{ facture.commande.avance|number_format(2,'.',' ') }}
+                                        DH
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td style="text-align: center;width:70%;vertical-align: middle;font-weight: bold;">Reste
+                                </td>
+                                <td style="width: 30%;vertical-align: middle;text-align: right;">{{ facture.commande.reste|number_format(2,'.',' ') }}
+                                    DH
+                                </td>
+                            </tr>
+                        </table>
+                    {% endif %}#}
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 100%;">
+                    <h5 style="font-size: 12px;font-weight: normal;">
+                        Arréter la présente facture en toute taxes comprise a la somme de: <span
+                                style="text-decoration: underline;">{{ (facture.total)|toLetter }}</span> Dirhams
+                    </h5>
+                </td>
+            </tr>
+        </table>
+    {% else %}
+        {% set commande = facture.commandes.first %}
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 60%;"></td>
+                <td style="width: 40%;text-align: left;">{{ commande.dateLivraison|date('d/m/Y') }}</td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 60%;text-align: left;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td><br/></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%;font-size: 12px;">
+                                <span style="font-weight: bold;font-size: 23px;">{{ configuration.get("entreprise_nom") }}</span><br/><br/>
+                                Tél: &nbsp;&nbsp;&nbsp;{{ configuration.get("entreprise_phone") }}<br/>
+                                Gsm: {{ configuration.get("entreprise_gsm1") }}<br/>
+                                email: {{ configuration.get("entreprise_email") }}<br/><br/>
+                                <span style="color:grey; ">Livré par : {{ commande.livrerPar }}</span><br/><br/>
+                                <span style="font-size: 11px;color: grey;font-weight: normal;margin-top: -8px;">BL: {{ commande.id }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 40%;text-align: left;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 100%;text-align: left;font-size: 18px;font-weight: bold;">
+                                Facture: {{ facture.numero }}<br/>
+                                <span style="font-size: 11px;color: grey;font-weight: normal;">Réf: {{ commande.reference }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 100%;text-align: left;font-size: 18px;font-weight: bold;">
+                                {{ commande.clientEntreprise }}
+                            </td>
+                        </tr>
+                        {% if (commande.client and commande.client.adresse) or (commande.entreprise and commande.entreprise.adresse) %}
+                            <tr>
+                                <td style="width: 100%;text-align: left;">
+                                    {% if commande.entreprise %}{{ commande.entreprise.adresse }}{% elseif commande.client %}{{ commande.client.adresse }}{% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br/><br/><br/>
+        <table cellspacing="0" class="bordred" style="width: 100%;font-size: 14px;margin-top: 25px;">
+            <tr>
+                <td style="text-align: left;width: 54%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Designation
+                </td>
+                <td style="text-align: center;width: 10%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Quantité
+                </td>
+                <td style="text-align: right;width: 18%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Prix Unitaire HT
+                </td>
+                <td style="text-align: right;width: 18%;font-weight: bold;vertical-align: middle;background-color: lightgrey;">
+                    Prix Total HT
+                </td>
+            </tr>
+            {% for pc in commande.produits %}
+                {% if pc.isEchantillon %}
+                    <tr>
+                        <td style="text-align: left;width: 54%;vertical-align: middle;">
+                            {{ pc.produit.titre }}{% if pc.produit.description %}<p
+                                    style="color: grey;font-size: 11px;margin-top:0;">{{ pc.produit.description }}</p>{% endif %}
+                        </td>
+                        <td style="text-align: center;width: 10%;vertical-align: middle;">{{ pc.quantite ~ ' ' ~ pc.produit.unite }}</td>
+                        <td colspan="2" style="text-align: center;width: 36%;vertical-align: middle;">Echantillon</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td style="text-align: left;width: 54%;vertical-align: middle;">
+                            {{ pc.produit.titre }}{% if pc.produit.description %}<p
+                                    style="color: grey;font-size: 11px;margin-top:0;">{{ pc.produit.description }}</p>{% endif %}
+                        </td>
+                        <td style="text-align: center;width: 10%;vertical-align: middle;">{{ pc.quantite ~ ' ' ~ pc.produit.unite }}</td>
+                        <td style="text-align: right;width: 18%;vertical-align: middle;">{{ pc.prix|number_format(2,'.',' ') }}</td>
+                        <td style="text-align: right;width: 18%;vertical-align: middle;">{{ pc.sousTotal|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+        <table style="width: 100%;margin-top: 20px;">
+            <tr>
+                <td style="width: 50%;text-align: center;">
+                    {% if commande.reste < 1 %}
+                        <img style="border: none;height: 100px;width: 200px;rotation: 20deg;" {% if type == 'pdf' %} src="{{ configuration.absoluteWebPath ~ '/images/paid.png' }}" {% else %} src="{{ asset('images/paid.png') }}" {% endif %} />
+                    {% endif %}
+                </td>
+                <td style="width: 50%;">
+                    <table class="bordred" style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">Sous
+                                Total
+                            </td>
+                            <td style="width: 50%;text-align: right;">{{ commande.montantHt|number_format(2,'.',' ') }}</td>
+                        </tr>
+                        {% if commande.remise is not null and commande.remise > 0 %}
+                            <tr>
+                                <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">
+                                    Remise ({{ commande.remise }}%)
+                                </td>
+                                <td style="width: 50%;text-align: right;">
+                                    - {{ commande.reduction|number_format(2,'.',' ') }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">TVA
+                                ({{ commande.tva }}%)
+                            </td>
+                            <td style="width: 50%;text-align: right;">{{ commande.taxes|number_format(2,'.',' ') }}</td>
+                        </tr>
+                        {% for fc in commande.FraitWithTva %}
+                            <tr>
+                                <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">{{ fc.label }}</td>
+                                <td style="width: 50%;text-align: right;">{{ fc.ttc|number_format(2,'.',' ') }}</td>
+                            </tr>
+                        {% endfor %}
+                        {% for fc in commande.FraitWithoutTva %}
+                            <tr>
+                                <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;">{{ fc.label }}</td>
+                                <td style="width: 50%;text-align: right;">{{ fc.ttc|number_format(2,'.',' ') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <table style="width: 100%;margin-top: 20px;" class="bordred">
+                        <tr>
+                            <td style="width: 50%;background-color:lightgrey;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;font-size: 14px;">
+                                Net A Payer
+                            </td>
+                            <td style="width: 50%;text-align: right;font-weight: bold;padding-top: 10px;padding-bottom: 10px;font-size: 14px;">{{ commande.total|number_format(2,'.',' ') }}
+                                DH
+                            </td>
+                        </tr>
+                        {% if commande.paiements|length == 0 %}
+                            <tr>
+                                <td style="width: 50%;text-align: center;font-weight: bold;padding-top: 10px;padding-bottom: 10px;">
+                                    Reste
+                                </td>
+                                <td style="width: 50%;text-align: right;font-weight: bold;padding-top: 10px;padding-bottom: 10px;">{{ commande.total|number_format(2,'.',' ') }}
+                                    DH
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                    {% if commande.paiements|length > 0 %}
+                        <table style="width: 100%;margin-top: 20px;" class="bordred">
+                            {% for paiement in commande.paiements %}
+                                <tr>
+                                    <td style="text-align: left;width:70%;vertical-align: middle;">
+                                        {{ paiement.modePayment.label }}
+                                        - {{ paiement.date|date('d/m/Y') }}  {% if paiement.numeroReglement %}N° {{ paiement.numeroReglement }}{% endif %}
+                                    </td>
+                                    <td style="width: 30%;vertical-align: middle;text-align: right;">{{ paiement.prix|number_format(2,'.',' ') }}
+                                        DH
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% if commande.avance > 0 %}
+                                <tr>
+                                    <td style="text-align: center;width:70%;vertical-align: middle;font-weight: bold;">
+                                        Total Avance
+                                    </td>
+                                    <td style="width: 30%;vertical-align: middle;text-align: right;">{{ commande.avance|number_format(2,'.',' ') }}
+                                        DH
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td style="text-align: center;width:70%;vertical-align: middle;font-weight: bold;">
+                                    Reste
+                                </td>
+                                <td style="width: 30%;vertical-align: middle;text-align: right;">{{ commande.reste|number_format(2,'.',' ') }}
+                                    DH
+                                </td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 100%;">
+                    <h5 style="font-size: 12px;font-weight: normal;">
+                        Arréter la présente facture en toute taxes comprise a la somme de: <span
+                                style="text-decoration: underline;">{{ (commande.total)|toLetter }}</span> Dirhams
+                    </h5>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+</page>

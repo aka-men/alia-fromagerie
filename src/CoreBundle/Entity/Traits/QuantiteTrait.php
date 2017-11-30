@@ -18,16 +18,16 @@ use Doctrine\ORM\Mapping as ORM;
 trait QuantiteTrait
 {
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(name="quantite", type="integer")
+     * @ORM\Column(name="quantite", type="float")
      */
     private $quantite;
 
     /**
      * Set quantite
      *
-     * @param integer $quantite
+     * @param float $quantite
      *
      * @return $this
      */
@@ -40,7 +40,7 @@ trait QuantiteTrait
     /**
      * Get quantite
      *
-     * @return int
+     * @return float
      */
     public function getQuantite() {
         return $this->quantite;

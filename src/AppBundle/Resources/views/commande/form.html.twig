@@ -1,0 +1,498 @@
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="well">
+            {% if params.step is not defined or (params.step is defined and params.step == '1') %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form action="{{ path('app_commande_add') }}" method="post" name="commande_step_1" id="commande_step_1">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                                    <h4 class="text-bold">Type des produits</h4>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
+                                    <div style="padding-top: 8px;" class="form-group">
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input checked class="radio-typeProduit" value="alia" id="typeProduit3" name="typeProduit" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Produits Alia</label>
+                                        </div>
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input class="radio-typeProduit" value="others" id="typeProduit2" name="typeProduit" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Produits d'importation</label>
+                                        </div>
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input required class="radio-typeProduit" value="all" id="typeProduit1" name="typeProduit" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Tous</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                                    <h4 class="text-bold">Client/Entreprise</h4>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
+                                    <div style="padding-top: 8px;" class="form-group">
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input checked required class="radio-typeClient" value="clients" id="typeClient2" name="typeClient" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Clients</label>
+                                        </div>
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input class="radio-typeClient" value="commerciaux" id="typeClient3" name="typeClient" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Commerciaux</label>
+                                        </div>
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input class="radio-typeClient" value="entreprises" id="typeClient4" name="typeClient" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Entreprises</label>
+                                        </div>
+                                        <div class="pretty info circle curvy a-rotate">
+                                            <input class="radio-typeClient" value="all" id="typeClient1" name="typeClient" type="radio">
+                                            <label><i class="fa fa-check prety-large" aria-hidden="true"></i> Tous</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <select required class="form-control show-tick" data-live-search="true" name="commande_client_entreprise" id="commande_client">
+                                            <option data-object="0" selected value>Sélectionner Client/Commerciale/Entreprise</option>
+                                            <optgroup id="clients" label="Clients">
+                                                {% for client in clients %}
+                                                    <option data-object="client" value="{{ client.id }}">{{ client.fullName(true) }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            <optgroup id="commerciaux" label="Commerciaux">
+                                                {% for commerciale in commerciaux %}
+                                                    <option data-object="client" value="{{ commerciale.id }}">{{ commerciale.fullName(true) }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            <optgroup id="entreprises" label="Entreprises">
+                                                {% for entreprise in entreprises %}
+                                                    <option data-object="entreprise" value="{{ entreprise.id }}">{{ entreprise.nom }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                        </select>
+                                        <p style="margin-top: -5px;" class="help-block"><a data-type="client" id="add-client" data-href="{{ path('app_client_add') }}" data-title="Ajouter un client" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link"><i class="fa fa-plus-square" aria-hidden="true"></i> client</a><a data-type="commerciale" id="add-commerciale" data-href="{{ path('app_client_add') }}" data-title="Ajouter un commerciale" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link"><i class="fa fa-plus-square" aria-hidden="true"></i> commerciale</a><a id="add-entreprise" data-href="{{ path('app_entreprise_add') }}" data-title="Ajouter une entreprise" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link"><i class="fa fa-plus-square" aria-hidden="true"></i> entreprise</a></p>
+                                        <input type="hidden" id="used_type" name="used_type" value="0" />
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="text-bold">Produits</h4>
+                            <div id="produits-alia" class="row">
+                                <div class="col-lg-12">
+                                    <h5 class="text-bold" style="color: coral;">Produits Alia</h5>
+                                    <div class="row">
+                                        {% if produitsAlia|length == 0 %}
+                                            <div class="alert alert-warning">
+                                                <p>Vous n'avez aucun produit Alia disponible !</p>
+                                            </div>
+                                        {% endif %}
+                                        {% for p in produitsAlia %}
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                <div class="pretty info circle curvy a-rotate">
+                                                    <input class="check-produits" value="{{ p.id }}" name="produit[]" type="checkbox">
+                                                    <label>
+                                                        <i class="fa fa-check prety-large" aria-hidden="true"></i> {{ p.titre }}<br/>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="produits-importation" class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <h5 class="text-bold" style="color: coral;">Produits d'importation</h5>
+                                    <div class="row">
+                                        {% if produitsImportation|length == 0 %}
+                                            <div class="alert alert-warning">
+                                                <p>Vous n'avez aucun produit disponible !</p>
+                                            </div>
+                                        {% endif %}
+                                        {% for p in produitsImportation %}
+                                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                <div class="pretty info circle curvy a-rotate">
+                                                    <input class="check-produits" value="{{ p.id }}" name="produit[]" type="checkbox">
+                                                    <label>
+                                                        <i class="fa fa-check prety-large" aria-hidden="true"></i> {{ p.titre }}<br/>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="step" value="2" />
+                            <div class="form-group">
+                                <button type="submit" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-success pull-right">Suivant <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+                                <button class="btn btn-default pull-right" id="cancel">Annuler</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% elseif params.step is defined and params.step == '2' %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+                    </div>
+                </div>
+                {{ form_start(formCommande,{ 'action': path('app_commande_add'),'attr':{'method':'POST','id':'appbundle_commande','data-parsley-validate':''}}) }}
+                <div class="row">
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="appbundle_commande_date">Date</label>
+                            {{ form_widget(formCommande.date, {'attr': {'class':'form-control date-input'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Tva</label>
+                            <div class="input-group">
+                            <span class="input-group-btn">
+                                              <button id="checkTva" class="btn btn-danger"><i class="fa fa-circle-o" aria-hidden="true"></i></button>
+                                          </span>
+                                <input readonly style="background-color: white;" name="appbundle_commande[tva]" id="appbundle_commande_tva" type="text" class="form-control numerique">
+                            </div>
+                        </div>
+                    </div>
+                    {#<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="select_livraison">Livré par</label>
+                            <select id="select_livraison" class="form-control show-tick" data-live-search="true">
+                                <option value="">Livré par</option>
+                                <optgroup id="employes" label="Employés">
+                                    {% for employe in employes %}
+                                        {% if employe.commerciale is null %}
+                                            <option data-object="employe" value="{{ employe.id }}">{{ employe.fullName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup id="clients" label="Clients">
+                                    {% for c in clients %}
+                                        <option data-object="client" value="{{ c.id }}">{{ c.fullName(true) }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup id="commerciaux" label="Commerciaux">
+                                    {% for commerciale in commerciaux %}
+                                        <option data-object="client" value="{{ commerciale.id }}">{{ commerciale.fullName(true) }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup id="entreprises" label="Entreprises">
+                                    {% for e in entreprises %}
+                                        <option  data-object="entreprise" value="{{ e.id }}">{{ e.nom }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>#}
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            {{ form_label(formCommande.dateLivraison) }}
+                            {{ form_widget(formCommande.dateLivraison, {'attr': {'class':'form-control date-input'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            {{ form_label(formCommande.reference) }}
+                            {{ form_widget(formCommande.reference, {'attr': {'class':'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Client</label>
+                            <select id="select_client_entreprise" class="form-control show-tick" data-live-search="true">
+                                <optgroup id="clients" label="Clients">
+                                    {% for c in clients %}
+                                        <option data-tva="{{ c.hasTva ? 'true' : 'false' }}" {% if client is defined and client is not null and client.id == c.id %}selected{% endif %} data-object="client" value="{{ c.id }}">{{ c.fullName(true) }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup id="commerciaux" label="Commerciaux">
+                                    {% for commerciale in commerciaux %}
+                                        <option data-tva="{{ commerciale.hasTva ? 'true' : 'false' }}" {% if client is defined and client is not null and client.id == commerciale.id %}selected{% endif %} data-object="client" value="{{ commerciale.id }}">{{ commerciale.fullName(true) }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup id="entreprises" label="Entreprises">
+                                    {% for e in entreprises %}
+                                        <option data-tva="{{ e.hasTva ? 'true' : 'false' }}" {% if entreprise is defined and entreprise is not null and entreprise.id == e.id %}selected{% endif %}  data-object="entreprise" value="{{ e.id }}">{{ e.nom }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    {#<div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Montant HT</label>
+                            <input type="text" class="form-control" name="appbundle_commande[montantHt]" id="appbundle_commande_montantHt" />
+                        </div>
+                    </div>#}
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="text-bold">Articles <small style="display:-webkit-box;"><button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' data-href="{{ path('app_commande_add_produits') }}" id="add-article" class="btn-sm btn btn-success"> <i class="fa fa-plus-circle"></i> Ajouter</button> <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' data-href="{{ path('app_commande_add_echantillons') }}" id="add-echantillon" class="btn-sm btn btn-warning" style="background-color: blue;border-color: blue;"> <i class="fa fa-plus-circle"></i> Ajouter Echantillon</button> <div style="width: 120px;" class="input-group"><span class="input-group-btn"><button id="toggle-remise" class="btn btn-sm btn-danger"><i class="fa fa-circle-o" aria-hidden="true"></i></button></span><input title="Remise" placeholder="Remise" readonly style="background-color: white;width: 75px;" name="appbundle_commande[remise]" id="appbundle_commande_remise" type="text" class="form-control input-sm numerique"></div><div style="margin-top: 8px;" class="pretty info circle curvy a-rotate"><input id="create_invoice" name="create_invoice" type="checkbox"><label><i class="fa fa-check" aria-hidden="true"></i> Générer une facture</label></div></small></h4>
+                        {% if client is defined and client is not null %}
+                            <input id="appbundle_commande_client" type="hidden" name="appbundle_commande[client]" value="{{ client.id }}" />
+                        {% elseif entreprise is defined and entreprise is not null %}
+                            <input id="appbundle_commande_entreprise" type="hidden" name="appbundle_commande[entreprise]" value="{{ entreprise.id }}" />
+                        {% endif %}
+                        <div class="table-responsive">
+                            <table id="table-produits-commandes" style="background-color: white;" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th class="prix">Prix</th>
+                                    <th class="qte">Quantité</th>
+                                    <th class="prix">Sous total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% if params.produit is not defined or (params.produit is defined and params.produit|length == 0) %}
+                                    <tr class="tr-alert">
+                                        <td colspan="4">
+                                            <div class="alert alert-warning">
+                                                <p>Vous devez selectionner des produits !</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    {% set index = 0 %}
+                                    {% for produit in produitsAlia %}
+                                        {% if produit.id in params.produit %}
+                                            <tr data-id="{{ produit.id }}" class="details-line">
+                                                <td style="max-width: 100px;">
+                                                    <span>{{ produit.titre }}</span>
+                                                    <p class="description">{{ produit.description }}</p>
+                                                    <input type="hidden" name="appbundle_commande[produits][{{ index }}][produit]" value="{{ produit.id }}" />
+                                                </td>
+                                                <td class="prix">
+                                                    {% if client is defined and client is not null %}
+                                                        {% set prix = produit.prixClient(client) %}
+                                                    {% elseif entreprise is defined and entreprise is not null %}
+                                                        {% set prix = produit.prixEntreprise(entreprise) %}
+                                                    {% else %}
+                                                        {% set prix = produit.prix %}
+                                                    {% endif %}
+                                                    <input required type="text" class="form-control numerique prix" name="appbundle_commande[produits][{{ index }}][prix]" value="{{ prix }}" />
+                                                </td>
+                                                <td class="qte">
+                                                    <input required type="text" class="form-control numerique qte" name="appbundle_commande[produits][{{ index }}][quantite]" value="1" />
+                                                </td>
+                                                <td class="prix">
+                                                    <div class="input-group">
+                                                        <input value="{{ prix }}" style="background-color: white;z-index: 0 !important;" type="text" class="form-control st" readonly />
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-danger delete-line-produit"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% set index = index + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for produit in produitsImportation %}
+                                        {% if produit.id in params.produit %}
+                                            <tr data-id="{{ produit.id }}" class="details-line">
+                                                <td style="max-width: 100px;">
+                                                    <span>{{ produit.titre }}</span>
+                                                    <p class="description">{{ produit.description }}</p>
+                                                    <input type="hidden" name="appbundle_commande[produits][{{ index }}][produit]" value="{{ produit.id }}" />
+                                                </td>
+                                                <td class="prix">
+                                                    {% if client is defined and client is not null %}
+                                                        {% set prix = produit.prixClient(client) %}
+                                                    {% else %}
+                                                        {% set prix = produit.prix %}
+                                                    {% endif %}
+                                                    <input required type="text" class="form-control numerique prix" name="appbundle_commande[produits][{{ index }}][prix]" value="{{ prix }}" />
+                                                </td>
+                                                <td class="qte">
+                                                    <input required type="text" class="form-control numerique qte" name="appbundle_commande[produits][{{ index }}][quantite]" value="1" />
+                                                </td>
+                                                <td class="prix">
+                                                    <div class="input-group">
+                                                        <input value="{{ prix }}" style="background-color: white;z-index: 0 !important;" type="text" class="form-control st" readonly />
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-danger delete-line-produit"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% set index = index + 1 %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div id="frais-details" class="col-lg-12">
+                                <h4>Frais supplémentaires <small><a data-prototype='{% filter escape %}{% include "AppBundle:commande:frais.form.html.twig" %}{% endfilter %}' style="color: blue;" id="add-frais" class="btn btn-xs btn-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Ajouter</a></small></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="paiements-details" class="col-lg-12">
+                                <h4>Paiements <small><a data-prototype='{% filter escape %}{% include "AppBundle:commande:paiement.form.html.twig" with {'modes':modes} %}{% endfilter %}' style="color: blue;" id="add-paiement" class="btn btn-xs btn-link"><i class="fa fa-plus-circle" aria-hidden="true"></i> Ajouter</a></small></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div data-href="{{ path('app_commande_find_custom') }}" id="latest-commandes" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="select_livraison">Livré par</label>
+                                            <select id="select_livraison" class="form-control show-tick" data-live-search="true">
+                                                <option value="">Livré par</option>
+                                                <optgroup id="employes" label="Employés">
+                                                    {% for employe in employes %}
+                                                        {% if employe.commerciale is null %}
+                                                            <option data-object="employe" value="{{ employe.id }}">{{ employe.fullName }}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </optgroup>
+                                                <optgroup id="clients" label="Clients">
+                                                    {% for c in clients %}
+                                                        <option data-object="client" value="{{ c.id }}">{{ c.fullName(true) }}</option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                                <optgroup id="commerciaux" label="Commerciaux">
+                                                    {% for commerciale in commerciaux %}
+                                                        <option data-object="client" value="{{ commerciale.id }}">{{ commerciale.fullName(true) }}</option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                                <optgroup id="entreprises" label="Entreprises">
+                                                    {% for e in entreprises %}
+                                                        <option  data-object="entreprise" value="{{ e.id }}">{{ e.nom }}</option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <button data-print="false" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' type="submit" class="btn btn-primary pull-right" ><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                                            <button data-print="true" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' type="submit" class="btn btn-success pull-right" ><i class="fa fa-print" aria-hidden="true"></i> Imprimer</button>
+                                            <button class="btn btn-default pull-right" id="cancel">Annuler</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% do formCommande.client.setRendered %}
+                        {% do formCommande.remise.setRendered %}
+                        {% do formCommande.livraisonClient.setRendered %}
+                        {% do formCommande.livraisonEntreprise.setRendered %}
+                        {% do formCommande.employe.setRendered %}
+                        {% do formCommande.entreprise.setRendered %}
+                        {% do formCommande.produits.setRendered %}
+                        {% do formCommande.fraisSupplementaires.setRendered %}
+                        {% do formCommande.paiements.setRendered %}
+                        {% do formCommande.tva.setRendered %}
+                        {% do formCommande.montantHt.setRendered %}
+                        {% do formCommande.montantTtc.setRendered %}
+                        <input type="hidden" name="appbundle_commande[montantTtc]" id="appbundle_commande_montantTtc" />
+                        <input type="hidden" name="appbundle_commande[montantHt]" id="appbundle_commande_montantHt" />
+                        {{ form_rest(formCommande) }}
+                        {{ form_end(formCommande) }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div style="max-width: 80mm;margin-left: auto;margin-right: auto;" id="vaucher" class="well">
+            <div>
+                <div style="text-align: center">
+                    <i style="font-weight: bold; font-size: xx-large;">Alia Fromagerie</i><br>
+                    Bled brigadi,Dar bouazza<br/>
+                    12500 Casablanca<br/>
+                    aliafromagerie@gmail.com<br/>
+                    05 22 96 54 13
+                </div>
+            </div>
+            <br/>
+            <div>
+                <b>Bon N° : </b> <span id="id-span" >....</span>
+            </div>
+            <br/>
+            {% if client is defined and client is not null %}
+                <div>
+                    <span id="titre-client">Client : </span> <span class="commande-client" style="font-weight: bold;">{{ client.fullName }}</span>
+                </div>
+                <br/>
+            {% endif %}
+            {% if entreprise is defined and entreprise is not null %}
+                <div>
+                    <span id="titre-client">Entreprise : </span> <span class="commande-client" style="font-weight: bold;">{{ entreprise.nom }}</span>
+                </div>
+                <br/>
+            {% endif %}
+            <div>
+                <b>Date : </b> <span id="date-span">{{ "now"|date('d/m/Y') }}</span>
+            </div>
+            <br/>
+            {% if params.step is defined and params.step == '2' %}
+                <div data-prototype-echantillon="<tr style='font-size:10px;'><td style='width: 15%;'>__quantite__</td><td style='width: 55%;'>__titre__</td><td colspan='2' style='width: 30%;text-align:center;'>Echantillon</td></tr>" data-prototype="<tr><td style='width: 15%;'>__quantite__</td><td style='width: 55%;'>__titre__</td><td style='width: 15%;text-align:right;padding-right: 5px;'>__prixUnitaire__</td><td style='width: 15%;text-align:right;'>__total__</td></tr>"  id="bon-details" class="row">
+                    <table style="width: 100%;border-bottom: dotted 1px;border-top: solid 1px;">
+                        <thead>
+                        <tr style="border-bottom: 1px solid;">
+                            <th style="width: 15%;">Qté</th>
+                            <th style="width: 55%;">Titre</th>
+                            <th style="width: 15%;text-align: right;padding-right: 5px;">P/U</th>
+                            <th style="width: 15%;text-align: right;">Total</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <br/>
+                <div id="ht">
+                    <b>Total Ht </b> <span id="span-ht" style="text-align: right;float: right;"></span>
+                </div>
+                <div id="reduction">
+                    <b>Remise(<i id="remise"></i>%) </b> <span id="span-reduction" style="text-align: right;float: right;color: red;"></span>
+                </div>
+                <div id="taxes">
+                    <b>Tva(<i id="tva"></i>%) </b> <span id="span-taxes" style="text-align: right;float: right;"></span>
+                </div>
+                <div id="ttc">
+                    <b>Total Ttc </b> <span id="span-ttc" style="text-align: right;float: right;"></span>
+                </div>
+                <div data-prototype="<tr><td style='width: 80%;'>__label__</td><td style='width: 80%;text-align: right;'>__frais__</td></tr>" style="color: #023cff" old-data-prototype='<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">__label__</div><div class="col-lg-4 col-md-4 col-lg-4 col-lg-4 text-right">__frais__</div>' id="frais-supp">
+                    <table style="width: 100%;">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <div style="border-top: solid 1px;border-bottom: solid 1px;" id="total">
+                    <b>Net A Payer : </b> <span  style="text-align: right;float: right;color: blue;font-weight: bold;" id="span-total"></span>
+                </div>
+                <div id="avance">
+                    <b>Avance : </b> <span  style="text-align: right;float: right;color: green;" id="span-avance"></span>
+                </div>
+                <div id="reste">
+                    <b>Reste : </b> <span  style="text-align: right;float: right;color:red;" id="span-reste"></span>
+                </div>
+                <br/>
+                <div>
+                    <b>Livré par : </b> <span id="employe-span"></span>
+                </div>
+                <br/><br/><br/>
+                <div>
+                    <span class="commande-client">{% if client is defined and client is not null %}{{ client.fullName }}{% endif %}{% if entreprise is defined and entreprise is not null %}{{ entreprise.nom }}{% endif %}</span>
+                </div>
+                <br/><br/><br/><br/><br/>
+                <div style="text-align: center;width: 100%;border-top: solid 1px;font-size: 10px;">
+                    <p style="text-align: center;">
+                        IF: 14478752 / Patente: 91390050 / Rc: 295227<br/>Gsm: 0602 06 00 26 / 0666 11 22 33<br/>
+                        <span style="font-size: 15px;font-weight: bold;">www.aliafromagerie.com</span><br/><br/>******
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

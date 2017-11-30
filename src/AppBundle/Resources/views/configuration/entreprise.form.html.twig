@@ -1,0 +1,119 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{{ form_start(formEntreprise,{'attr':{'id':'config_entreprise','action':path('app_config'),'data-parsley-validate':''}}) }}
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_nom) }}
+            {{ form_widget(formEntreprise.entreprise_nom, {'attr': {'class':'form-control','value':configuration.get("entreprise_nom")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_email) }}
+            {{ form_widget(formEntreprise.entreprise_email, {'attr': {'class':'form-control','value':configuration.get("entreprise_email")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_ice) }}
+            {{ form_widget(formEntreprise.entreprise_ice, {'attr': {'class':'form-control entier','value':configuration.get("entreprise_ice")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_if) }}
+            {{ form_widget(formEntreprise.entreprise_if, {'attr': {'class':'form-control entier','value':configuration.get("entreprise_if")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_patente) }}
+            {{ form_widget(formEntreprise.entreprise_patente, {'attr': {'class':'form-control entier','value':configuration.get("entreprise_patente")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_cnss) }}
+            {{ form_widget(formEntreprise.entreprise_cnss, {'attr': {'class':'form-control entier','value':configuration.get("entreprise_cnss")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_phone) }}
+            {{ form_widget(formEntreprise.entreprise_phone, {'attr': {'class':'form-control phone','value':configuration.get("entreprise_phone")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_fax) }}
+            {{ form_widget(formEntreprise.entreprise_fax, {'attr': {'class':'form-control phone','value':configuration.get("entreprise_fax")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_adresse1) }}
+            {{ form_widget(formEntreprise.entreprise_adresse1, {'attr': {'class':'form-control','value':configuration.get("entreprise_adresse1")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_adresse2) }}
+            {{ form_widget(formEntreprise.entreprise_adresse2, {'attr': {'class':'form-control','value':configuration.get("entreprise_adresse2")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_gsm1) }}
+            {{ form_widget(formEntreprise.entreprise_gsm1, {'attr': {'class':'form-control phone','value':configuration.get("entreprise_gsm1")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_gsm2) }}
+            {{ form_widget(formEntreprise.entreprise_gsm2, {'attr': {'class':'form-control phone','value':configuration.get("entreprise_gsm2")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_gsm3) }}
+            {{ form_widget(formEntreprise.entreprise_gsm3, {'attr': {'class':'form-control phone','value':configuration.get("entreprise_gsm3")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_site) }}
+            {{ form_widget(formEntreprise.entreprise_site, {'attr': {'class':'form-control','value':configuration.get("entreprise_site")}}) }}
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="form-group">
+            {{ form_label(formEntreprise.entreprise_rc) }}
+            {{ form_widget(formEntreprise.entreprise_rc, {'attr': {'class':'form-control entier','value':configuration.get("entreprise_rc")}}) }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group">
+            <button type="submit" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' type="button" class="btn btn-primary pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+        </div>
+    </div>
+</div>
+{{ form_rest(formEntreprise) }}
+{{ form_end(formEntreprise) }}

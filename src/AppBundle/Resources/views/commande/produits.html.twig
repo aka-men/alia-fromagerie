@@ -1,0 +1,13 @@
+<div id="produits">
+    {% if produits|length > 0 %}
+        <div class="row">
+            <h6 style="color: black;"><b>Produits vendus</b></h6>
+            {% for item in produits %}
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top">{{ item.titre }}</span>
+                    <div class="count">{{ item.qte|number_format(2,'.',' ') }} {{ item.unite }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

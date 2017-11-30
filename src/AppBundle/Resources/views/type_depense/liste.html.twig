@@ -1,0 +1,91 @@
+{% if fournisseur is defined %}
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Liste Des Designations pour <strong>{{ fournisseur.nom }}</strong></h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a title="Atacher/Détacher" data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' data-title="Atacher/Détacher des designations pour <strong>{{ fournisseur.nom }}</strong>" data-href="{{ path('app_fournisseur_types_collection',{'id':fournisseur.id}) }}" id="atache-detache-types-to-fournisseur"><i class="fa fa-sitemap" aria-hidden="true"></i></a></li>
+                <li><a data-fournisseur="{{ fournisseur.id }}" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' data-title="Ajouter des nouvelles designations pour <strong>{{ fournisseur.nom }}</strong>" data-href="{{ path('app_type_depense_add_collection') }}" id="add-type-to-fournisseur"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</a></li>
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <table data-href="{{ path('app_type_depense_liste_by_fournisseur',{'id':fournisseur.id}) }}" id="table-types" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th style="background-color: transparent;"></th>
+                            <th>Libellé</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for type in fournisseur.typesDepenses %}
+                            <tr>
+                                <td class="bg-ligne">{{ loop.index }}</td>
+                            <td>{{ type.label }}</td>
+                            <td class="text-center">
+                                <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-table btn-xs btn-info list-sous-type" data-href="{{ path('app_type_depense_liste_by_parent',{'id':type.id}) }}" title="Liste sous libellés"><i class="fa fa-list" aria-hidden="true"></i></button>
+                                <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-table btn-xs btn-danger type-fournisseur-delete"  data-href="{{ path('app_type_depense_fournisseur_delete',{'type':type.id,'fournisseur':fournisseur.id}) }}" title="Détacher"><i class="fa fa-chain-broken" aria-hidden="true"></i></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% elseif type is defined %}
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Liste Des Sous Libellé pour <strong>{{ type.label}}</strong></h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a data-parent="{{ type.id }}" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' data-title="Ajouter des nouvelles sous libellés pour <strong>{{ type.label }}</strong>" data-href="{{ path('app_type_depense_add_collection') }}" id="add-type-to-parent"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</a></li>
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <table data-href="{{ path('app_type_depense_liste_by_parent',{'id':type.id}) }}" id="table-sous-types" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th style="background-color: transparent;"></th>
+                            <th>Libellé</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for sousType in type.childrens %}
+                            <tr>
+                                <td class="bg-ligne">{{ loop.index }}</td>
+                            <td>{{ sousType.label }}</td>
+                            <td class="text-center">
+                                {% if params.settings is defined %}
+                                    <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-table btn-xs btn-primary edit-sous-type" data-title="Editer une designation" title="Editer" data-href="{{ path('app_type_depense_edit',{'id':sousType.id}) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a data-loading-text='Veuillez patienter <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-link sous-type-toggle-state"  data-href="{{ path('app_type_depense_state_toggle',{'id':sousType.id}) }}">{% if sousType.isArchive %}Désarchivé{% else %}Archivé{% endif %}</a></li>
+                                            <li><a data-loading-text='Veuillez patienter <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-link sous-type-delete"  data-href="{{ path('app_type_depense_remove',{'id':sousType.id}) }}" title="Supprimer">Supprimer</a></li>
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <button data-loading-text='<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-table btn-xs btn-danger sous-type-delete"  data-href="{{ path('app_type_depense_remove',{'id':sousType.id}) }}" title="Supprimer"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+

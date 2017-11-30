@@ -1,0 +1,177 @@
+<div style="margin-top: -15px;" class="row">
+    <div class="col-lg-12">
+        <p style="padding: 2px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{% if commande is defined %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    Vente N° : <strong>{{ commande.id }}</strong> | Net a payer : <strong>{{ commande.total|number_format(2,'.','') }} DH</strong> | Avance : <strong style="color: green;">{{ commande.avance|number_format(2,'.','') }}</strong> | Reste : <strong style="color: red;">{{ commande.reste|number_format(2,'.','') }}</strong>
+                </div>
+            </div>
+            {% if commande.paiements|length > 0 %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h4>Liste Paiements</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tbody>
+                                {% for p in commande.paiements %}
+                                    <tr>
+                                        <td>{{ p.date|date('d/m/Y') }}</td>
+                                        <td>{{ p.modePayment.label }}</td>
+                                        <td class="text-right">{{ p.prix|number_format(2,'.','') }} DH</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <h4>Nouveau paiement <small><button class="btn btn-sm btn-success" id="btn-regle"><i class="fa fa-check-circle-o"></i> Réglé</button></small></h4>
+    {{ form_start(formPaiement,{ 'action': action,'attr':{'method':'POST','id':'appbundle_paiement'}}) }}
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.date) }}
+                {{ form_widget(formPaiement.date, {'attr': {'class':'form-control date-input'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.modePayment) }}
+                {{ form_widget(formPaiement.modePayment, {'attr': {'class':'form-control show-tick','data-live-search':'true'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+                {% if paiement is defined %}
+                    {% set max = (commande.reste + paiement.prix) %}
+                {% else %}
+                    {% set max = commande.reste %}
+                {% endif %}
+                {{ form_label(formPaiement.prix) }}
+                {{ form_widget(formPaiement.prix, {'attr': {'class':'form-control numerique','max':max}}) }}
+            </div>
+        </div>
+    </div>
+    <div id="no-espece" class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.numeroReglement) }}
+                {{ form_widget(formPaiement.numeroReglement, {'attr': {'class':'form-control entier'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.banque) }}
+                {{ form_widget(formPaiement.banque, {'attr': {'class':'form-control show-tick','data-live-search':'true'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.dateReglement) }}
+                {{ form_widget(formPaiement.dateReglement, {'attr': {'class':'form-control date-input'}}) }}
+            </div>
+        </div>
+    </div>
+    <div id="no-espece" class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label for="appbundle_paiement_imageCheque_file">Image reglement</label>
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button class="btn btn-default bind_img" type="button">Choisir photo</button>
+                        <button title="Visualiser" class="btn btn-default" type="button"><a {% if paiement is defined and paiement.imageCheque is not null %} data-href="{{ path('app_images',{'nom':paiement.imageCheque.nom}) }}" href="{{ path('app_images',{'nom':paiement.imageCheque.nom}) }}"  {% endif %} class="pic-show" data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                    </div>
+                    <p class="help-block"><span style="color: red;cursor: pointer;{% if paiement.imageCheque is null %}display: none;{% endif %}" class="del-img-paiement"><i class="fa fa-trash-o"></i> Supprimer l'image</span></p>
+                    {{ form_widget(formPaiement.imageCheque, {'attr': {'style':'display: none;'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="appbundle_paiement[commande]" value="{{ commande.id }}" />
+    {% do formPaiement.commande.setRendered %}
+    {{ form_rest(formPaiement) }}
+    {{ form_end(formPaiement) }}
+{% elseif commandes is defined %}
+    {% set totalReste = 0 %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            Vente(s) N° : {% for commande in commandes %}{% if commande.reste > 0 %}{% set totalReste = totalReste + commande.reste %}<span style="margin-left: 2px;margin-right: 2px;" data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}Net a payer : <strong>{{ commande.total|number_format(2,'.','') }}</strong> | Avance : <strong>{{ commande.avance|number_format(2,'.','') }}</strong> | Reste : <strong>{{ commande.reste|number_format(2,'.','') }}</strong>{% endfilter %}" class="label label-primary">{{ commande.id }}</span>{% endif %}{% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div style="padding-top: 3px;" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            Total a payer : <strong style="color: green;">{{ totalReste|number_format(2,'.','') }} DH</strong>
+        </div>
+    </div>
+    <h4>Nouveau paiement <small><button class="btn btn-sm btn-success" id="btn-regle"><i class="fa fa-check-circle-o"></i> Réglé</button></small></h4>
+    {{ form_start(formPaiement,{ 'action': action,'attr':{'method':'POST','id':'appbundle_paiement'}}) }}
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.date) }}
+                {{ form_widget(formPaiement.date, {'attr': {'class':'form-control date-input'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.modePayment) }}
+                {{ form_widget(formPaiement.modePayment, {'attr': {'class':'form-control show-tick','data-live-search':'true'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.prix) }}
+                {{ form_widget(formPaiement.prix, {'attr': {'class':'form-control numerique','max':totalReste}}) }}
+            </div>
+        </div>
+    </div>
+    <div id="no-espece" class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.numeroReglement) }}
+                {{ form_widget(formPaiement.numeroReglement, {'attr': {'class':'form-control entier'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.banque) }}
+                {{ form_widget(formPaiement.banque, {'attr': {'class':'form-control show-tick','data-live-search':'true'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formPaiement.dateReglement) }}
+                {{ form_widget(formPaiement.dateReglement, {'attr': {'class':'form-control date-input'}}) }}
+            </div>
+        </div>
+    </div>
+    <div id="no-espece" class="row">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label for="appbundle_paiement_imageCheque_file">Image reglement</label>
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button class="btn btn-default bind_img" type="button">Choisir photo</button>
+                        <button title="Visualiser" class="btn btn-default" type="button"><a {% if paiement is defined and paiement.imageCheque is not null %} data-href="{{ path('app_images',{'nom':paiement.imageCheque.nom}) }}" href="{{ path('app_images',{'nom':paiement.imageCheque.nom}) }}"  {% endif %} class="pic-show" data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                    </div>
+                    <p class="help-block"><span style="color: red;cursor: pointer;{% if paiement.imageCheque is null %}display: none;{% endif %}" class="del-img-paiement"><i class="fa fa-trash-o"></i> Supprimer l'image</span></p>
+                    {{ form_widget(formPaiement.imageCheque, {'attr': {'style':'display: none;'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for commande in commandes %}
+        <input type="hidden" name="commandes[{{ loop.index0 }}]" value="{{ commande.id }}" />
+    {% endfor %}
+    {% do formPaiement.commande.setRendered %}
+    {{ form_rest(formPaiement) }}
+    {{ form_end(formPaiement) }}
+{% endif %}

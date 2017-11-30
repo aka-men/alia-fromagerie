@@ -1,0 +1,43 @@
+{% if td is defined and td == 'action' %}
+    <div class="btn-group">
+        <button type="button" class="btn btn-default btn-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu inner">
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' class="btn btn-xs btn-default entreprise-toggle-state"  data-href="{{ path('app_entreprise_state_toggle',{'id':entreprise.id}) }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% if entreprise.isArchive %}Désarchiver{% else %}Archiver{% endif %}</button></li>
+            <li><button data-loading-text='Veuillez patienter<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>' data-href="{{ path('app_entreprise_remove',{'id':entreprise.id}) }}" class="btn btn-xs btn-default delete-entreprise"><i class="fa fa-trash" aria-hidden="true"></i> Supprimer</button></li>
+            <li><button  data-href="{{ path('app_commande_index') }}?entreprise={{ entreprise.id }}" class="btn btn-xs btn-default b-link"><i class="fa fa-handshake-o" aria-hidden="true"></i> Ventes</button></li>
+        </ul>
+    </div>
+    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Produits" data-href="{{ path('app_entreprise_produits',{'id':entreprise.id}) }}" data-title="Produits achetés par <strong style='color:cornflowerblue;'>{{ entreprise.nom }}</strong>" class="btn btn-table btn-warning produits-entreprise"><i class="fa fa-cubes" aria-hidden="true"></i></button>
+    <button data-loading-text='<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' title="Editer" data-href="{{ path('app_entreprise_edit',{'id':entreprise.id}) }}" data-title="Editer une entreprise" class="btn btn-table btn-primary edit-entreprise"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+{% endif %}
+{% if td is defined and td == 'nom' %}
+    <span data-toggle="tooltip" data-placement="top" data-original-title="{% filter escape %}
+             {% if entreprise.gsm %}
+             <strong>Gsm : </strong>{{ entreprise.gsm }}<br/>
+             {% endif %}
+             {% if entreprise.site %}
+             <strong>Site : </strong>{{ entreprise.site }}<br/>
+             {% endif %}
+             {% if entreprise.idCE %}
+             <strong>Id CE : </strong>{{ entreprise.idCE }}<br/>
+             {% endif %}
+             {% if entreprise.idFiscale %}
+             <strong>Id Fiscale : </strong>{{ entreprise.idFiscale }}<br/>
+             {% endif %}
+             {% if entreprise.patente %}
+             <strong>Patente : </strong>{{ entreprise.patente }}<br/>
+             {% endif %}
+             {% if entreprise.cnss %}
+             <strong>Cnss : </strong>{{ entreprise.cnss }}<br/>
+             {% endif %}
+             {% if entreprise.compteBancaire %}
+             <strong>Compte : </strong>{{ entreprise.compteBancaire }}<br/>
+             {% endif %}
+             {% if entreprise.adresse %}
+             <strong>Adresse : </strong>{{ entreprise.adresse }}<br/>
+             {% endif %}
+             {% endfilter %}">{{ entreprise.nom }}</span>
+    {% if entreprise.hasTva %} <i class="fa fa-star" style="color: gold;" aria-hidden="true"></i>{% endif %}
+{% endif %}

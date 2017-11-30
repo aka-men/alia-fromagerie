@@ -5,3 +5,111 @@ services:
     app.fournisseur.manager:
         class: AppBundle\Manager\FournisseurManager
         arguments: ["@doctrine.orm.entity_manager"]
+
+    app.employe.manager:
+        class: AppBundle\Manager\EmployeManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.type_depense.manager:
+        class: AppBundle\Manager\TypeDepenseManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.mode_payment.manager:
+        class: AppBundle\Manager\ModePaymentManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.option.manager:
+        class: AppBundle\Manager\OptionManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.e_document.manager:
+        class: AppBundle\Manager\EDocumentManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.produit.manager:
+        class: AppBundle\Manager\ProduitManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.user.manager:
+        class: AppBundle\Manager\UserManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.charge.manager:
+        class: AppBundle\Manager\ChargeManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.achat.manager:
+        class: AppBundle\Manager\AchatManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.image.manager:
+        class: AppBundle\Manager\ImageManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.file.manager:
+        class: AppBundle\Manager\FileManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.achat_option.manager:
+        class: AppBundle\Manager\AchatMatierePremiereOptionManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.achat_production.manager:
+        class: AppBundle\Manager\AchatMatierePremiereProduitManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.produit_achat.manager:
+        class: AppBundle\Manager\ProduitAchatManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.produit_commande.manager:
+        class: AppBundle\Manager\ProduitCommandeManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.client.manager:
+        class: AppBundle\Manager\ClientManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.commande.manager:
+        class: AppBundle\Manager\CommandeManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.entreprise.manager:
+        class: AppBundle\Manager\EntrepriseManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.facture.manager:
+        class: AppBundle\Manager\FactureManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.produit_client.manager:
+        class: AppBundle\Manager\ProduitClientManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.paiement.manager:
+        class: AppBundle\Manager\PaiementManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.frais_supp.manager:
+        class: AppBundle\Manager\FraisSuppManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.configuration.manager:
+        class: AppBundle\Manager\ConfigurationManager
+        arguments: ["@Kernel"]
+
+    app.banque.manager:
+        class: AppBundle\Manager\BanqueManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    app.produit_entreprise.manager:
+        class: AppBundle\Manager\ProduitEntrepriseManager
+        arguments: ["@doctrine.orm.entity_manager"]
+
+# twig extension
+
+    app.twig_extension:
+        class: AppBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }

@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+        .row{
+            padding:10px;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('images/logo.ico') }}" type="image/x-icon" />
+    <!-- Jquery UI -->
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.structure.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <title>Alia Fromagerie | Rapport des bénéfices net {% if criteres.mois is defined and criteres.annee is defined %} du mois {{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}  {% elseif criteres.date_start is defined and criteres.date_end is defined %}  du {{ criteres.date_start }} au {{ criteres.date_end }} {% endif %}</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <legend style="padding: 10px;">Rapport des bénéfices net {% if criteres.mois is defined and criteres.annee is defined %} du mois <b>{{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}</b>  {% elseif criteres.date_start is defined and criteres.date_end is defined %} <b> du {{ criteres.date_start }} au {{ criteres.date_end }}</b> {% endif %}</legend>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h2 style="text-decoration: underline;">La liste des ventes</h2><br/>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">BL</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Client</th>
+                    <th class="text-center">HT</th>
+                    <th class="text-center">Remise</th>
+                    <th class="text-center">TVA</th>
+                    <th class="text-center">TTC</th>
+                    <th class="text-center">Frais</th>
+                    <th class="text-center">Ttotal</th>
+                    <th class="text-center">Avance</th>
+                    <th class="text-center">Reste</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportCommandes.commandes|length > 0 %}
+                    {% for commande in reportCommandes.commandes if commande.facture is null %}
+                        <tr>
+                            <td class="text-center">{{ commande.id }}</td>
+                            <td class="text-center">{{ commande.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ commande.clientEntreprise }}</td>
+                            <td class="text-center">{{ commande.montantHt|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.remise ? commande.remise : '0' }}</td>
+                            <td class="text-center">{{ commande.tva ? commande.tva : '0'  }}</td>
+                            <td class="text-center">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.totalFrais|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.total|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.avance|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.reste|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for commande in reportCommandes.commandes if commande.facture is not null %}
+                        <tr>
+                            <td class="text-center">{{ commande.id }}</td>
+                            <td class="text-center">{{ commande.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ commande.clientEntreprise }}</td>
+                            <td class="text-center">{{ commande.montantHt|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.remise ? commande.remise : '0' }}</td>
+                            <td class="text-center">{{ commande.tva ? commande.tva : '0'  }}</td>
+                            <td class="text-center">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.totalFrais|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.total|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.avance|number_format(2,'.',' ') }}</td>
+                            <td class="text-center">{{ commande.reste|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="8" style="text-align: right;font-weight: bold;">Sous Totaux</td>
+                        <td style="text-align: center;vertical-align: middle;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }}</td>
+                        <td style="text-align: center;vertical-align: middle;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }}</td>
+                        <td style="text-align: center;vertical-align: middle;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11" style="font-size: 15px;text-align: center;color: silver;">
+                            Aucune vente enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des ventes</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;color: green;font-weight: bold;">Total de avances</td>
+                    <td style="text-align: right;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;color: red;font-weight: bold;">Total du reste</td>
+                    <td style="text-align: right;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }} DH</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h2 style="text-decoration: underline;">La liste des achats (Matière Première)</h2><br/>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Fournisseur</th>
+                    <th class="text-center">TVA</th>
+                    <th class="text-center">TTC</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportAchatsMP.achats|length > 0 %}
+                    {% for achat in reportAchatsMP.achats if achat.numeroFacture is null %}
+                        <tr>
+                            <td class="text-center">{{ achat.id }}</td>
+                            <td class="text-center">{{ achat.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ achat.fournisseur.nom }}</td>
+                            <td class="text-center">{{ achat.tva ? achat.tva : '0' }}</td>
+                            <td class="text-center">{{ achat.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for achat in reportAchatsMP.achats if achat.numeroFacture is not null %}
+                        <tr>
+                            <td class="text-center">{{ achat.id }}</td>
+                            <td class="text-center">{{ achat.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ achat.fournisseur.nom }}</td>
+                            <td class="text-center">{{ achat.tva ? achat.tva : '0' }}</td>
+                            <td class="text-center">{{ achat.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="4" style="text-align: right;font-weight: bold;">Sous Totaux</td>
+                        <td style="text-align: center;vertical-align: middle;font-weight: bold;">{{ reportAchatsMP.total|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="font-size: 15px;text-align: center;color: silver;">
+                            Aucune Achat (Matière Première) enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des achats (Matière Première)</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportAchatsMP.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h2 style="text-decoration: underline;">La liste des achats (Produit d'Importation)</h2><br/>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Fournisseur</th>
+                    <th class="text-center">TVA</th>
+                    <th class="text-center">TTC</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportAchatsPI.achats|length > 0 %}
+                    {% for achat in reportAchatsPI.achats if achat.numeroFacture is null %}
+                        <tr>
+                            <td class="text-center">{{ achat.id }}</td>
+                            <td class="text-center">{{ achat.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ achat.fournisseur.nom }}</td>
+                            <td class="text-center">{{ achat.tva ? achat.tva : '0' }}</td>
+                            <td class="text-center">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for achat in reportAchatsPI.achats if achat.numeroFacture is not null %}
+                        <tr>
+                            <td class="text-center">{{ achat.id }}</td>
+                            <td class="text-center">{{ achat.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ achat.fournisseur.nom }}</td>
+                            <td class="text-center">{{ achat.tva ? achat.tva : '0' }}</td>
+                            <td class="text-center">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="4" style="text-align: right;font-weight: bold;">Sous Totaux</td>
+                        <td style="text-align: center;vertical-align: middle;font-weight: bold;">{{ reportAchatsPI.total|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="font-size: 15px;text-align: center;color: silver;">
+                            Aucune Achat (Produit d'Importation) enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des achats (Produit d'Importation)</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportAchatsPI.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h2 style="text-decoration: underline;">La liste des dépenses</h2><br/>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Fournisseur</th>
+                    <th class="text-center">Designations</th>
+                    <th class="text-center">TVA</th>
+                    <th class="text-center">TTC</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportChargesAutre.charges|length > 0 %}
+                    {% for charge in reportChargesAutre.charges if charge.numeroFacture is null %}
+                        <tr>
+                            <td class="text-center">{{ charge.id }}</td>
+                            <td class="text-center">{{ charge.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ charge.fournisseur ? charge.fournisseur.nom : '' }}</td>
+                            <td class="text-center">
+                                {% for d in charge.typesDepenses %}
+                                    &diams; {{ d.fullLabel }}
+                                {% endfor %}
+                            </td>
+                            <td class="text-center">{{ charge.tva ? charge.tva : '0' }}</td>
+                            <td class="text-center">{{ charge.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for charge in reportChargesAutre.charges if charge.numeroFacture is not null %}
+                        <tr>
+                            <td class="text-center">{{ charge.id }}</td>
+                            <td class="text-center">{{ charge.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ charge.fournisseur ? charge.fournisseur.nom : '' }}</td>
+                            <td class="text-center">
+                                {% for d in charge.typesDepenses %}
+                                    &diams; {{ d.fullLabel }}
+                                {% endfor %}
+                            </td>
+                            <td class="text-center">{{ charge.tva ? charge.tva : '0' }}</td>
+                            <td class="text-center">{{ charge.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="5" style="text-align: right;font-weight: bold;">Sous Totaux</td>
+                        <td style="text-align: center;vertical-align: middle;font-weight: bold;">{{ reportChargesAutre.total|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="font-size: 15px;text-align: center;color: silver;">
+                            Aucune dépense enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des dépenses</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportChargesAutre.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h2 style="text-decoration: underline;">La liste des charges employés</h2><br/>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Employé</th>
+                    <th class="text-center">Designation</th>
+                    <th class="text-center">Montant</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportChargesEmploye.charges|length > 0 %}
+                    {% for charge in reportChargesEmploye.charges %}
+                        <tr>
+                            <td class="text-center">{{ charge.id }}</td>
+                            <td class="text-center">{{ charge.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ charge.employe.fullName }}</td>
+                            <td class="text-center">
+                                {% for d in charge.typesDepenses %}
+                                    &diams; {{ d.fullLabel }}
+                                {% endfor %}
+                            </td>
+                            <td class="text-center">{{ charge.montantTtc|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="5" style="text-align: right;font-weight: bold;">Sous Totaux</td>
+                        <td style="text-align: center;vertical-align: middle;font-weight: bold;">{{ reportChargesEmploye.total|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="font-size: 15px;text-align: center;color: silver;">
+                            Aucune charges employés enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des charges employés</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportChargesEmploye.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br/><br/><br/>
+
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+        <div class="table-responsive">
+            <table style="background-color: lightgrey;" class="table">
+                <tr>
+                    <td colspan="2" style=";font-weight: bold;font-size: 15px;text-align: center;">
+                        Résumé {% if criteres.mois is defined and criteres.annee is defined %} du mois {{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}  {% elseif criteres.date_start is defined and criteres.date_end is defined %} du {{ criteres.date_start }} au {{ criteres.date_end }} {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des ventes</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;color: green;">Avance</td>
+                    <td style="text-align: right;font-weight: bold;color: green;">{{ reportCommandes.avance|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;color: red;">Reste</td>
+                    <td style="text-align: right;font-weight: bold;color: red;">{{ reportCommandes.reste|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des achats (Matière Première)</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportAchatsMP.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des achats (Produit d'Importation)</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportAchatsPI.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des dépenses</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportChargesAutre.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;">Total des charges employés</td>
+                    <td style="text-align: right;font-weight: bold;">{{ reportChargesEmploye.total|number_format(2,'.',' ') }} DH</td>
+                </tr>
+                <tr>
+                    <td style="text-align: left;font-weight: bold;color: blue;">Bénéfice net</td>
+                    <td style="text-align: right;font-weight: bold;color: blue;">{{ (reportCommandes.total - (reportAchatsMP.total + reportAchatsPI.total + reportChargesAutre.total + reportChargesEmploye.total ))|number_format(2,'.',' ') }} DH</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

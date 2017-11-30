@@ -1,0 +1,207 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{{ form_start(formCharge,{ 'action': action,'attr':{'method':'POST','id':'appbundle_charge_edit'}}) }}
+{% if charge.employe is not null %}
+    <div class="row">
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.date) }}
+                {{ form_widget(formCharge.date, {'attr': {'class':'form-control date-input required'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.employe) }}
+                {{ form_widget(formCharge.employe, {'attr': {'class':'form-control required show-tick','data-live-search':'true'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                <label for="appbundle_charge_typeDepense">Designation</label>
+                <select multiple data-live-search="true" name="appbundle_charge[typesDepenses]" id="appbundle_charge_typesDepenses" class="form-control show-tick" title="Type charge">
+                       {% for type in types %}
+                        {% if type.forEmploye %}
+                    <option {% if charge.hasTypeDepense(type) %}selected{% endif %} value="{{ type.id }}">{{ type.label }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.montantTtc) }}
+                {{ form_widget(formCharge.montantTtc, {'attr': {'class':'form-control required numerique'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.modePayment) }}
+                {{ form_widget(formCharge.modePayment, {'attr': {'class':'form-control show-tick','data-live-search':'true'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.numeroCheque) }}
+                {{ form_widget(formCharge.numeroCheque, {'attr': {'class':'form-control cheque entier'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.dateCheque) }}
+                {{ form_widget(formCharge.dateCheque, {'attr': {'class':'form-control cheque date-input'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-4 ccol-md-4 col-sm-6 col-xs-12 text-center">
+            {{ form_label(formCharge.imageCheque) }}
+            <div class="form-group text-center">
+                <div class="btn-group">
+                    <button class="btn btn-default bind_img_edit" type="button">Chois une photo</button>
+                    <button title="Visualiser" class="btn btn-default" type="button"><a class="pic-show"  {% if charge.imageCheque is not null %} data-href="{{ path('app_images',{'nom':charge.imageCheque.nom}) }}" href="{{ path('app_images',{'nom':charge.imageCheque.nom}) }}"  {% endif %} data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                </div>
+                {{ form_widget(formCharge.imageCheque, {'attr': {'class':'form-control','style':'display:none;'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-6 ccol-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formCharge.observation) }}
+                {{ form_widget(formCharge.observation, {'attr': {'class':'form-control auto-growth'}}) }}
+            </div>
+        </div>
+    </div>
+    {% do formCharge.isVaucher.setRendered %}
+    {% do formCharge.image.setRendered %}
+    {% do formCharge.tva.setRendered %}
+    {% do formCharge.montantHt.setRendered %}
+    {% do formCharge.fournisseur.setRendered %}
+    {% do formCharge.numeroFacture.setRendered %}
+    {% do formCharge.isPaid.setRendered %}
+    {% do formCharge.typesDepenses.setRendered %}
+{% else %}
+
+    <div class="row">
+        <div class="col-lg-2 ccol-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.date) }}
+                {{ form_widget(formCharge.date, {'attr': {'class':'form-control date-input required'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.fournisseur) }}
+                {{ form_widget(formCharge.fournisseur, {'attr': {'class':'form-control show-tick','data-live-search':"true",'data-href':path('app_type_depense_liste')}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <label for="appbundle_charge_typeDepense" >Designation</label>
+            <div class="form-group">
+                <select data-live-search="true" multiple name="appbundle_charge[typesDepenses]" id="appbundle_charge_typesDepenses" class="form-control show-tick" title="Type charge">
+                    {% for type in types %}
+                        {% if (charge.fournisseur is not null and type.fournisseurs.contains(charge.fournisseur)) or (charge.fournisseur is null and type.fournisseurs|length == 0) %}
+                            {% if not type.forEmploye %}
+                                {% if type.childrens|length > 0 %}
+                                    <optgroup label="{{ type.label }}" >
+                                        {% for t in type.childrens %}
+                                            <option {% if charge.hasTypeDepense(t) %}selected{% endif %} value="{{ t.id }}">{{ t.label }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                {% else %}
+                                    <option {% if charge.hasTypeDepense(type) %}selected{% endif %} value="{{ type.id }}">{{ type.label }}</option>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.montantHt) }}
+                {{ form_widget(formCharge.montantHt, {'attr': {'class':'form-control numerique ht-edit'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.tva) }}
+                {{ form_widget(formCharge.tva, {'attr': {'class':'form-control entier tva-edit'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.montantTtc) }}
+                {{ form_widget(formCharge.montantTtc, {'attr': {'class':'form-control numerique ttc-edit'}}) }}
+            </div>
+        </div>
+     </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.numeroFacture) }}
+                {{ form_widget(formCharge.numeroFacture, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 text-center">
+            {{ form_label(formCharge.image) }}
+            <div class="form-group text-center">
+                <div class="btn-group">
+                    <button class="btn btn-default bind_img_edit" type="button">Chois une photo</button>
+                    <button title="Visualiser" class="btn btn-default" type="button"><a class="pic-show"  {% if charge.image is not null %} data-href="{{ path('app_images',{'nom':charge.image.nom}) }}" href="{{ path('app_images',{'nom':charge.image.nom}) }}"  {% endif %} data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                </div>
+                {{ form_widget(formCharge.image, {'attr': {'class':'form-control','style':'display:none;'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.modePayment) }}
+                {{ form_widget(formCharge.modePayment, {'attr': {'class':'form-control show-tick','data-live-search':"true"}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.numeroCheque) }}
+                {{ form_widget(formCharge.numeroCheque, {'attr': {'class':'form-control'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div class="form-group">
+                {{ form_label(formCharge.dateCheque) }}
+                {{ form_widget(formCharge.dateCheque, {'attr': {'class':'form-control cheque date-input'}}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 text-center">
+            {{ form_label(formCharge.imageCheque) }}
+            <div class="form-group text-center">
+                <div class="btn-group">
+                    <button class="btn btn-default bind_img_edit" type="button">Chois une photo</button>
+                    <button title="Visualiser" class="btn btn-default" type="button"><a class="pic-show"  {% if charge.imageCheque is not null %} data-href="{{ path('app_images',{'nom':charge.imageCheque.nom}) }}" href="{{ path('app_images',{'nom':charge.imageCheque.nom}) }}"  {% endif %} data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                </div>
+                {{ form_widget(formCharge.imageCheque, {'attr': {'class':'form-control','style':'display:none;'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+                {{ form_label(formCharge.observation) }}
+                {{ form_widget(formCharge.observation, {'attr': {'class':'form-control auto-growth'}}) }}
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+            <div style="padding-top: 30px;" class="form-group">
+                {{ form_label(formCharge.isVaucher) }}
+                {{ form_widget(formCharge.isVaucher, {'attr': {'class':'flat'}}) }}
+            </div>
+        </div>
+    </div>
+    <input type="hidden" class="isPaid" data-name="appbundle_charge[isPaid]" value="1" {% if charge.isPaid %} name="appbundle_charge[isPaid]" {% endif %}/>
+    {% do formCharge.isPaid.setRendered %}
+    {% do formCharge.employe.setRendered %}
+    {% do formCharge.typesDepenses.setRendered %}
+{% endif %}
+{{ form_rest(formCharge) }}
+{{ form_end(formCharge) }}

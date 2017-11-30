@@ -1,0 +1,12 @@
+{% if produit.childrens|length > 0 %}
+    {% set i = index %}
+    {% for p in produit.childrens %}
+        <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6 form-group">
+            <label title="{{ p.titre }}" style="font-size: 10px;">{{ p.titre|slice(0,7) }}</label>
+            <input style="font-size: 14px;" title="{{ p.titre }}" class="form-control big-placeholder small-input entier" type="text" id="appbundle_achat_productions_{{ i }}_valeur" name="appbundle_achat[productions][{{ i }}][valeur]" placeholder="{{ p.titre }}" />
+            <input type="hidden" value="{{ p.id }}" id="appbundle_achat_productions_{{ i }}_produit" name="appbundle_achat[productions][{{ i }}][produit]" />
+            <input type="hidden" value="{{ produit.id }}" id="appbundle_achat_productions_{{ i }}_produitParent" name="appbundle_achat[productions][{{ i }}][produitParent]" />
+        </div>
+        {% set i = i + 1 %}
+    {% endfor %}
+{% endif %}

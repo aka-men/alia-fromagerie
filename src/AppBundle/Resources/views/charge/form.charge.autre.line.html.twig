@@ -1,0 +1,199 @@
+{% if typeId is defined %}
+    <div data-index="{{ index }}" class="line-charge-autre">
+        {% set selectedType = null %}
+        {% for type in types %}
+            {% if type.id == typeId %}
+                {% set selectedType = type %}
+            {% endif %}
+        {% endfor %}
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="input-group">
+                    <span class="input-group-btn"><button class="btn btn-danger" type="button" title="Supprimer la ligne" id="delete-line-charge"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+                    <input title="Date charge" placeholder="Date charge" type="text" class="form-control date-input required" value="{{ "now"|date('d/m/Y') }}" name="appbundle_charge[{{ index }}][date]" id="appbundle_charge_date_{{ index }}" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group has-select">
+                    <select data-live-search="true" name="appbundle_charge[{{ index }}][fournisseur]" id="appbundle_charge_fournisseur_{{ index }}" class="form-control show-tick" title="Fournisseur">
+                        <option selected value>Fournisseur</option>
+                        {% for fournisseur in fournisseurs %}
+                            {% if fournisseur.typeVente is null or fournisseur.typeVente == 0 %}
+                                {% if fournisseur.hasTypeDepense(selectedType) %}
+                                    <option selected value="{{ fournisseur.id }}">{{ fournisseur.nom }}</option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group has-select">
+                    <select  placeholder="Designation" multiple data-live-search="true" name="appbundle_charge[{{ index }}][typesDepenses]" id="appbundle_charge_typesDepenses_{{ index }}" class="form-control show-tick type" title="Designation">
+                        {% for type in types %}
+                            {% if type.id == typeId %}
+                                <option selected value="{{ type.id }}">{{ type.fullLabel }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <input type="text" class="form-control required numerique ht" name="appbundle_charge[{{ index }}][montantHt]" id="appbundle_charge_montantHt_{{ index }}" title="Montant HT" placeholder="Montant HT" />
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <div class="form-group">
+                    <input type="text" class="form-control numerique tva" value="20" name="appbundle_charge[{{ index }}][tva]" id="appbundle_charge_tva_{{ index }}" title="Tva" placeholder="Tva" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <input type="text" class="form-control required numerique ttc" name="appbundle_charge[{{ index }}][montantTtc]" id="appbundle_charge_montantTtc_{{ index }}" title="Montant TTC" placeholder="Montant TTC" />
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <div class="form-group">
+                    <input type="checkbox" name="appbundle_charge[{{ index }}][isVaucher]" id="appbundle_charge_isVaucher_{{ index }}" class="flat" /> Bon
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="appbundle_charge[{{ index }}][numeroFacture]" id="appbundle_charge_numeroFacture_{{ index }}" title="Numéro facture" placeholder="Numéro facture" />
+                    <span class="input-group-btn ms"><button class="btn btn-default bind_img" type="button" title="Image facture"><i class="fa fa-picture-o" aria-hidden="true"></i></button></span>
+                    <input class="facture" type="file" style="display: none;" name="appbundle_charge[{{ index }}][image][file]" id="appbundle_charge_image_{{ index }}_file" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group has-select">
+                    <select title="Mode Paiement" data-live-search="true" name="appbundle_charge[{{ index }}][modePayment]" id="appbundle_charge_modePayment_{{ index }}" class="form-control mode-autre show-tick">
+                        <option selected value>Mode Paiement</option>
+                        {% for mode in modes %}
+                            <option value="{{ mode.id }}">{{ mode.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="input-group">
+                    <input type="text" class="form-control cheque entier" name="appbundle_charge[{{ index }}][numeroCheque]" id="appbundle_charge_numeroCheque_{{ index }}" title="Numéro reglement" placeholder="Numéro reglement" />
+                    <span class="input-group-btn ms"><button class="btn btn-default bind_img" type="button" title="Image reglement"><i class="fa fa-picture-o" aria-hidden="true"></i></button></span>
+                    <input type="file" style="display: none;" name="appbundle_charge[{{ index }}][imageCheque][file]" id="appbundle_charge_imageCheque_{{ index }}_file" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <input type="text" value="" class="form-control cheque date-input" name="appbundle_charge[{{ index }}][dateCheque]" id="appbundle_charge_dateCheque_{{ index }}" title="Date reglement" placeholder="Date reglement" />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <textarea rows="1" class="form-control auto-growth" name="appbundle_charge[{{ index }}][observation]" id="appbundle_charge_observation_{{ index }}" placeholder="Obsérvation" title="Obsérvation" ></textarea>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <div class="form-group">
+                    <button type="button" title="Dupliquer" class="btn btn-warning clone-charge"><i class="fa fa-copy"></i></button>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" value="1" data-name="appbundle_charge[{{ index }}][isPaid]" class="isPaid"/>
+    </div>
+{% else %}
+    <div data-index="{{ index }}" class="line-charge-autre">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="input-group">
+                    <span class="input-group-btn"><button class="btn btn-danger" type="button" title="Supprimer la ligne" id="delete-line-charge"><i class="fa fa-times" aria-hidden="true"></i></button></span>
+                    <input title="Date charge" placeholder="Date charge" type="text" class="form-control date-input required" value="{{ "now"|date('d/m/Y') }}" name="appbundle_charge[{{ index }}][date]" id="appbundle_charge_date_{{ index }}" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group has-select">
+                    <select data-href="{{ path('app_type_depense_liste') }}" data-live-search="true" name="appbundle_charge[{{ index }}][fournisseur]" id="appbundle_charge_fournisseur_{{ index }}" class="form-control show-tick fournisseur" title="Fournisseur">
+                        <option selected value>Fournisseur</option>
+                        {% for fournisseur in fournisseurs %}
+                            {% if fournisseur.typeVente is null or fournisseur.typeVente == 0 %}
+                                <option value="{{ fournisseur.id }}">{{ fournisseur.nom }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <p style="margin-top: -5px;" class="help-block text-center"><a data-href="{{ path('app_fournisseur_add') }}" data-title="Ajouter un fournisseur" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link add-fournisseur"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter fournisseur</a></p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group has-select">
+                    <select  placeholder="Designation" multiple data-live-search="true" name="appbundle_charge[{{ index }}][typesDepenses]" id="appbundle_charge_typesDepenses_{{ index }}" class="form-control show-tick type" title="Designation">
+
+                    </select>
+                    <p style="margin-top: -5px;" class="help-block text-center"><a data-href="{{ path('app_type_depense_add') }}" data-title="Ajouter une designation" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link add-type"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter designation</a></p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <input type="text" class="form-control required numerique ht" name="appbundle_charge[{{ index }}][montantHt]" id="appbundle_charge_montantHt_{{ index }}" title="Montant HT" placeholder="Montant HT" />
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <div class="form-group">
+                    <input type="text" class="form-control numerique tva" value="20" name="appbundle_charge[{{ index }}][tva]" id="appbundle_charge_tva_{{ index }}" title="Tva" placeholder="Tva" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <input type="text" class="form-control required numerique ttc" name="appbundle_charge[{{ index }}][montantTtc]" id="appbundle_charge_montantTtc_{{ index }}" title="Montant TTC" placeholder="Montant TTC" />
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <div class="form-group">
+                    <input type="checkbox" name="appbundle_charge[{{ index }}][isVaucher]" id="appbundle_charge_isVaucher_{{ index }}" class="flat" /> Bon
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="appbundle_charge[{{ index }}][numeroFacture]" id="appbundle_charge_numeroFacture_{{ index }}" title="Numéro facture" placeholder="Numéro facture" />
+                    <span class="input-group-btn ms"><button class="btn btn-default bind_img" type="button" title="Image facture"><i class="fa fa-picture-o" aria-hidden="true"></i></button></span>
+                    <input class="facture" type="file" style="display: none;" name="appbundle_charge[{{ index }}][image][file]" id="appbundle_charge_image_{{ index }}_file" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group has-select">
+                    <select title="Mode Paiement" data-live-search="true" name="appbundle_charge[{{ index }}][modePayment]" id="appbundle_charge_modePayment_{{ index }}" class="form-control mode-autre show-tick">
+                        <option selected value>Mode Paiement</option>
+                        {% for mode in modes %}
+                            <option value="{{ mode.id }}">{{ mode.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="input-group">
+                    <input type="text" class="form-control cheque entier" name="appbundle_charge[{{ index }}][numeroCheque]" id="appbundle_charge_numeroCheque_{{ index }}" title="Numéro reglement" placeholder="Numéro reglement" />
+                    <span class="input-group-btn ms"><button class="btn btn-default bind_img" type="button" title="Image reglement"><i class="fa fa-picture-o" aria-hidden="true"></i></button></span>
+                    <input type="file" style="display: none;" name="appbundle_charge[{{ index }}][imageCheque][file]" id="appbundle_charge_imageCheque_{{ index }}_file" />
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <input type="text" value="" class="form-control cheque date-input" name="appbundle_charge[{{ index }}][dateCheque]" id="appbundle_charge_dateCheque_{{ index }}" title="Date reglement" placeholder="Date reglement" />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                <div class="form-group">
+                    <textarea rows="1" class="form-control auto-growth" name="appbundle_charge[{{ index }}][observation]" id="appbundle_charge_observation_{{ index }}" placeholder="Obsérvation" title="Obsérvation" ></textarea>
+                </div>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6">
+                <div class="form-group">
+                    <button type="button" title="Dupliquer" class="btn btn-xs btn-warning clone-charge"><i class="fa fa-copy"></i></button>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" value="1" data-name="appbundle_charge[{{ index }}][isPaid]" class="isPaid"/>
+    </div>
+{% endif %}

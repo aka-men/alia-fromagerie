@@ -1,0 +1,25 @@
+{% if query.types is defined %}
+    <form name="appbundle_charge" id="appbundle_charge" action="{{ path('app_charge_add') }}" method="post">
+        <p id="form-error" style="padding: 10px;color:red;"></p>
+        {% for typeId in query.types %}
+            {% include 'AppBundle:charge:form.charge.autre.line.html.twig' with {'modes':modes,'types':types,'fournisseurs':fournisseurs,'index':loop.index0,'typeId':typeId} %}
+        {% endfor %}
+        <div class="form-group">
+            <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-primary pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            <button class="btn btn-success pull-right" type="button" data-href="{{ path('app_charge_autre_line_add') }}" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' id="add-line-charge"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+            <a class="btn btn-default pull-right liste-charges">Anuller</a>
+        </div>
+    </form>
+{% else %}
+    <form name="appbundle_charge" id="appbundle_charge" action="{{ path('app_charge_add') }}" method="post">
+        <p id="form-error" style="padding: 10px;color:red;"></p>
+
+        {% include 'AppBundle:charge:form.charge.autre.line.html.twig' with {'modes':modes,'types':types,'fournisseurs':fournisseurs,'index':0} %}
+
+        <div class="form-group">
+            <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-primary pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+            <button class="btn btn-success pull-right" type="button" data-href="{{ path('app_charge_autre_line_add') }}" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' id="add-line-charge"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter</button>
+            <a class="btn btn-default pull-right liste-charges">Anuller</a>
+        </div>
+    </form>
+{% endif %}

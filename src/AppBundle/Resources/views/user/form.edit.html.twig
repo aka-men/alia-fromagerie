@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-lg-12">
+        <p style="padding: 10px 15px;color: red;" class="form-error"></p>
+    </div>
+</div>
+{{ form_start(formUser,{'attr':{'id':'appbundle_user','action':action}}) }}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="form-group">
+            {{ form_label(formUser.email) }}
+            {{ form_widget(formUser.email, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group">
+            {{ form_label(formUser.username) }}
+            {{ form_widget(formUser.username, {'attr': {'class':'form-control'}}) }}
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="form-group">
+            <label for="appbundle_user_roles_0">Role</label>
+           <select required name="appbundle_user[roles][0]" id="appbundle_user_roles_0" class="form-control show-tick">
+                <option value="">Role</option>
+                <option {% if user.hasRole('ROLE_USER') %} selected {% endif %}  value="ROLE_USER">Utilisateur</option>
+                <option {% if user.hasRole('ROLE_SUPER_ADMIN') %} selected {% endif %} value="ROLE_SUPER_ADMIN">Administrateur</option>
+            </select>
+        </div>
+    </div>
+</div>
+{% do formUser.plainPassword.first.setRendered %}
+{% do formUser.plainPassword.second.setRendered %}
+{% do formUser.roles.setRendered %}
+{{ form_rest(formUser) }}
+{{ form_end(formUser) }}

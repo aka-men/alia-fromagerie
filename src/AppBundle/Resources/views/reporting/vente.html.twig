@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+        .row{
+            padding:10px;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ asset('images/logo.ico') }}" type="image/x-icon" />
+    <!-- Jquery UI -->
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.structure.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/jquery-ui-1.12.1.custom/jquery-ui.theme.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <title>Alia Fromagerie | Rapport des ventes {% if criteres.isPaid is defined and criteres.isPaid == 0 %} (impayées) {% elseif criteres.has_invoice is defined and criteres.has_invoice == true %} (avec facture) {% elseif criteres.has_invoice is defined and criteres.has_invoice == false %} (sans facture){% endif %} {% if criteres.mois is defined and criteres.annee is defined %} du mois {{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}  {% elseif criteres.date_start is defined and criteres.date_end is defined %}  du {{ criteres.date_start }} au {{ criteres.date_end }} {% endif %}</title>
+</head>
+<body>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <legend style="padding: 10px;">Rapport des ventes {% if criteres.isPaid is defined and criteres.isPaid == 0 %} (impayées) {% elseif criteres.has_invoice is defined and criteres.has_invoice == true %} (avec facture) {% elseif criteres.has_invoice is defined and criteres.has_invoice == false %} (sans facture){% endif %} {% if criteres.mois is defined and criteres.annee is defined %} du mois <b>{{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}</b>  {% elseif criteres.date_start is defined and criteres.date_end is defined %} <b> du {{ criteres.date_start }} au {{ criteres.date_end }}</b> {% endif %}</legend>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        {% if criteres.isPaid is defined and criteres.isPaid == 0 %}
+            <h2 style="text-decoration: underline;">La liste des ventes (impayées)</h2><br/>
+        {% elseif criteres.has_invoice is defined and criteres.has_invoice == true %}
+            <h2 style="text-decoration: underline;">La liste des ventes (avec facture)</h2><br/>
+        {% elseif criteres.has_invoice is defined and criteres.has_invoice == false %}
+            <h2 style="text-decoration: underline;">La liste des ventes (sans facture)</h2><br/>
+        {% else %}
+            <h2 style="text-decoration: underline;">La liste des ventes</h2><br/>
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="text-center">BL</th>
+                    {% if criteres.has_invoice is not defined or criteres.has_invoice != false %}
+                        <th class="text-center">Facture</th>
+                    {% endif %}
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Client</th>
+                    <th class="text-center">HT</th>
+                    <th class="text-center">Remise</th>
+                    <th class="text-center">TVA</th>
+                    <th class="text-center">TTC</th>
+                    <th class="text-center">Frais</th>
+                    <th class="text-center">Ttotal</th>
+                    <th class="text-center">Avance</th>
+                    <th class="text-center">Reste</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if reportCommandes.commandes|length > 0 %}
+                    {% for commande in reportCommandes.commandes %}
+                        <tr>
+                            <td class="text-center">{{ commande.id }}</td>
+                            {% if criteres.has_invoice is not defined or criteres.has_invoice != false %}
+                                <td class="text-center">{{ commande.facture ? commande.facture.id : '-' }}</td>
+                            {% endif %}
+                            <td class="text-center">{{ commande.date|date('d/m/Y') }}</td>
+                            <td class="text-center">{{ commande.clientEntreprise }}</td>
+                            <td class="text-right">{{ commande.montantHt|number_format(2,'.',' ') }}</td>
+                            <td class="text-right">{{ commande.remise ? commande.remise|number_format(2,'.',' ') : '0.00' }}</td>
+                            <td class="text-right">{{ commande.tva ? commande.tva|number_format(2,'.',' ') : '0.00'  }}</td>
+                            <td class="text-right">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                            <td class="text-right">{{ commande.totalFrais|number_format(2,'.',' ') }}</td>
+                            <td class="text-right">{{ commande.total|number_format(2,'.',' ') }}</td>
+                            <td class="text-right">{{ commande.avance|number_format(2,'.',' ') }}</td>
+                            <td class="text-right">{{ commande.reste|number_format(2,'.',' ') }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td  {% if criteres.has_invoice is not defined or criteres.has_invoice != false %} colspan="9"{% else %}colspan="8"{% endif %} style="text-align: right;font-weight: bold;">Sous Totaux</td>
+                        <td style="text-align: right;vertical-align: middle;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }}</td>
+                        <td style="text-align: right;vertical-align: middle;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }}</td>
+                        <td style="text-align: right;vertical-align: middle;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td  {% if criteres.has_invoice is not defined or criteres.has_invoice != false %} colspan="12"{% else %}colspan="11"{% endif %} style="font-size: 15px;text-align: center;color: silver;">
+                            Aucune vente enregistrée
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if criteres.isPaid is not defined and criteres.has_invoice is not defined %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-lg-offset-3 col-md-offset-3">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <td style="text-align: left;font-weight: bold;">Total des ventes</td>
+                        <td style="text-align: right;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;color: green;font-weight: bold;">Total de avances</td>
+                        <td style="text-align: right;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;color: red;font-weight: bold;">Total du reste</td>
+                        <td style="text-align: right;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,32 @@
+<div style="font-weight: bold;" id="totals">
+    <div class="row">
+        <h6 style="color: black;"><b>Total</b></h6>
+        <div style="color:blue;" class="col-lg-2 col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top">Total</span>
+            <div class="count">{{ totalGlobal|number_format(2,'.',' ') }} DH</div>
+        </div>
+        {% if totalAvance is defined %}
+            <div style="color:green;" class="col-lg-2 col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top">Avance</span>
+                <div class="count">{{ totalAvance|number_format(2,'.',' ') }} DH</div>
+            </div>
+        {% endif %}
+        {% if totalReste is defined %}
+            <div style="color:red;" class="col-lg-2 col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                <span class="count_top">Reste</span>
+                <div class="count">{{ totalReste|number_format(2,'.',' ') }} DH</div>
+            </div>
+        {% endif %}
+    </div>
+    {% if totals|length > 0 %}
+        <div class="row">
+            <h6 style="color: black;"><b>Modes des reglements</b></h6>
+            {% for item in totals %}
+                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                    <span class="count_top">{{ item.label }}</span>
+                    <div class="count">{{ item.total|number_format(2,'.',' ') }} DH</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

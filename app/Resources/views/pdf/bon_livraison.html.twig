@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style type="text/css">
+        {% if type == 'printer' %}
+        @font-face {
+            font-family: "CenturyGothic";
+            src: url({{ asset('fonts/century-gothic.ttf') }});
+        }
+        #vaucher{
+            font-family: "CenturyGothic";
+        }
+        {% endif %}
+    </style>
+</head>
+<body>
+<div id="vaucher" >
+    {% if type == 'pdf' %}
+        <div style="text-align: center;">
+            <img {% if type == 'pdf' %} src="./images/logo.jpg" style="width: 100%;height: 40mm;" {% else %} src="{{ asset('images/logo.jpg') }}" style="width: 70mm;height: 40mm;" {% endif %}  />
+        </div>
+    {% endif %}
+    <div>
+        <div style="text-align: center;font-size: 12px;">
+            <i style="font-weight: bold; font-size:35px;">{{ configuration.get("entreprise_nom") }}</i><br>
+            Dar bouazza 12500 Casablanca<br/>
+            {{ configuration.get('entreprise_nom') }}<br/>
+            Tél: {{ configuration.get('entreprise_phone') }}
+        </div>
+    </div>
+    <br/>
+    <div>
+        Bon N° :  <b>{{ commande.id }}</b>
+    </div>
+    <br/>
+    {% if commande.client %}
+        <div>
+            Client : <b>{{ commande.client.fullName }}</b>
+        </div>
+    {% endif %}
+    {% if commande.entreprise %}
+        <div>
+            Entreprise : <b>{{ commande.entreprise.nom }}</b>
+        </div>
+    {% endif %}
+    <br/>
+    <div>
+        Date livraison: <b>{% if commande.dateLivraison %}{{ commande.dateLivraison|date('d/m/Y') }}{% else %}{{ commande.date|date('d/m/Y') }}{% endif %}</b>
+    </div>
+    <br/>
+    Les prix en <b>DH</b><br/>
+    <div>
+        <table style="width: 100%;border-bottom: dotted 1px;border-top: solid 1px;">
+            <thead>
+            <tr>
+                <th style="width: 20%;border-bottom: 1px dotted;text-align: left;">Qté</th>
+                <th style="width: 50%;border-bottom: 1px dotted;text-align: left;">Titre</th>
+                <th style="width: 15%;border-bottom: 1px dotted;text-align: right;padding-right: 5px;">P/U</th>
+                <th style="width: 15%;border-bottom: 1px dotted;text-align: right;">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pc in commande.produits %}
+                {% if pc.isEchantillon %}
+                    <tr>
+                        <td style="width: 20%;text-align: left;">{{ pc.quantite|number_format(2,'.','') }}<span style="font-size: 10px;">{{ pc.produit.unite }}</span></td>
+                        <td style="width: 50%;text-align: left;">{{ pc.produit.titre }}</td>
+                        <td colspan="2" style="width: 30%;text-align: center;">Echantillon</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td style="width: 20%;text-align: left;">{{ pc.quantite|number_format(2,'.','') }}<span style="font-size: 10px;">{{ pc.produit.unite }}</span></td>
+                        <td style="width: 50%;text-align: left;">{{ pc.produit.titre }}</td>
+                        <td style="width: 15%;text-align: right;padding-right: 5px;">{{ pc.prix|number_format(2,'.','') }}</td>
+                        <td style="width: 15%;text-align: right;">{{ pc.sousTotal|number_format(2,'.','') }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br/>
+    <table style="width: 100%;">
+        <tbody>
+        <tr>
+            <td style="width: 50%;font-weight: bold;">
+                Montant Ht
+            </td>
+            <td style="width: 50%;text-align: right;">
+                {{ commande.montantHt|number_format(2,'.',' ') }}
+            </td>
+        </tr>
+        {% if commande.tva is not null %}
+            <tr>
+                <td style="width: 50%;font-weight: bold;">
+                    Tva ({{ commande.tva }}%)
+                </td>
+                <td style="width: 50%;text-align: right;">
+                    {{ commande.taxes|number_format(2,'.',' ') }}
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 50%;font-weight: bold;">
+                    Montant Ttc
+                </td>
+                <td style="width: 50%;text-align: right;">
+                    {{ commande.montantTtc|number_format(2,'.',' ') }}
+                </td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+   {% if commande.fraisSupplementaires.count > 0 %}
+        <div>
+            <table style="width: 100%;">
+                <tbody>
+                {% for fc in commande.fraisSupplementaires %}
+                    <tr>
+                        <td style="width: 70%;">{{ fc.label }}</td>
+                        <td style="width: 30%;text-align: right;">{{ fc.ttc|number_format(2,'.',' ') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    <table style="width: 100%;">
+        <tbody>
+        <tr >
+            <td style="width: 50%;border-top: solid 1px;border-bottom: solid 1px;font-weight: bold">
+                NET A PAYER
+            </td>
+            <td style="width: 50%;border-top: solid 1px;border-bottom: solid 1px;text-align: right;font-weight: bold">
+                {{ commande.total|number_format(2,'.',' ') }} DH
+            </td>
+        </tr>
+        {% if commande.avance > 0 %}
+            <tr>
+                <td style="width: 50%;font-weight:bold;">
+                    Avance
+                </td>
+                <td style="width: 50%;text-align: right;font-weight:bold;">
+                    {{ commande.avance|number_format(2,'.',' ') }} DH
+                </td>
+            </tr>
+        {% endif %}
+        {% if commande.paiements|length > 0 %}
+            <tr>
+                <td colspan="2">
+                    <table style="width: 100%;">
+                        <tbody>
+                        {% for p in commande.paiements %}
+                            <tr>
+                                <td style="width: 33.33%;">{{ p.modePayment.label }}</td>
+                                <td style="width: 33.33%;">{{ p.date|date('d/m/Y') }}</td>
+                                <td style="width: 33.33%;text-align: right;">{{ p.prix|number_format(2,'.',' ') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td style="width: 50%;font-weight:bold;">
+                Reste
+            </td>
+            <td style="width: 50%;text-align: right;font-weight: bold">
+                {{ commande.reste|number_format(2,'.',' ') }} DH
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    {% if commande.livrerPar %}
+        <div>
+            Livré par : <b style="font-size: 12px;">{{ commande.livrerPar }}</b>
+        </div>
+        <br/><br/><br/><br/><br/>
+    {% else %}
+        <div>
+            Livré par :  <br/><span style="margin-left: 70px;">_____________________</span>
+        </div>
+        <br/><br/><br/><br/><br/>
+    {% endif %}
+    <div>
+        {{ commande.clientEntreprise }}
+    </div>
+    <br/><br/><br/><br/><br/>
+    <div>
+        Edité le : <b>{{ commande.date|date('d/m/Y') }}</b>
+    </div>
+    <br/>
+    <div style="text-align: center;width: 100%;border-top: solid 1px;font-size: 10px;">
+        <p style="text-align: center;">
+            IF: 14478752 / Patente: 91390050 / Rc: 295227<br/>Gsm: 0602 06 00 26 / 0666 11 22 33<br/>
+            <span style="font-size: 15px;font-weight: bold;">www.aliafromagerie.com</span><br/><br/><br/>******
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

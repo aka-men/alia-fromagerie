@@ -1,0 +1,26 @@
+<div style="margin-bottom: 20px;" class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li {% if item == 'client' %} class="active" {% endif %}><a href="{{ path('app_client_index') }}"><i class="fa fa-address-card" aria-hidden="true"></i> Clients</a></li>
+                        <li {% if item == 'commerciale' %} class="active" {% endif %}><a href="{{ path('app_commerciale_index') }}"><i class="fa fa-id-badge" aria-hidden="true"></i> Commerciaux</a></li>
+                        <li {% if item == 'entreprise' %} class="active" {% endif %}><a href="{{ path('app_entreprise_index') }}"><i class="fa fa-university" aria-hidden="true"></i> Entreprises</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    </div>
+</div>

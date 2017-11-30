@@ -1,0 +1,19 @@
+<form name="commandes_factures_tva" method="post" id="commandes_factures_tva" action="{{ actionPath }}">
+    {% for cmd in commandesWithoutTva %}
+        <div class="row">
+            <input type="hidden" name="commande[{{ loop.index }}][id]" value="{{ cmd.id }}" />
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-success">N° {{ cmd.id }}</button>
+                    </span>
+                    <input placeholder="Tva" required class="form-control numerique" type="text" id="commande_{{ loop.index }}_tva" name="commande[{{ loop.index }}][tva]" />
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    {% for cmd in commandes %}
+        <input type="hidden" name="commande[{{ loop.index }}][id]" value="{{ cmd.id }}" />
+        <input type="hidden" name="commande[{{ loop.index }}][tva]" value="{{ cmd.tva }}" />
+    {% endfor %}
+</form>

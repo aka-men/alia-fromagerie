@@ -1,0 +1,127 @@
+<style type="text/css">
+    table.bordred tr td{
+        border: 1px solid black;
+        padding: 5px;
+    }
+    table.bordred tr td:first-child{
+        padding-left: 8px !important;
+    }
+    table.bordred{
+        border-collapse: collapse;
+    }
+</style>
+<page backtop="30mm" backbottom="15mm" backleft="3mm" backright="3mm">
+
+    <page_header>
+        <table style="width: 100%; border-bottom: solid 1px black;">
+            <tr>
+                <td style="text-align: left;width: 15%;vertical-align: middle;">
+                    <img style="width:100%;height:60px;" src="{{ configuration.absoluteWebPath ~ '/images/logo.png' }}" />
+                </td>
+                <td style="text-align: left;width: 85%;font-size: 15px;padding-left: 20px;vertical-align: middle;">
+                    Statut client <b>{% if client is defined %}{{ client.fullName }}{% elseif entreprise is defined %}{{ entreprise.nom }}{% endif %}</b>,{% if criteres.mois is defined and criteres.annee is defined %} {{ ((criteres.mois ~ "/01/" ~ criteres.annee)|date('F'))|trans }} - {{ (criteres.mois ~ "/01/" ~ criteres.annee)|date('Y') }}  {% elseif criteres.date_start is defined and criteres.date_end is defined %} du {{ criteres.date_start }} au {{ criteres.date_end }}{% endif %}
+                </td>
+            </tr>
+        </table>
+    </page_header>
+    <page_footer>
+        <table style="width: 100%; border-top: solid 1px black;">
+            <tr>
+                <td style="width: 50%;text-align: left;font-size: 9px;">
+                    Généré le {{ "now"|date('d/m/Y') }}
+                </td>
+                <td style="width: 50%;text-align: right;font-size: 9px;">
+                    Page: [[page_cu]]/[[page_nb]]
+                </td>
+            </tr>
+        </table>
+    </page_footer>
+
+    <br/><br/>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 100%;padding-left: 30px;font-weight: normal;text-decoration:underline;">
+                <h2>● La liste des ventes {% if criteres.isPaid is defined and criteres.isPaid is not empty and criteres.isPaid == '0' %} (impayées) {% elseif criteres.isPaid is defined and criteres.isPaid is not empty and criteres.isPaid == '1' %} (payées){% endif %}</h2>
+                <h3>Client : <b>{% if client is defined %}{{ client.fullName }}{% elseif entreprise is defined %}{{ entreprise.nom }}{% endif %}</b></h3>
+            </td>
+        </tr>
+    </table>
+
+    <br/><br/>
+
+    <table style="width: 100%;" class="bordred">
+        <tr>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:20px;text-align: center;">N°</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:26px;text-align: center;">BL</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:20px;text-align: center;">Facture</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:50px;text-align: center;">Date</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:41px;text-align: center;">HT</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:39px;text-align: center;">TVA</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:41px;text-align: center;">TTC</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:39px;text-align: center;">Frais</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:45px;text-align: center;">Ttotal</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:45px;text-align: center;">Avance</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:45px;text-align: center;">Reste</td>
+            <td style="font-weight: bold;font-size: 9px;background-color: lightgrey;width:78px;text-align: center;">Payée</td>
+
+        </tr>
+        {% if reportCommandes.commandes|length > 0 %}
+            {% for commande in reportCommandes.commandes %}
+                <tr>
+                    <td style="font-size: 9px;width:20px;text-align: center;vertical-align: middle;">{{ loop.index }}</td>
+                    <td style="font-size: 9px;width:26px;text-align: center;vertical-align: middle;">{{ commande.id }}</td>
+                    <td style="font-size: 9px;width:20px;text-align: center;">{{ commande.facture ? commande.facture.id : '-' }}</td>
+                    <td style="font-size: 9px;width:50px;text-align: center;vertical-align: middle;">{{ commande.date|date('d/m/Y') }}</td>
+                    <td style="font-size: 9px;width:41px;text-align: right;vertical-align: middle;">{{ commande.montantHt|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:39px;text-align: right;vertical-align: middle;">{{ commande.tva ? commande.tva|number_format(2,'.',' ') : '0.00'  }}</td>
+                    <td style="font-size: 9px;width:41px;text-align: right;vertical-align: middle;">{{ commande.montantTtc|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:39px;text-align: right;vertical-align: middle;">{{ commande.totalFrais|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;">{{ commande.total|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;color: green;">{{ commande.avance|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;color: red;">{{ commande.reste|number_format(2,'.',' ') }}</td>
+                    <td style="font-size: 9px;width:78px;text-align: center;vertical-align: middle;font-weight: bold;">{{ commande.state }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="11" style="width: 100%;font-size: 15px;text-align: center;color: silver;">
+                    Aucune vente trouvée
+                </td>
+            </tr>
+        {% endif %}
+    </table>
+    {% if reportCommandes.commandes|length > 0 %}
+    <table style="width: 100%;margin-top: 5px;" class="bordred">
+        <tr>
+            <td style="width:377px;border-left: none !important;border-bottom: none !important;border-top: none !important;"></td>
+            <td style="font-size: 8px;width:39px;text-align: right;vertical-align: middle;font-weight: bold;">Sous Total</td>
+            <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }}</td>
+            <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }}</td>
+            <td style="font-size: 9px;width:45px;text-align: right;vertical-align: middle;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }}</td>
+        </tr>
+    </table>
+    {% endif %}
+    <br/><br/><br/>
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 50%;"></td>
+            <td style="width: 50%;">
+                <table class="bordred" style="width: 100%;font-size: 13px;">
+                    <tr>
+                        <td style="width: 50%;vertical-align: middle;text-align: left;font-weight: bold;">Total des ventes</td>
+                        <td style="width: 50%;vertical-align: middle;text-align: right;font-weight: bold;">{{ reportCommandes.total|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%;vertical-align: middle;text-align: left;color: green;font-weight: bold;">Total de avances</td>
+                        <td style="width: 50%;vertical-align: middle;text-align: right;color: green;font-weight: bold;">{{ reportCommandes.avance|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%;vertical-align: middle;text-align: left;color: red;font-weight: bold;">Total du reste</td>
+                        <td style="width: 50%;vertical-align: middle;text-align: right;color: red;font-weight: bold;">{{ reportCommandes.reste|number_format(2,'.',' ') }} DH</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</page>

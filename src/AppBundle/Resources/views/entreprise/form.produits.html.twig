@@ -1,0 +1,74 @@
+<form name="entreprise_produits" method="post" id="entreprise_produits" action="{{ action }}">
+    {% set index = 0 %}
+    <div class="row">
+        <div class="col-lg-12">
+            <legend>Produits ALia</legend>
+            <table class="table table-bordered table-striped produits-entreprise">
+                <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>prix</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if produitsAlia|length == 0 %}
+                    <tr>
+                        <td colspan="2">
+                            <div class="alert alert-warning">
+                                <p>Vous n'avez aucun produit Alia disponible !</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% for produit in produitsAlia %}
+                    <tr>
+                        <td>
+                            {{ produit.titre }}
+                            <p class="description">{{ produit.description }}</p>
+                            <input type="hidden" value="{{ produit.id }}" name="entreprise_produits[{{ index }}][produit]" />
+                        </td>
+                        <td><input name="entreprise_produits[{{ index }}][prix]" type="text" class="form-control prix numerique" value="{{ produit.prixEntreprise(entreprise) }}" /></td>
+                    </tr>
+                    {% set index = index + 1 %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <legend>Autres Produits</legend>
+            <table class="table table-bordered table-striped produits-client">
+                <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>prix</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if produitsImportation|length == 0 %}
+                    <tr>
+                        <td colspan="2">
+                            <div class="alert alert-warning">
+                                <p>Vous n'avez aucun produit disponible !</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+                {% for produit in produitsImportation %}
+                    <tr>
+                        <td>
+                            {{ produit.titre }}
+                            <p class="description">{{ produit.description }}</p>
+                            <input type="hidden" value="{{ produit.id }}" name="entreprise_produits[{{ index }}][produit]" />
+                        </td>
+                        <td><input name="entreprise_produits[{{ index }}][prix]" type="text" class="form-control prix numerique" value="{{ produit.prixEntreprise(entreprise) }}" /></td>
+                    </tr>
+                    {% set index = index + 1 %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+

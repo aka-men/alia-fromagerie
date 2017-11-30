@@ -1,99 +1,67 @@
 {% trans_default_domain 'FOSUserBundle' %}
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Alia Fromagerie | Se Connecter</title>
-    <!-- Favicon-->
-    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <title>Alia Fromagerie - Connexion</title>
 
-    <!-- Bootstrap Core Css -->
-    <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{{ asset('vendors/nprogress/nprogress.css') }}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="{{ asset('vendors/animate.css/animate.min.css') }}" rel="stylesheet">
 
-    <!-- Waves Effect Css -->
-    <link href="{{ asset('plugins/node-waves/waves.css') }}" rel="stylesheet" />
-
-    <!-- Animation Css -->
-    <link href="{{ asset('plugins/animate-css/animate.css') }}" rel="stylesheet" />
-
-    <!-- Custom Css -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="{{ asset('build/css/custom.min.css') }}" rel="stylesheet">
 </head>
 
-<body class="login-page">
+<body class="login">
+   <div class="login_wrapper">
+        <div class="animate form login_form">
+            <section class="login_content">
+                <form action="{{ path("fos_user_security_check") }}" method="post">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+                    <h1>Connexion</h1>
+                    {% if error %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <input type="text" name="_username" id="_username" class="form-control" placeholder="Nom utilisateur / Email" required="" />
+                    </div>
+                    <div>
+                        <input type="password" name="_password" id="_password" class="form-control" placeholder="Mot de passe" required="" />
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-default submit">Se connecter</button>
+                        <a class="reset_pass" href="{{ path('fos_user_resetting_request') }}">Mot de passe oublié ?</a>
+                    </div>
 
-<div class="login-box">
-    <div class="logo">
-        <a href="javascript:void(0);">Alia Fromagerie</a>
-       {#<small>Admin BootStrap Based - Material Design</small>#}
-    </div>
-    <div class="card">
-        <div class="body">
-            <form action="{{ path("fos_user_security_check") }}" id="sign_in" method="POST">
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-                <div class="msg">Connectez-vous pour commencer votre session</div>
-                {% if error %}
-                    <div class="alert bg-red alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <div>
+                            <h1>Alia Fromagerie</h1>
+                            <p>{{ "now"|date('Y') }} © Tous droits réservés</p>
+                        </div>
                     </div>
-                {% endif %}
-                <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">person</i>
-                        </span>
-                    <div class="form-line">
-                        <input type="text" class="form-control" name="_username" placeholder="Email ou Nom utilisateur" required autofocus>
-                    </div>
-                </div>
-                <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="material-icons">lock</i>
-                        </span>
-                    <div class="form-line">
-                        <input type="password" class="form-control" name="_password" placeholder="Mot de passe" required>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-8 p-t-5">
-                        <input type="checkbox" name="°rememberme" id="rememberme" class="filled-in chk-col-pink">
-                        <label for="rememberme">Se souvenir de moi</label>
-                    </div>
-                    <div class="col-xs-4">
-                        <button class="btn btn-block bg-pink waves-effect" type="submit">Connexion</button>
-                    </div>
-                </div>
-                <div class="row m-t-15 m-b--20">
-                    <div class="col-xs-6 align-right">
-                        <a href="{{ path('fos_user_resetting_request') }}">Mot de passe oublié?</a>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </section>
         </div>
-    </div>
-</div>
-
-<!-- Jquery Core Js -->
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-
-<!-- Bootstrap Core Js -->
-<script src="{{ asset('plugins/bootstrap/js/bootstrap.js') }}"></script>
-
-<!-- Waves Effect Plugin Js -->
-<script src="{{ asset('plugins/node-waves/waves.js') }}"></script>
-
-<!-- Validation Plugin Js -->
-<script src="{{ asset('plugins/jquery-validation/jquery.validate.js') }}"></script>
-
-<!-- Custom Js -->
-<script src="{{ asset('js/admin.js') }}"></script>
-<script src="{{ asset('js/pages/examples/sign-in.js') }}"></script>
+   </div>
+   <!-- jQuery -->
+   <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
+   <!-- Bootstrap -->
+   <script src="{{ asset('vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 </body>
-
 </html>

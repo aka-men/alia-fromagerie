@@ -1,0 +1,23 @@
+configuration:
+    facture_entete: true
+    facture_pied: true
+    facture_logo_pied: facture_logo_pied.png
+    facture_logo_entete: facture_logo_entete.png
+    facture_cachet: null
+    entreprise_nom: 'Alia Fromagerie'
+    entreprise_rc: '295227'
+    entreprise_patente: '91390050'
+    entreprise_cnss: '9868219'
+    entreprise_adresse1: 'Bled Brigadi Douar Abbad Lahrach'
+    entreprise_adresse2: '12500,Dar bouazza Casablanca'
+    entreprise_if: '14478752'
+    entreprise_ice: '000209644000047'
+    entreprise_email: aliafromagerie@gmail.com
+    entreprise_fax: '0522 49 07 07'
+    entreprise_phone: '0522 96 54 13'
+    entreprise_gsm1: '0602 06 00 26'
+    entreprise_gsm2: '0666 11 22 33'
+    entreprise_gsm3: '0662 22 12 12'
+    entreprise_site: 'http://www.aliafromagerie.com'
+    admin_code_retour: qwertyuiop
+    admin_enable_retour: true

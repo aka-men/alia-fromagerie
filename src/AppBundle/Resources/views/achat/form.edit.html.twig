@@ -1,0 +1,216 @@
+{{ form_start(formAchat,{ 'action': path('app_achat_edit',{'id':achat.id}),'attr':{'method':'POST','id':'appbundle_achat','data-parsley-validate':''}}) }}
+<p id="form-error" style="padding: 10px;color:red;"></p>
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12">
+                <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                <button class="btn btn-sm btn-default show-tab-liste">Annuler</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_date">Date</label>
+                                    {{ form_widget(formAchat.date, {'attr': {'class':'form-control date-input'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_fournisseur">Fournisseur</label>
+                                    {#<label class="form-control">{{ achat.fournisseur.nom }}</label>
+                                    <input data-href="{{ path('app_fournisseur_get',{'id':'id'}) }}" data-produits-href="{{ path('app_produit_achat_autocomplete') }}" name="appbundle_achat[fournisseur]" type="hidden" value="{{ achat.fournisseur.id }}" id="appbundle_achat_fournisseur" />#}
+                                    <select data-trigger="false" id="appbundle_achat_fournisseur" data-href="{{ path('app_fournisseur_get',{'id':'id'}) }}" data-produits-href="{{ path('app_produit_achat_autocomplete') }}" name="appbundle_achat[fournisseur]" class="form-control show-tick" data-live-search="true">
+                                        {% for fournisseur in fournisseurs %}
+                                            {% if fournisseur.sellProducts(achat.productsObjects) %}
+                                                <option {% if achat.fournisseur.id == fournisseur.id %} selected {% endif %} value="{{ fournisseur.id }}">{{ fournisseur.nom }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    {#{{ form_widget(formAchat.fournisseur, {'attr': {'data-produits-href':path('app_produit_achat_autocomplete'),'class':'form-control show-tick','data-live-search':'true','data-href':path('app_fournisseur_get',{'id':'id'})}}) }}#}
+                                    {#<p style="margin-top: -5px;" class="help-block text-center"><a data-href="{{ path('app_fournisseur_add') }}" data-title="Ajouter un fournisseur" data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-xs btn-link add-fournisseur"><i class="fa fa-plus-square" aria-hidden="true"></i> Ajouter fournisseur</a></p>#}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_numeroFacture">Numéro facture</label>
+                                    {{ form_widget(formAchat.numeroFacture, {'attr': {'class':'form-control'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label for="appbundle_achat_image_file">Image facture</label>
+                                <div class="form-group">
+                                    <div class="btn-group">
+                                        <button class="btn btn-default bind_img" type="button">Chois une photo</button>
+                                        <button title="Visualiser" class="btn btn-default" type="button"><a class="pic-show" data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                                    </div>
+                                    {{ form_widget(formAchat.image, {'attr': {'style':'display: none;'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_modePayment">Mode paiement</label>
+                                    {{ form_widget(formAchat.modePayment, {'attr': {'class':'form-control show-tick','data-live-search':'true'}}) }}
+                                </div>
+                            </div>
+                            <div class="cheque col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_numeroCheque">Numéro reglement</label>
+                                    {{ form_widget(formAchat.numeroCheque, {'attr': {'class':'form-control entier cheque-info'}}) }}
+                                </div>
+                            </div>
+                            <div class="cheque col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_dateCheque">Date reglement</label>
+                                    {{ form_widget(formAchat.dateCheque, {'attr': {'class':'form-control date-input cheque-info'}}) }}
+                                </div>
+                            </div>
+                            <div class="cheque col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_imageCheque_file">Image reglement</label>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default bind_img" type="button">Chois une photo</button>
+                                        <button title="Visualiser" class="btn btn-default" type="button"><a class="pic-show" data-fancybox><i class="fa fa-eye" aria-hidden="true"></i></a></button>
+                                    </div>
+                                    {{ form_widget(formAchat.imageCheque, {'attr': {'style':'display: none;','class':'cheque-info'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="appbundle_achat_observation">Obsérvation</label>
+                                    {{ form_widget(formAchat.observation, {'attr': {'class':'form-control auto-growth'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                <button class="btn btn-sm btn-default show-tab-liste">Annuler</button>
+            </div>
+        </div>
+    </div>
+    <div id="details" class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+        <div style="margin-bottom: 15px;" class="row">
+            <div class="col-lg-5 col-md-5 hidden-sm hidden-xs div-header">Produit</div>
+            <div class="col-lg-2 col-md-2 hidden-sm hidden-xs div-header text-center">Quantité</div>
+            <div class="col-lg-2 col-md-2 hidden-sm hidden-xs div-header text-center">Prix Unitaire</div>
+            <div class="col-lg-3 col-md-3 hidden-sm hidden-xs div-header text-center">Sous Total</div>
+        </div>
+        {% set j = 0 %}
+        {% set k = 0 %}
+        {% for pa in achat.produits %}
+            <div class="row line" id="appbundle_achat_produits_{{ loop.index0 }}">
+                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 form-group">
+                    <span class="form-control">{{ pa.produit.titre }}</span>
+                    <select style="display: none;" data-href="{{ path('app_produit_achat_autocomplete') }}" id="appbundle_achat_produits_{{ loop.index0 }}_produit" name="appbundle_achat[produits][{{ loop.index0 }}][produit]" required="required" class="form-control ms produit" data-href-sub-form="{{ path('app_charge_options_production_form') }}" >
+                        <option value="{{ pa.produit.id }}" selected>{{ pa.produit.titre }}</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 form-group">
+                    <input value="{{ pa.quantite }}" required="required" class="form-control numerique qte" type="text" id="appbundle_achat_produits_{{ loop.index0 }}_quantite" name="appbundle_achat[produits][{{ loop.index0 }}][quantite]" placeholder="Quantité" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 form-group">
+                    <input value="{{ pa.prix }}" required="required" class="form-control numerique prix" type="text" id="appbundle_achat_produits_{{ loop.index0 }}_prix" name="appbundle_achat[produits][{{ loop.index0 }}][prix]" placeholder="Prix unitaire" />
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group">
+                    <input value="{{ pa.sousTotal }}" class="form-control sousTotal" readonly type="text" id="sous_total_{{ loop.index0 }}_prix"  placeholder="Sous Total" />
+                    <span class="input-group-btn">
+                    <button id="delete-line" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button>
+                </span>
+                </div>
+                <div class="col-lg-12">
+                    <div class="analyses row">
+                        {% for oa in achat.options %}
+                            {% if oa.produit.id == pa.produit.id %}
+                                <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6 option form-group">
+                                    <label title="{{ oa.option.label }}" style="font-size: 10px;">{{ oa.option.code }}</label>
+                                    <input style="font-size: 14px;" value="{{ oa.valeur }}" class="form-control big-placeholder numerique small-input" type="text" id="appbundle_achat_options_{{ j }}_valeur" name="appbundle_achat[options][{{ j }}][valeur]" title="{{ oa.option.label }}" placeholder="{{ oa.option.code }}" />
+                                    <input type="hidden" value="{{ oa.option.id }}" id="appbundle_achat_options_{{ j }}_option" name="appbundle_achat[options][{{ j }}][option]" />
+                                    <input type="hidden" value="{{ oa.produit.id }}" id="appbundle_achat_options_{{ j }}_produit" name="appbundle_achat[options][{{ j }}][produit]" />
+                                </div>
+                                {% set j = j + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="production row">
+                        {% for pra in achat.productions %}
+                            {% if pra.produitParent.id == pa.produit.id %}
+                                <div class="col-lg-1 col-md-1 col-sm-3 col-xs-6 production form-group">
+                                    <label title="{{ pra.produit.titre }}" style="font-size: 10px;">{{ pra.produit.titre|slice(0,7) }}</label>
+                                    <input style="font-size: 14px;" value="{{ pra.valeur }}" title="{{ pra.produit.titre }}" class="form-control big-placeholder small-input entier" type="text" id="appbundle_achat_productions_{{ k }}_valeur" name="appbundle_achat[productions][{{ k }}][valeur]" placeholder="{{ pra.produit.titre }}" />
+                                    <input type="hidden" value="{{ pra.produit.id }}" id="appbundle_achat_productions_{{ k }}_produit" name="appbundle_achat[productions][{{ k }}][produit]" />
+                                    <input type="hidden" value="{{ pra.produitParent.id }}" id="appbundle_achat_productions_{{ k }}_produitParent" name="appbundle_achat[productions][{{ k }}][produitParent]" />
+                                </div>
+                                {% set k = k + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="row action">
+            <div class="col-lg-12">
+                <button data-prototype='<div class="row line" id="appbundle_achat_produits___name__"><div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 form-group"><select id="appbundle_achat_produits___name___produit" name="appbundle_achat[produits][__name__][produit]" required="required" class="form-control produit" data-href-sub-form="{{ path('app_charge_options_production_form') }}" ></select></div><div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 form-group"><input required="required" class="form-control numerique qte" type="text" id="appbundle_achat_produits___name___quantite" name="appbundle_achat[produits][__name__][quantite]" placeholder="Quantité" /></div><div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 form-group"><input required="required" class="form-control numerique prix" type="text" id="appbundle_achat_produits___name___prix" name="appbundle_achat[produits][__name__][prix]" placeholder="Prix unitaire" /></div><div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group"><input class="form-control sousTotal" readonly type="text" id="sous_total___name___prix"  placeholder="Sous Total" /><span class="input-group-btn"><button id="delete-line" type="button" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></button></span></div><div class="col-lg-12"><div class="analyses row"></div></div><div class="col-lg-12"><div class="production row"></div></div></div></div>' style="border-radius: 50%;z-index: 500;box-shadow: cyan 1px 2px 9px;margin-top: 15px;" id="add-line" class="btn pull-right btn-circle btn-info text-center"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table-condensed pull-right">
+                    <tbody>
+                    <tr>
+                        <td class="text-right">Total HT</td>
+                        <td>
+                            <div class="form-group">
+                                {{ form_widget(formAchat.montantHt, {'attr': {'class':'form-control numerique'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Tva</td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" class="form-control numerique" value="{{ achat.tva }}" id="appbundle_achat_tva" name="appbundle_achat[tva]" placeholder="Tva">
+                                <span id="taxes" title="Taxes" class="input-group-addon">{{ achat.taxes|number_format(2,'.','') }}DH</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">Total TTC</td>
+                        <td>
+                            <div class="form-group">
+                                {{ form_widget(formAchat.montantTtc, {'attr': {'class':'form-control numerique'}}) }}
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <button data-loading-text='Veuillez patienter <i class="fa fa-spin fa-spinner" aria-hidden="true"></i>' class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if achat.isPaid %}
+    <input type="hidden" value="1" id="appbundle_achat_isPaid" name="appbundle_achat[isPaid]" />
+{% endif %}
+{% do formAchat.tva.setRendered %}
+{% do formAchat.fournisseur.setRendered %}
+{% do formAchat.isPaid.setRendered %}
+{% do formAchat.produits.setRendered %}
+{% do formAchat.productions.setRendered %}
+{% do formAchat.options.setRendered %}
+{{ form_rest(formAchat) }}
+{{ form_end(formAchat) }}
